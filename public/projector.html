@@ -958,80 +958,154 @@
     function renderFinaleCeremony(arena, state) {
       const step = state.finale.step;
       const lb = state.finale.leaderboard;
+      const team1 = lb[0] || state.teams[0];
+      const team2 = lb[1] || state.teams[1];
+      const team3 = lb[2] || state.teams[2];
 
+      // Step 1: Suspense
       if (step === 1) {
         arena.innerHTML = `
-          <div class="podium-container">
-            <h1 class="electric-heading" style="font-size: 3rem; margin-top: 20px;">
-              KẾT QUẢ CUỐI CÙNG ĐÃ ĐƯỢC XÁC NHẬN!
+          <div class="podium-container" style="text-align: center;">
+            <h1 class="electric-heading" style="font-size: 3.2rem; margin-top: 10px; color: var(--c-surface);">
+              LỄ VINH DANH TOP 3 XUẤT SẮC NHẤT
             </h1>
-            <p style="font-size: 1.4rem; color: var(--c-surface); margin-top: 10px;">
-              Sân khấu đóng băng • Chuẩn bị vinh danh các thứ hạng...
+            <p style="font-size: 1.6rem; color: #cbd5e1; margin-top: 14px;">
+              Trận đấu khép lại • Sân khấu đóng băng chuẩn bị vinh danh Quán quân & Top 3!
             </p>
+            <div style="margin-top: 25px; font-size: 1.3rem; color: var(--c-tertiary);">
+              MC đang chuẩn bị công bố Hạng 3...
+            </div>
           </div>
         `;
         return;
       }
 
-      if (step >= 2 && step <= 6) {
-        const revealRank = 7 - step;
-        const targetTeam = lb.find(t => t.rank === revealRank) || lb[lb.length - 1];
-        const isChampion = revealRank === 1;
-
-        if (isChampion) launchConfetti();
-
+      // Step 2: Rank 3 (Huy Chương Đồng)
+      if (step === 2) {
         arena.innerHTML = `
-          <div class="podium-container" style="animation: fadeIn 0.5s ease;">
-            ${isChampion ? `
-              <img src="/assets/images/golden_trophy.jpg" alt="Cúp Chuông Vàng" class="champion-trophy-img">
-              <h2 class="electric-heading" style="font-size: 2.2rem; letter-spacing: 2px;">
-                NHÀ VÔ ĐỊCH RUNG CHUÔNG VÀNG
-              </h2>
-            ` : `
-              <div style="font-size: 1.6rem; color: #94a3b8; letter-spacing: 2px;">
-                VINH DANH HẠNG ${revealRank}
-              </div>
-            `}
+          <div class="podium-container" style="animation: fadeIn 0.5s ease; text-align: center;">
+            <div style="font-size: 1.8rem; color: #f59e0b; font-weight: bold; letter-spacing: 2px;">
+              VINH DANH HẠNG 3 — HUY CHƯƠNG ĐỒNG
+            </div>
+            <h1 style="font-size: 4.5rem; color: ${team3.color}; margin: 12px 0;">
+              ${team3.name}
+            </h1>
+            <div style="font-size: 3.5rem; font-weight: 700; color: var(--c-surface); margin-bottom: 20px;">
+              ${team3.score} <span style="font-size: 1.5rem; color: #94a3b8;">ĐIỂM</span>
+            </div>
+            <div style="display: flex; gap: 20px; justify-content: center;">
+              <span class="badge badge-gold">Vòng 1: +${team3.r1Score}đ</span>
+              <span class="badge badge-jade">Vòng 2: +${team3.r2Score}đ</span>
+              <span class="badge badge-ruby">Vòng 3: ${team3.r3Result >= 0 ? '+' : ''}${team3.r3Result}đ</span>
+            </div>
+          </div>
+        `;
+        return;
+      }
 
-            <h1 style="font-size: 4rem; color: ${targetTeam.color}; margin: 10px 0; text-shadow: 2px 2px 0px var(--c-neutral);">
-              ${targetTeam.name}
+      // Step 3: Rank 2 (Huy Chương Bạc)
+      if (step === 3) {
+        arena.innerHTML = `
+          <div class="podium-container" style="animation: fadeIn 0.5s ease; text-align: center;">
+            <div style="font-size: 1.8rem; color: #cbd5e1; font-weight: bold; letter-spacing: 2px;">
+              VINH DANH HẠNG 2 (Á QUÂN) — HUY CHƯƠNG BẠC
+            </div>
+            <h1 style="font-size: 4.5rem; color: ${team2.color}; margin: 12px 0;">
+              ${team2.name}
+            </h1>
+            <div style="font-size: 3.5rem; font-weight: 700; color: var(--c-surface); margin-bottom: 20px;">
+              ${team2.score} <span style="font-size: 1.5rem; color: #94a3b8;">ĐIỂM</span>
+            </div>
+            <div style="display: flex; gap: 20px; justify-content: center;">
+              <span class="badge badge-gold">Vòng 1: +${team2.r1Score}đ</span>
+              <span class="badge badge-jade">Vòng 2: +${team2.r2Score}đ</span>
+              <span class="badge badge-ruby">Vòng 3: ${team2.r3Result >= 0 ? '+' : ''}${team2.r3Result}đ</span>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // Step 4: Rank 1 (QUÁN QUÂN — CÚP CHUÔNG VÀNG)
+      if (step === 4) {
+        launchConfetti();
+        arena.innerHTML = `
+          <div class="podium-container" style="animation: fadeIn 0.5s ease; text-align: center;">
+            <img src="/assets/images/golden_trophy.jpg" alt="Cúp Chuông Vàng" class="champion-trophy-img" style="width: 140px; height: 140px; object-fit: contain; margin-bottom: 10px;">
+            <div style="font-size: 2.2rem; color: var(--c-surface); font-weight: 900; letter-spacing: 2px;">
+              VINH DANH NHÀ VÔ ĐỊCH RUNG CHUÔNG VÀNG
+            </div>
+            <h1 style="font-size: 5rem; color: ${team1.color}; margin: 10px 0; text-shadow: 2px 2px 0px var(--c-neutral);">
+              ${team1.name}
+            </h1>
+            <div style="font-size: 4rem; font-weight: 700; color: var(--c-surface); margin-bottom: 16px;">
+              ${team1.score} <span style="font-size: 1.6rem; color: #94a3b8;">ĐIỂM</span>
+            </div>
+            <div style="display: flex; gap: 20px; justify-content: center;">
+              <span class="badge badge-gold">Vòng 1: +${team1.r1Score}đ</span>
+              <span class="badge badge-jade">Vòng 2: +${team1.r2Score}đ</span>
+              <span class="badge badge-ruby">Vòng 3: ${team1.r3Result >= 0 ? '+' : ''}${team1.r3Result}đ</span>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // Step 5: BỤC PODIUM TOP 3 + BẢNG TỔNG SẮP
+      if (step >= 5) {
+        launchConfetti();
+        arena.innerHTML = `
+          <div style="width: 100%; max-width: 1100px; display: flex; flex-direction: column; gap: 20px; align-items: center;">
+            <h1 class="electric-heading" style="font-size: 2.8rem; text-align: center; color: var(--c-surface);">
+              BỤC VINH DANH TOP 3 XUẤT SẮC NHẤT
             </h1>
 
-            <div style="font-family: var(--font-mono); font-size: 3rem; font-weight: 700; color: var(--c-surface); margin-bottom: 20px;">
-              ${targetTeam.score} <span style="font-size: 1.4rem; color: #94a3b8;">ĐIỂM</span>
+            <!-- 3-Tier Olympic Podium -->
+            <div style="display: flex; align-items: flex-end; justify-content: center; gap: 16px; width: 100%; max-width: 800px; margin: 15px 0 25px;">
+              <!-- Hạng 2: Left -->
+              <div style="flex: 1; text-align: center; display: flex; flex-direction: column; align-items: center;">
+                <div style="font-size: 1.4rem; color: #cbd5e1; font-weight: bold; margin-bottom: 6px;">Á Quân (Hạng 2)</div>
+                <div style="font-size: 1.6rem; color: ${team2.color}; font-weight: bold; margin-bottom: 4px;">${team2.name}</div>
+                <div style="font-size: 1.8rem; color: var(--c-surface); font-weight: bold; margin-bottom: 10px;">${team2.score}đ</div>
+                <div style="width: 100%; height: 160px; background: linear-gradient(180deg, #94a3b8 0%, #475569 100%); border-radius: 8px 8px 0 0; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: #fff; font-weight: bold; border: 2px solid #cbd5e1;">
+                  2
+                </div>
+              </div>
+
+              <!-- Hạng 1: Center (Tallest) -->
+              <div style="flex: 1.2; text-align: center; display: flex; flex-direction: column; align-items: center;">
+                <div style="font-size: 1.8rem; color: var(--c-surface); font-weight: 900; margin-bottom: 6px;">QUÁN QUÂN</div>
+                <div style="font-size: 2.2rem; color: ${team1.color}; font-weight: 900; margin-bottom: 4px;">${team1.name}</div>
+                <div style="font-size: 2.4rem; color: var(--c-surface); font-weight: 900; margin-bottom: 10px;">${team1.score}đ</div>
+                <div style="width: 100%; height: 230px; background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%); border-radius: 12px 12px 0 0; display: flex; align-items: center; justify-content: center; font-size: 4.5rem; color: #120722; font-weight: 900; border: 3px solid #fef08a; box-shadow: 0 0 35px rgba(251, 191, 36, 0.6);">
+                  1
+                </div>
+              </div>
+
+              <!-- Hạng 3: Right -->
+              <div style="flex: 1; text-align: center; display: flex; flex-direction: column; align-items: center;">
+                <div style="font-size: 1.4rem; color: #f59e0b; font-weight: bold; margin-bottom: 6px;">Quý Quân (Hạng 3)</div>
+                <div style="font-size: 1.6rem; color: ${team3.color}; font-weight: bold; margin-bottom: 4px;">${team3.name}</div>
+                <div style="font-size: 1.8rem; color: var(--c-surface); font-weight: bold; margin-bottom: 10px;">${team3.score}đ</div>
+                <div style="width: 100%; height: 120px; background: linear-gradient(180deg, #d97706 0%, #78350f 100%); border-radius: 8px 8px 0 0; display: flex; align-items: center; justify-content: center; font-size: 2.8rem; color: #fff; font-weight: bold; border: 2px solid #f59e0b;">
+                  3
+                </div>
+              </div>
             </div>
 
-            <div style="display: flex; gap: 20px;">
-              <span class="badge badge-gold">Vòng 1: +${targetTeam.r1Score}đ</span>
-              <span class="badge badge-jade">Vòng 2: +${targetTeam.r2Score}đ</span>
-              <span class="badge badge-ruby">Vòng 3: ${targetTeam.r3Result >= 0 ? '+' : ''}${targetTeam.r3Result}đ</span>
-            </div>
-          </div>
-        `;
-        return;
-      }
-
-      if (step >= 7) {
-        arena.innerHTML = `
-          <div style="width: 100%; max-width: 1050px; display: flex; flex-direction: column; gap: 15px;">
-            <div style="text-align: center;">
-              <h1 class="electric-heading" style="font-size: 2.6rem;">
-                BẢNG VÀNG DANH DỰ TOÀN TRẬN ĐẤU
-              </h1>
-            </div>
-
-            <div style="display: flex; flex-direction: column; gap: 8px;">
+            <!-- Full Leaderboard Table of All 5 Teams -->
+            <div style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
               ${lb.map(t => `
-                <div class="card-psy" style="display: grid; grid-template-columns: 80px 1fr 120px 120px 120px 150px; align-items: center; padding: 14px 20px; border-left: 6px solid ${t.color}; background: var(--c-dark-surface);">
-                  <span style="font-family: var(--font-mono); font-size: 1.6rem; color: ${t.rank === 1 ? 'var(--c-surface)' : '#94a3b8'}; font-weight: 700;">
-                    ${t.rank === 1 ? '1' : `#${t.rank}`}
+                <div class="card-psy" style="display: grid; grid-template-columns: 90px 1fr 130px 130px 130px 160px; align-items: center; padding: 12px 20px; border-left: 6px solid ${t.color}; background: var(--c-dark-surface);">
+                  <span style="font-size: 1.4rem; color: ${t.rank <= 3 ? 'var(--c-surface)' : '#94a3b8'}; font-weight: 700;">
+                    ${t.rank === 1 ? 'Quán Quân' : (t.rank === 2 ? 'Á Quân' : (t.rank === 3 ? 'Hạng Ba' : `Hạng ${t.rank}`))}
                   </span>
-                  <div style="font-size: 1.3rem; color: ${t.color};">${t.name}</div>
-                  <div style="font-family: var(--font-mono); color: #cbd5e1; font-size: 0.95rem;">V1: <strong style="color: var(--c-surface);">+${t.r1Score}</strong></div>
-                  <div style="font-family: var(--font-mono); color: #cbd5e1; font-size: 0.95rem;">V2: <strong style="color: var(--c-tertiary);">+${t.r2Score}</strong></div>
-                  <div style="font-family: var(--font-mono); color: #cbd5e1; font-size: 0.95rem;">V3: <strong style="color: ${t.r3Result >= 0 ? 'var(--c-tertiary)' : 'var(--c-secondary)'};">${t.r3Result >= 0 ? '+' : ''}${t.r3Result}</strong></div>
-                  <div style="font-family: var(--font-mono); font-size: 1.8rem; font-weight: 700; color: var(--c-surface); text-align: right;">
-                    ${t.score} <span style="font-size: 0.9rem; color: #94a3b8;">đ</span>
+                  <div style="font-size: 1.3rem; color: ${t.color}; font-weight: bold;">${t.name}</div>
+                  <div style="color: #cbd5e1; font-size: 0.95rem;">V1: <strong style="color: var(--c-surface);">+${t.r1Score}đ</strong></div>
+                  <div style="color: #cbd5e1; font-size: 0.95rem;">V2: <strong style="color: var(--c-tertiary);">+${t.r2Score}đ</strong></div>
+                  <div style="color: #cbd5e1; font-size: 0.95rem;">V3: <strong style="color: ${t.r3Result >= 0 ? 'var(--c-tertiary)' : 'var(--c-secondary)'};">${t.r3Result >= 0 ? '+' : ''}${t.r3Result}đ</strong></div>
+                  <div style="font-size: 1.7rem; font-weight: 700; color: var(--c-surface); text-align: right;">
+                    ${t.score} đ
                   </div>
                 </div>
               `).join('')}

@@ -667,14 +667,17 @@
 
             <!-- MC Step Actions -->
             <div class="action-btn-row">
-              <button class="btn btn-ghost" onclick="sendMcAction('R1_OPEN_QUESTION', { index: ${qIdx} })" style="display: inline-flex; align-items: center; gap: 6px;">
-                ${SVGS.book} <span>1. Mở Câu Hỏi</span>
+              <button class="btn btn-gold" onclick="sendMcAction('R1_OPEN_AND_BUZZ', { index: ${qIdx} })" style="display: inline-flex; align-items: center; gap: 6px; font-weight: bold; background: var(--c-primary); color: #fff;">
+                ${SVGS.bell} <span>⚡ Mở Câu Hỏi & Bật Chuông Ngay (1 Chạm)</span>
               </button>
-              <button class="btn btn-gold" onclick="sendMcAction('R1_START_BUZZER')" style="display: inline-flex; align-items: center; gap: 6px;">
-                ${SVGS.bell} <span>2. Bắt Đầu Bấm Chuông</span>
+              <button class="btn btn-ghost" onclick="sendMcAction('R1_OPEN_QUESTION', { index: ${qIdx} })" style="display: inline-flex; align-items: center; gap: 6px;">
+                ${SVGS.book} <span>Chỉ Mở Câu Hỏi</span>
+              </button>
+              <button class="btn btn-ghost" onclick="sendMcAction('R1_START_BUZZER')" style="display: inline-flex; align-items: center; gap: 6px;">
+                ${SVGS.bell} <span>Bật Chuông Riêng</span>
               </button>
               <button class="btn btn-ghost" onclick="sendMcAction('R1_FORCE_REVEAL')" style="display: inline-flex; align-items: center; gap: 6px;">
-                ${SVGS.bulb} <span>3. Công Bố Đáp Án</span>
+                ${SVGS.bulb} <span>Công Bố Đáp Án</span>
               </button>
               <button class="btn btn-ruby" onclick="sendMcAction('R1_NEXT_QUESTION')" style="display: inline-flex; align-items: center; gap: 6px;">
                 ${SVGS.arrowRight} <span>${qIdx < 4 ? 'Câu Tiếp Theo' : 'Tổng Kết Vòng 1'}</span>
@@ -854,31 +857,29 @@
       if (currentTab === 'FINALE') {
         const step = state.finale.step;
         const stepsMap = {
-          1: 'Đóng băng sân khấu (Suspense)',
-          2: 'Công bố Hạng 5',
-          3: 'Công bố Hạng 4',
-          4: 'Công bố Hạng 3',
-          5: 'Công bố Hạng 2',
-          6: 'VINH DANH NHÀ VÔ ĐỊCH (Cúp Vàng)',
-          7: 'Bảng vàng vinh danh toàn trận'
+          1: 'Bước 1: Đóng băng sân khấu (Hồi hộp chuẩn bị vinh danh Top 3)',
+          2: 'Bước 2: Vinh danh Hạng 3 (Huy Chương Đồng)',
+          3: 'Bước 3: Vinh danh Hạng 2 (Huy Chương Bạc)',
+          4: 'Bước 4: VINH DANH QUÁN QUÂN (Cúp Vàng Vô Địch)',
+          5: 'Bước 5: Đại Sân Khấu Bục Podium Top 3 & Toàn Bảng Vàng'
         };
 
         area.innerHTML = `
           <div style="display: flex; flex-direction: column; gap: 16px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <h3 style="font-family: var(--font-display); font-size: 1.4rem; color: var(--psy-yellow); margin: 0; text-shadow: 1px 1px 0 var(--psy-pink);">
-                LỄ VINH DANH & CÔNG BỐ KẾT QUẢ
+                LỄ VINH DANH & CÔNG BỐ TOP 3 XUẤT SẮC NHẤT
               </h3>
               <span class="badge badge-gold" style="font-family: var(--font-code);">BƯỚC HIỆN TẠI: ${stepsMap[step] || 'Chưa bắt đầu'}</span>
             </div>
 
             <div style="padding: 24px; background: rgba(71,0,165,0.3); border-radius: var(--radius-sm); border: 2px solid var(--psy-blue); text-align: center;">
               <p style="font-size: 1.15rem; color: #cbd5e1; margin-bottom: 18px; font-family: var(--font-body);">
-                Nhấn nút bên dưới để điều khiển MC trình chiếu từng thứ hạng theo cao trào kịch tính:
+                MC bấm nút bên dưới để trình chiếu từng thứ hạng vinh danh Top 3 lên màn hình máy chiếu:
               </p>
               <button class="btn btn-gold" style="padding: 16px 32px; font-size: 1.25rem; display: inline-flex; align-items: center; gap: 10px;" onclick="sendMcAction('FINALE_NEXT_STEP')">
                 ${SVGS.trophy}
-                <span>TIẾP TỤC: ${step < 6 ? 'Công Bố Thứ Hạng Tiếp Theo' : (step === 6 ? 'Hiển Thị Bảng Tổng Kết Toàn Diện' : 'Đã Hoàn Tất')}</span>
+                <span>TIẾP TỤC: ${step < 4 ? 'Vinh Danh Thứ Hạng Tiếp Theo (Top 3)' : (step === 4 ? 'Mở Đại Sân Khấu Bục Podium Top 3' : 'Đã Hoàn Tất Vinh Danh')}</span>
               </button>
             </div>
           </div>

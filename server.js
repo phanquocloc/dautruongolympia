@@ -560,6 +560,21 @@ function handleMcAction(action, payload) {
     }
 
     // --- ROUND 1 ACTIONS ---
+    case 'R1_OPEN_AND_BUZZ': {
+      const { index } = payload;
+      if (typeof index === 'number') game.r1QuestionIndex = index;
+      game.r1Stage = 'BUZZER_OPEN';
+      game.r1BuzzerQueue = [];
+      game.r1ActiveAttempt = 0;
+      game.r1CurrentTurn = null;
+      game.r1SelectedAnswer = null;
+      game.teams.forEach(t => (t.locked = false));
+      game.stopTurnCountdown();
+      game.logEvent('GAME', `Vòng 1: Mở Câu hỏi ${game.r1QuestionIndex + 1} & Bật chuông thi đấu ngay!`);
+      broadcastState('bell');
+      break;
+    }
+
     case 'R1_OPEN_QUESTION': {
       const { index } = payload;
       if (typeof index === 'number') game.r1QuestionIndex = index;
@@ -833,30 +848,26 @@ function handleMcAction(action, payload) {
       break;
     }
 
-    // --- FINALE PODIUM ACTIONS ---
+    // --- FINALE TOP 3 PODIUM ACTIONS ---
     case 'FINALE_NEXT_STEP': {
-      if (game.finaleStep < 7) {
+      if (game.finaleStep < 5) {
         game.finaleStep += 1;
         if (game.finaleStep === 2) {
-          game.status = 'FINALE_PODIUM';
-          game.logEvent('FINALE', 'Công bố Hạng 5');
+          game.status = 'FINALE_RANK_3';
+          game.logEvent('FINALE', 'Công bố & Vinh danh Hạng 3 (Huy Chương Đồng)');
           broadcastState('bell');
         } else if (game.finaleStep === 3) {
-          game.logEvent('FINALE', 'Công bố Hạng 4');
+          game.status = 'FINALE_RANK_2';
+          game.logEvent('FINALE', 'Công bố & Vinh danh Hạng 2 (Huy Chương Bạc)');
           broadcastState('bell');
         } else if (game.finaleStep === 4) {
-          game.logEvent('FINALE', 'Công bố Hạng 3');
-          broadcastState('bell');
-        } else if (game.finaleStep === 5) {
-          game.logEvent('FINALE', 'Công bố Hạng 2');
-          broadcastState('bell');
-        } else if (game.finaleStep === 6) {
-          game.logEvent('FINALE', 'VINH DANH NHÀ VÔ ĐỊCH RUNG CHUÔNG VÀNG!');
+          game.status = 'FINALE_CHAMPION';
+          game.logEvent('FINALE', 'VINH DANH QUÁN QUÂN RUNG CHUÔNG VÀNG (Cúp Vàng Vô Địch)!');
           broadcastState('victory');
-        } else if (game.finaleStep >= 7) {
-          game.status = 'FINALE_LEADERBOARD';
-          game.logEvent('FINALE', 'Bảng vàng vinh danh toàn trận đấu');
-          broadcastState();
+        } else if (game.finaleStep >= 5) {
+          game.status = 'FINALE_PODIUM_TOP3';
+          game.logEvent('FINALE', 'Đại sân khấu Bục Podium Top 3 & Bảng vàng danh dự toàn trận');
+          broadcastState('victory');
         }
       }
       break;

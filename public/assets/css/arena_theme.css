@@ -26,11 +26,12 @@
   --team-4: #A020F0;          /* Purple Haze (Huyền Vũ) */
   --team-5: #FF1D8E;          /* Hot Pink (Kim Lân) */
 
-  /* Typography Scale with 100% Vietnamese Diacritic Fallback */
-  --font-display: 'Lobster', 'Montserrat', 'Be Vietnam Pro', cursive, sans-serif;
-  --font-body: 'Lobster', 'Montserrat', 'Be Vietnam Pro', sans-serif;
-  --font-ui: 'Montserrat', 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  /* Typography: Times New Roman across all elements for high readability */
+  --font-display: 'Times New Roman', Times, serif;
+  --font-body: 'Times New Roman', Times, serif;
+  --font-ui: 'Times New Roman', Times, serif;
+  --font-mono: 'Times New Roman', Times, serif;
+  --font-code: 'Times New Roman', Times, serif;
 
   --fs-hero: clamp(2.5rem, 5vw, 4rem);
   --fs-h1: 2.25rem;
@@ -60,23 +61,38 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: 'Times New Roman', Times, serif !important;
 }
 
 html {
   font-size: 16px;
   scroll-behavior: smooth;
+  font-family: 'Times New Roman', Times, serif !important;
 }
 
 body {
   min-height: 100dvh;
-  font-family: var(--font-body);
+  font-family: 'Times New Roman', Times, serif !important;
   font-weight: 400;
   font-size: var(--fs-body);
   line-height: 1.6;
   background-color: var(--c-dark);
-  color: var(--c-secondary);
+  color: #FFFFFF;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Ensure buttons, inputs and headings strictly use Times New Roman */
+button, input, textarea, select, h1, h2, h3, h4, h5, h6, p, span, div, code, a {
+  font-family: 'Times New Roman', Times, serif !important;
+}
+
+/* Buzzer click integrity: prevent children from blocking button click */
+.big-buzzer-btn * {
+  pointer-events: none;
+}
+.dual-buzzer-btn * {
+  pointer-events: none;
 }
 
 /* Max-width Containment */
