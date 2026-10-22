@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANIME RELIGION QUIZ ARENA — Rung Chuông Vàng 5 Đội</title>
+  <meta name="description" content="Hệ thống Gameshow Rung Chuông Vàng trực tuyến kết hợp Anime Cartoon và Văn hóa Tín ngưỡng, Tôn giáo Việt Nam">
+  <link rel="stylesheet" href="/assets/css/arena_theme.css">
+  <style>
+    .hub-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 20px 80px;
+    }
+    .hero-banner {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 30px;
+      align-items: center;
+      padding: 40px;
+      border-radius: var(--radius-lg);
+      margin-bottom: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-banner::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 50%;
+      background: radial-gradient(circle at 70% 50%, rgba(245, 158, 11, 0.15), transparent 70%);
+      pointer-events: none;
+    }
+    .hero-title {
+      font-family: var(--font-title);
+      font-size: 2.8rem;
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 15px;
+      letter-spacing: -0.5px;
+    }
+    .hero-slogan {
+      font-size: 1.25rem;
+      color: #fef08a;
+      font-style: italic;
+      margin-bottom: 20px;
+      font-weight: 600;
+      text-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
+    }
+    .hero-desc {
+      color: #cbd5e1;
+      font-size: 1.05rem;
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
+    .topic-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+    .hero-img-box {
+      position: relative;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+      border: 2px solid var(--border-gold);
+    }
+    .hero-img {
+      width: 100%;
+      height: 380px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease;
+    }
+    .hero-img-box:hover .hero-img {
+      transform: scale(1.04);
+    }
+    .launch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 22px;
+      margin-bottom: 50px;
+    }
+    .launch-card {
+      padding: 30px 24px;
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      color: var(--ivory);
+    }
+    .launch-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(245, 158, 11, 0.3);
+      border-color: rgba(251, 191, 36, 0.6);
+    }
+    .launch-card-icon {
+      font-size: 2.8rem;
+      margin-bottom: 16px;
+    }
+    .launch-card-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      font-family: var(--font-display);
+    }
+    .launch-card-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      flex-grow: 1;
+    }
+    .teams-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .team-badge-card {
+      padding: 16px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .qr-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 25px;
+      padding: 25px 35px;
+      border-radius: var(--radius-md);
+      margin-top: 20px;
+    }
+    .qr-img {
+      width: 120px;
+      height: 120px;
+      border-radius: 10px;
+      background: #fff;
+      padding: 6px;
+      flex-shrink: 0;
+    }
+    @media (max-width: 900px) {
+      .hero-banner {
+        grid-template-columns: 1fr;
+      }
+      .hero-img {
+        height: 260px;
+      }
+      .qr-banner {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="arena-bg">
+    <div class="particles-layer"></div>
+  </div>
+
+  <div class="hub-container">
+    <!-- Top Header -->
+    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 2rem;">🔔</span>
+        <div>
+          <h2 style="font-family: var(--font-title); font-size: 1.2rem; letter-spacing: 1px; color: #fbbf24;">RELIGION QUIZ ARENA</h2>
+          <p style="font-size: 0.8rem; color: #94a3b8;">Hệ Thống Rung Chuông Vàng Học Thuật 5 Đội</p>
+        </div>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <span class="badge badge-live" id="serverStatusBadge">
+          <span class="status-dot"></span> ĐANG KẾT NỐI
+        </span>
+        <button class="btn btn-ghost btn-icon" id="soundToggleBtn" title="Bật/Tắt Âm Thanh" onclick="toggleSound()">
+          🔊
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero Banner -->
+    <section class="hero-banner glass-panel gold-frame">
+      <div>
+        <div class="topic-badges">
+          <span class="badge badge-gold">Văn Hóa & Tôn Giáo Việt Nam</span>
+          <span class="badge badge-ruby">Chủ Nghĩa Mác – Lênin</span>
+          <span class="badge badge-jade">Gameshow Trực Tuyến 5 Đội</span>
+        </div>
+        <h1 class="hero-title gold-text">
+          ANIME RELIGION<br>QUIZ ARENA
+        </h1>
+        <p class="hero-slogan">
+          “Giải mã tri thức – Khám phá niềm tin – Chinh phục chuông vàng!”
+        </p>
+        <p class="hero-desc">
+          Hệ thống tổ chức cuộc thi Rung Chuông Vàng đồng bộ thời gian thực chuẩn học thuật: 
+          MC điều khiển trận đấu trên máy tính, 5 đội thi đấu bằng điện thoại riêng và màn hình trình chiếu 16:9 
+          phục vụ thuyết trình cho cả lớp học.
+        </p>
+        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+          <a href="/projector" target="_blank" class="btn btn-gold">
+            🖥️ Mở Màn Chiếu 16:9
+          </a>
+          <a href="/mc" target="_blank" class="btn btn-ruby">
+            👑 Bảng Điều Khiển MC
+          </a>
+          <a href="/sandbox" target="_blank" class="btn btn-jade">
+            🎮 Phòng Giả Lập 5 Đội
+          </a>
+          <a href="/psychedelic" target="_blank" class="btn btn-ghost" style="border-color: #ff5f00; color: #ff5f00;">
+            🌀 Psicodélico Anos 60
+          </a>
+        </div>
+      </div>
+      <div class="hero-img-box">
+        <img src="/assets/images/anime_mc.jpg" alt="MC Anime Gameshow" class="hero-img">
+      </div>
+    </section>
+
+    <!-- 4 Main Portals Launch Cards -->
+    <h2 style="font-family: var(--font-title); font-size: 1.6rem; margin-bottom: 20px; color: #fbbf24;">
+      🎯 4 Giao Diện Chuyên Biệt
+    </h2>
+    <div class="launch-grid">
+      <!-- Projector -->
+      <a href="/projector" target="_blank" class="launch-card glass-panel gold-frame" id="cardProjector">
+        <div>
+          <div class="launch-card-icon">🖥️</div>
+          <h3 class="launch-card-title gold-text">Màn Hình Trình Chiếu</h3>
+          <p class="launch-card-desc">
+            Tối ưu tỷ lệ 16:9 chuẩn máy chiếu, thiết kế như sân khấu anime gameshow hoành tráng, 
+            bảng điểm 5 đội, hiệu ứng chuông vàng, bức tranh bí ẩn và vinh danh vô địch.
+          </p>
+        </div>
+        <span class="btn btn-gold" style="width: 100%;">Trình Chiếu Toàn Màn Hình &rarr;</span>
+      </a>
+
+      <!-- MC Console -->
+      <a href="/mc" target="_blank" class="launch-card glass-panel" style="border: 1px solid var(--crimson);" id="cardMC">
+        <div>
+          <div class="launch-card-icon">👑</div>
+          <h3 class="launch-card-title ruby-text">Bảng Quản Trị MC</h3>
+          <p class="launch-card-desc">
+            Cockpit điều khiển trận đấu dành cho MC/Giảng viên trên laptop: chuyển câu hỏi, 
+            nhận chuông miligiây, xác nhận đúng/sai, sửa điểm và ngân hàng câu hỏi.
+          </p>
+        </div>
+        <span class="btn btn-ruby" style="width: 100%;">Vào Bảng Điều Khiển &rarr;</span>
+      </a>
+
+      <!-- Player Mobile -->
+      <a href="/player" target="_blank" class="launch-card glass-panel" style="border: 1px solid var(--jade);" id="cardPlayer">
+        <div>
+          <div class="launch-card-icon">📱</div>
+          <h3 class="launch-card-title jade-text">Điện Thoại Đội Chơi</h3>
+          <p class="launch-card-desc">
+            Giao diện dành riêng cho smartphone 5 đội: nút chuông vàng siêu nhạy, chuông kép 
+            Vòng 2 (Mảnh ghép & Từ khóa), thanh kéo thả cược điểm Vòng 3.
+          </p>
+        </div>
+        <span class="btn btn-jade" style="width: 100%;">Chọn Đội Tham Gia &rarr;</span>
+      </a>
+
+      <!-- Sandbox 5-phone simulator -->
+      <a href="/sandbox" target="_blank" class="launch-card glass-panel" style="border: 1px solid #8b5cf6;" id="cardSandbox">
+        <div>
+          <div class="launch-card-icon">🎮</div>
+          <h3 class="launch-card-title" style="color: #c084fc;">Giả Lập 5 Đội Chơi</h3>
+          <p class="launch-card-desc">
+            Mở đồng thời 5 màn hình điện thoại trên 1 máy tính để MC thử nghiệm, kiểm tra bấm chuông 
+            đồng thời và chạy thử toàn bộ trận đấu mà không cần 5 điện thoại thật!
+          </p>
+        </div>
+        <span class="btn btn-ghost" style="width: 100%; border-color: #a855f7;">Mở Phòng Giả Lập &rarr;</span>
+      </a>
+    </div>
+
+    <!-- 5 Sacred Beasts Teams Showcase -->
+    <h2 style="font-family: var(--font-title); font-size: 1.6rem; margin-bottom: 20px; color: #fbbf24;">
+      🛡️ 5 Đội Thi Đấu Tứ Linh & Thần Thú
+    </h2>
+    <div class="teams-strip">
+      <div class="team-badge-card" style="border-left: 5px solid var(--team-1);">
+        <div class="team-avatar avatar-phoenix"></div>
+        <div>
+          <h4 style="font-weight: 800; color: #f87171;">Hỏa Phượng</h4>
+          <span style="font-size: 0.8rem; color: #94a3b8;">Đội 1 • Đỏ Son</span>
+        </div>
+      </div>
+      <div class="team-badge-card" style="border-left: 5px solid var(--team-2);">
+        <div class="team-avatar avatar-dragon"></div>
+        <div>
+          <h4 style="font-weight: 800; color: #38bdf8;">Thanh Long</h4>
+          <span style="font-size: 0.8rem; color: #94a3b8;">Đội 2 • Xanh Ngọc</span>
+        </div>
+      </div>
+      <div class="team-badge-card" style="border-left: 5px solid var(--team-3);">
+        <div class="team-avatar avatar-tiger"></div>
+        <div>
+          <h4 style="font-weight: 800; color: #fbbf24;">Bạch Hổ</h4>
+          <span style="font-size: 0.8rem; color: #94a3b8;">Đội 3 • Vàng Hổ</span>
+        </div>
+      </div>
+      <div class="team-badge-card" style="border-left: 5px solid var(--team-4);">
+        <div class="team-avatar avatar-tortoise"></div>
+        <div>
+          <h4 style="font-weight: 800; color: #c084fc;">Huyền Vũ</h4>
+          <span style="font-size: 0.8rem; color: #94a3b8;">Đội 4 • Tím Huyền</span>
+        </div>
+      </div>
+      <div class="team-badge-card" style="border-left: 5px solid var(--team-5);">
+        <div class="team-avatar avatar-qilin"></div>
+        <div>
+          <h4 style="font-weight: 800; color: #facc15;">Kim Lân</h4>
+          <span style="font-size: 0.8rem; color: #94a3b8;">Đội 5 • Hoàng Kim</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- QR Code Scan for Mobile Connections -->
+    <div class="qr-banner glass-panel gold-frame">
+      <div>
+        <h3 style="font-size: 1.3rem; font-weight: 800; color: #fbbf24; margin-bottom: 8px;">
+          📲 Quét Mã QR Để Kết Nối Điện Thoại Đội Chơi
+        </h3>
+        <p style="color: #cbd5e1; font-size: 0.95rem; margin-bottom: 12px;">
+          Các đội sử dụng camera điện thoại cùng mạng Wi-Fi quét mã QR hoặc truy cập trực tiếp địa chỉ:
+        </p>
+        <code id="directUrlCode" style="background: rgba(0,0,0,0.5); padding: 6px 14px; border-radius: 6px; color: #5eead4; font-size: 1.1rem; font-family: monospace;">
+          Đang tải địa chỉ mạng...
+        </code>
+      </div>
+      <img id="qrCodeImg" src="" alt="Mã QR Truy Cập" class="qr-img">
+    </div>
+
+    <!-- Footer -->
+    <footer style="margin-top: 50px; text-align: center; color: #64748b; font-size: 0.9rem;">
+      <p>ANIME RELIGION QUIZ ARENA © 2026 • Phục vụ thuyết trình học thuật Triết học & Tôn giáo học</p>
+      <p style="font-size: 0.8rem; margin-top: 5px;">Mã phòng mặc định: <strong style="color: #fbbf24;">ARENA88</strong></p>
+    </footer>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/assets/js/sound_engine.js"></script>
+  <script>
+    const socket = io();
+
+    socket.on('game_state', (state) => {
+      if (state.qrUrl) {
+        document.getElementById('qrCodeImg').src = state.qrUrl;
+      }
+      if (state.localIP) {
+        const port = window.location.port ? `:${window.location.port}` : '';
+        document.getElementById('directUrlCode').innerText = `http://${state.localIP}${port}/player`;
+      }
+      const badge = document.getElementById('serverStatusBadge');
+      badge.innerHTML = `<span class="status-dot"></span> PHÒNG: ${state.roomCode} (${state.status})`;
+    });
+
+    function toggleSound() {
+      const isMuted = window.quizSound.toggleMute();
+      document.getElementById('soundToggleBtn').innerText = isMuted ? '🔇' : '🔊';
+    }
+
+    if (window.quizSound.isMuted()) {
+      document.getElementById('soundToggleBtn').innerText = '🔇';
+    }
+  </script>
+</body>
+</html>

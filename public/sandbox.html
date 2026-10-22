@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PHÒNG GIẢ LẬP 5 ĐỘI — ANIME RELIGION QUIZ ARENA</title>
+  <link rel="stylesheet" href="/assets/css/arena_theme.css">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #060913;
+      overflow-x: auto;
+    }
+    .sandbox-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 24px;
+      background: rgba(15, 23, 42, 0.95);
+      border-bottom: 1px solid var(--border-gold);
+    }
+    .sandbox-phones-container {
+      display: flex;
+      gap: 16px;
+      padding: 20px;
+      flex: 1;
+      justify-content: center;
+      align-items: stretch;
+      min-width: 1550px;
+    }
+    .phone-mockup {
+      width: 300px;
+      height: 720px;
+      background: #000;
+      border: 6px solid #1e293b;
+      border-radius: 36px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(245, 158, 11, 0.15);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .phone-mockup.team-1 { border-color: #ef4444; }
+    .phone-mockup.team-2 { border-color: #06b6d4; }
+    .phone-mockup.team-3 { border-color: #f59e0b; }
+    .phone-mockup.team-4 { border-color: #8b5cf6; }
+    .phone-mockup.team-5 { border-color: #eab308; }
+
+    .phone-notch {
+      width: 110px;
+      height: 18px;
+      background: #1e293b;
+      border-radius: 0 0 12px 12px;
+      margin: 0 auto;
+      z-index: 10;
+      flex-shrink: 0;
+    }
+    .phone-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #070a12;
+    }
+    .phone-label {
+      text-align: center;
+      padding: 6px;
+      font-weight: 800;
+      font-size: 0.85rem;
+      background: rgba(0,0,0,0.6);
+      color: #cbd5e1;
+    }
+  </style>
+</head>
+<body>
+  <div class="sandbox-topbar">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <span style="font-size: 1.8rem;">🎮</span>
+      <div>
+        <h2 class="gold-text" style="font-family: var(--font-title); font-size: 1.15rem;">
+          PHÒNG GIẢ LẬP 5 ĐIỆN THOẠI ĐỒNG THỜI
+        </h2>
+        <p style="font-size: 0.8rem; color: #94a3b8;">
+          Thử nghiệm bấm chuông miligiây, trả lời và cược điểm của 5 đội trên 1 màn hình
+        </p>
+      </div>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <a href="/projector" target="_blank" class="btn btn-gold">
+        🖥️ Mở Máy Chiếu
+      </a>
+      <a href="/mc" target="_blank" class="btn btn-ruby">
+        👑 Mở Bảng MC
+      </a>
+      <a href="/" class="btn btn-ghost">
+        🏠 Trang Chủ
+      </a>
+    </div>
+  </div>
+
+  <div class="sandbox-phones-container">
+    <!-- Phone 1: Hỏa Phượng -->
+    <div class="phone-mockup team-1">
+      <div class="phone-notch"></div>
+      <div class="phone-label" style="color: #ef4444;">ĐỘI 1: HỎA PHƯỢNG</div>
+      <iframe src="/player?team=team-1" class="phone-iframe"></iframe>
+    </div>
+
+    <!-- Phone 2: Thanh Long -->
+    <div class="phone-mockup team-2">
+      <div class="phone-notch"></div>
+      <div class="phone-label" style="color: #06b6d4;">ĐỘI 2: THANH LONG</div>
+      <iframe src="/player?team=team-2" class="phone-iframe"></iframe>
+    </div>
+
+    <!-- Phone 3: Bạch Hổ -->
+    <div class="phone-mockup team-3">
+      <div class="phone-notch"></div>
+      <div class="phone-label" style="color: #f59e0b;">ĐỘI 3: BẠCH HỔ</div>
+      <iframe src="/player?team=team-3" class="phone-iframe"></iframe>
+    </div>
+
+    <!-- Phone 4: Huyền Vũ -->
+    <div class="phone-mockup team-4">
+      <div class="phone-notch"></div>
+      <div class="phone-label" style="color: #8b5cf6;">ĐỘI 4: HUYỀN VŨ</div>
+      <iframe src="/player?team=team-4" class="phone-iframe"></iframe>
+    </div>
+
+    <!-- Phone 5: Kim Lân -->
+    <div class="phone-mockup team-5">
+      <div class="phone-notch"></div>
+      <div class="phone-label" style="color: #eab308;">ĐỘI 5: KIM LÂN</div>
+      <iframe src="/player?team=team-5" class="phone-iframe"></iframe>
+    </div>
+  </div>
+</body>
+</html>

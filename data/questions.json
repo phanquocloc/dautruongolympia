@@ -1,0 +1,202 @@
+{
+  "round1": [
+    {
+      "id": "r1_q1",
+      "question": "Theo chủ nghĩa Mác – Lênin, bản chất của tôn giáo là gì?",
+      "options": [
+        "A. Một hiện tượng siêu nhiên tồn tại vĩnh hằng trong vũ trụ",
+        "B. Một hình thái ý thức xã hội phản ánh một cách hư ảo hiện thực khách quan",
+        "C. Nhu cầu tâm linh bẩm sinh không thể biến đổi của bản chất con người",
+        "D. Một học thuyết triết học do các bậc hiền triết cổ đại sáng lập"
+      ],
+      "correctIndex": 1,
+      "topic": "Bản chất của tôn giáo",
+      "source": "Giáo trình Triết học Mác – Lênin (NXB Chính trị quốc gia Sự thật)",
+      "explanation": "Chủ nghĩa Mác – Lênin khẳng định: Tôn giáo là một hình thái ý thức xã hội phản ánh hư ảo hiện thực khách quan. Qua lăng kính tôn giáo, những sức mạnh tự phát của tự nhiên và xã hội biến thành những lực lượng siêu nhiên, thần bí.",
+      "timeLimit": 5,
+      "points": [30, 20, 10]
+    },
+    {
+      "id": "r1_q2",
+      "question": "Nguồn gốc nhận thức của tôn giáo xuất phát từ điều kiện nào sau đây?",
+      "options": [
+        "A. Sự phát triển toàn diện của khoa học tự nhiên và công nghệ hiện đại",
+        "B. Ý muốn chủ quan của giai cấp thống trị muốn tạo ra niềm tin tôn giáo để giải trí",
+        "C. Sự bất lực của con người trước tự nhiên và xã hội khi nhận thức chưa đạt tới bản chất",
+        "D. Sự khai sáng tâm thức tuyệt đối của các vị anh hùng dân tộc trong lịch sử"
+      ],
+      "correctIndex": 2,
+      "topic": "Nguồn gốc của tôn giáo",
+      "source": "Giáo trình Chủ nghĩa xã hội khoa học",
+      "explanation": "Nguồn gốc nhận thức của tôn giáo xuất hiện khi khoảng cách giữa 'biết' và 'chưa biết' của con người còn rộng. Sự tuyệt đối hóa nhận thức, không nắm bắt được bản chất quy luật tự nhiên và xã hội đã dẫn con người đến sự tưởng tượng về thế lực siêu nhiên.",
+      "timeLimit": 5,
+      "points": [30, 20, 10]
+    },
+    {
+      "id": "r1_q3",
+      "question": "Chủ nghĩa Mác – Lênin chỉ ra tôn giáo có những tính chất cơ bản nào sau đây?",
+      "options": [
+        "A. Tính vĩnh cửu, tính thần bí và tính cá nhân",
+        "B. Tính độc tôn, tính bất biến và tính đối kháng",
+        "C. Tính lịch sử, tính quần chúng và tính chính trị",
+        "D. Tính khoa học, tính kinh nghiệm và tính tự giác"
+      ],
+      "correctIndex": 2,
+      "topic": "Tính chất của tôn giáo",
+      "source": "Giáo trình Triết học Mác – Lênin",
+      "explanation": "Ba tính chất cơ bản của tôn giáo theo quan điểm Mác – Lênin: 1. Tính lịch sử (có sinh ra, biến đổi và tiêu vong); 2. Tính quần chúng (chi phối hàng tỷ tín đồ); 3. Tính chính trị (khi xã hội phân chia giai cấp có lợi ích đối kháng).",
+      "timeLimit": 5,
+      "points": [30, 20, 10]
+    },
+    {
+      "id": "r1_q4",
+      "question": "Nguyên tắc cơ bản nào của chủ nghĩa Mác – Lênin trong việc giải quyết vấn đề tôn giáo?",
+      "options": [
+        "A. Dùng biện pháp hành chính cưỡng chế để triệt tiêu tôn giáo nhanh chóng",
+        "B. Tôn trọng, bảo đảm quyền tự do tín ngưỡng và phân biệt rõ hai mặt chính trị - tư tưởng",
+        "C. Cấm đoán mọi nghi lễ tôn giáo trong toàn bộ đời sống xã hội",
+        "D. Đặt giáo điều tôn giáo lên trên pháp luật và hiến pháp nhà nước"
+      ],
+      "correctIndex": 1,
+      "topic": "Nguyên tắc giải quyết vấn đề tôn giáo",
+      "source": "V.I.Lênin: Về thái độ của Đảng công nhân đối với tôn giáo",
+      "explanation": "Chủ nghĩa Mác – Lênin đòi hỏi phải tôn trọng quyền tự do tín ngưỡng, không tín ngưỡng của nhân dân; giải quyết tôn giáo phải gắn với cải tạo kinh tế - xã hội; tuyệt đối không dùng mệnh lệnh hành chính thô bạo và phải phân biệt hai mặt chính trị và tư tưởng.",
+      "timeLimit": 5,
+      "points": [30, 20, 10]
+    },
+    {
+      "id": "r1_q5",
+      "question": "Điểm khác biệt pháp lý cơ bản giữa 'Tín ngưỡng' và 'Tôn giáo' theo Luật Tín ngưỡng, tôn giáo 2016 là gì?",
+      "options": [
+        "A. Tín ngưỡng hoàn toàn không có niềm tin vào bất kỳ điều thiêng liêng nào",
+        "B. Tôn giáo có hệ thống giáo lý, giáo luật, lễ nghi và cơ cấu tổ chức được công nhận",
+        "C. Tín ngưỡng bị pháp luật hạn chế, còn tôn giáo thì được hoạt động tự do",
+        "D. Tín ngưỡng chỉ áp dụng cho người nước ngoài sinh sống tại Việt Nam"
+      ],
+      "correctIndex": 1,
+      "topic": "Khái niệm Tín ngưỡng & Tôn giáo ở VN",
+      "source": "Luật Tín ngưỡng, tôn giáo Việt Nam (2016), Điều 2",
+      "explanation": "Theo Điều 2 Luật Tín ngưỡng, tôn giáo 2016: 'Tôn giáo là niềm tin của con người... có hệ thống giáo lý, giáo luật, lễ nghi và tổ chức'. Trong khi đó, 'Tín ngưỡng' là niềm tin thể hiện qua lễ nghi gắn với phong tục truyền thống nhằm mang lại bình an (như thờ cúng tổ tiên, anh hùng dân tộc).",
+      "timeLimit": 5,
+      "points": [30, 20, 10]
+    }
+  ],
+  "round2": {
+    "keyword": "ĐOÀN KẾT TÔN GIÁO",
+    "keywordHints": [
+      "Gợi ý 1: Cốt lõi của khối đại đoàn kết toàn dân tộc Việt Nam",
+      "Gợi ý 2: Phương châm sống 'Tốt đời đẹp đạo' của các tôn giáo Việt Nam",
+      "Gợi ý 3: Tinh thần hòa hợp, chung tay xây dựng và bảo vệ Tổ quốc"
+    ],
+    "keywordExplanation": "Từ khóa 'ĐOÀN KẾT TÔN GIÁO' là nguyên tắc nhất quán trong chính sách của Đảng và Nhà nước ta: đoàn kết đồng bào theo các tôn giáo khác nhau và đoàn kết giữa đồng bào theo tôn giáo với đồng bào không theo tôn giáo trong khối Đại đoàn kết toàn dân tộc.",
+    "pieces": [
+      {
+        "id": "piece_1",
+        "number": 1,
+        "title": "Mảnh ghép 1 — Dấu ấn Phật giáo",
+        "question": "Tôn giáo nào du nhập vào Việt Nam từ khoảng đầu Công nguyên, gắn bó keo sơn với lịch sử dân tộc và cực thịnh vào thời Lý – Trần với tư tưởng 'Cư trần lạc đạo'?",
+        "options": [
+          "A. Đạo Hồi (Islam)",
+          "B. Phật giáo",
+          "C. Kitô giáo",
+          "D. Đạo Hin-đu (Hinduism)"
+        ],
+        "correctIndex": 1,
+        "explanation": "Phật giáo du nhập vào Việt Nam từ sớm, hòa đồng với tín ngưỡng bản địa và trở thành quốc giáo thời Lý – Trần. Thiền phái Trúc Lâm Yên Tử do Phật hoàng Trần Nhân Tông sáng lập là biểu tượng tiêu biểu của Phật giáo yêu nước Việt Nam.",
+        "points": [20, 10]
+      },
+      {
+        "id": "piece_2",
+        "number": 2,
+        "title": "Mảnh ghép 2 — Đóng góp Chữ Quốc ngữ",
+        "question": "Hệ thống chữ Quốc ngữ của Việt Nam ngày nay gắn liền với sự đóng góp ban đầu quan trọng của các giáo sĩ phương Tây thuộc tôn giáo nào vào thế kỷ XVII?",
+        "options": [
+          "A. Phật giáo Nam tông",
+          "B. Đạo Bà-la-môn",
+          "C. Công giáo (Kitô giáo)",
+          "D. Đạo Tin Lành"
+        ],
+        "correctIndex": 2,
+        "explanation": "Các giáo sĩ Công giáo phương Tây (tiêu biểu như Alexandre de Rhodes) phối hợp cùng người Việt dùng chữ cái Latinh để ký âm tiếng Việt, tạo tiền đề khai sinh chữ Quốc ngữ vô giá cho văn hóa dân tộc.",
+        "points": [20, 10]
+      },
+      {
+        "id": "piece_3",
+        "number": 3,
+        "title": "Mảnh ghép 3 — Di sản Nhân loại",
+        "question": "Tín ngưỡng độc đáo nào thể hiện đạo lý 'Uống nước nhớ nguồn' của dân tộc Việt Nam đã được UNESCO ghi danh là Di sản văn hóa phi vật thể đại diện của nhân loại vào năm 2012?",
+        "options": [
+          "A. Tín ngưỡng thờ Thần Nông",
+          "B. Tín ngưỡng thờ Cá Ông",
+          "C. Tín ngưỡng thờ cúng Hùng Vương",
+          "D. Tín ngưỡng thờ Thành hoàng làng"
+        ],
+        "correctIndex": 2,
+        "explanation": "Tín ngưỡng thờ cúng Hùng Vương tại Phú Thọ được UNESCO vinh danh năm 2012. Đây là biểu tượng của tinh thần đại đoàn kết và gắn kết bền chặt của cộng đồng các dân tộc Việt Nam.",
+        "points": [20, 10]
+      },
+      {
+        "id": "piece_4",
+        "number": 4,
+        "title": "Mảnh ghép 4 — Tôn giáo Nội sinh",
+        "question": "Đạo Cao Đài và Phật giáo Hòa Hảo là những tôn giáo đặc biệt có nguồn gốc lịch sử ra đời ở vùng đất nào của Việt Nam?",
+        "options": [
+          "A. Vùng Tây Bắc",
+          "B. Đồng bằng sông Hồng",
+          "C. Miền Nam (Nam Bộ) Việt Nam",
+          "D. Vùng Duyên hải miền Trung"
+        ],
+        "correctIndex": 2,
+        "explanation": "Đạo Cao Đài (ra đời năm 1926 tại Tây Ninh) và Phật giáo Hòa Hảo (ra đời năm 1939 tại An Giang) là hai tôn giáo nội sinh tiêu biểu của Việt Nam, mang đậm bản sắc văn hóa và tinh thần dung hợp phương Nam.",
+        "points": [20, 10]
+      },
+      {
+        "id": "piece_5",
+        "number": 5,
+        "title": "Mảnh ghép 5 — Nguồn lực Phát triển",
+        "question": "Văn kiện Đại hội XIII của Đảng Cộng sản Việt Nam đã nhấn mạnh cần phát huy yếu tố tích cực nào của tôn giáo trong công cuộc xây dựng và phát triển đất nước?",
+        "options": [
+          "A. Cung cấp tài chính ngân sách độc quyền cho nhà nước",
+          "B. Nguồn lực văn hóa, đạo đức tốt đẹp và các nguồn lực xã hội của tôn giáo",
+          "C. Thay thế hoàn toàn luật pháp bằng giáo lý tôn giáo",
+          "D. Thành lập các chính đảng tôn giáo riêng biệt"
+        ],
+        "correctIndex": 1,
+        "explanation": "Văn kiện Đại hội XIII nêu rõ: 'Vận động, đoàn kết, tập hợp các tổ chức tôn giáo, chức sắc, tín đồ sống tốt đời đẹp đạo, đóng góp tích cực cho công cuộc xây dựng và bảo vệ Tổ quốc. Phát huy các nguồn lực văn hóa, đạo đức tốt đẹp và các nguồn lực của các tôn giáo cho sự nghiệp phát triển đất nước.'",
+        "points": [20, 10]
+      },
+      {
+        "id": "piece_6",
+        "number": 6,
+        "title": "Mảnh ghép 6 — Thượng tôn Pháp luật",
+        "question": "Điều 5 Luật Tín ngưỡng, tôn giáo năm 2016 quy định nghiêm cấm hành vi nào sau đây?",
+        "options": [
+          "A. Tham gia các hoạt động từ thiện nhân đạo của cơ sở tôn giáo",
+          "B. Nghiên cứu kinh sách và tìm hiểu triết lý tôn giáo",
+          "C. Lợi dụng hoạt động tín ngưỡng, tôn giáo để xâm phạm an ninh quốc gia, trật tự công cộng hoặc chia rẽ dân tộc",
+          "D. Tổ chức đám cưới theo nghi thức tôn giáo truyền thống hợp pháp"
+        ],
+        "correctIndex": 2,
+        "explanation": "Pháp luật Việt Nam bảo đảm quyền tự do tín ngưỡng, tôn giáo của mọi người, đồng thời nghiêm cấm hành vi lợi dụng tín ngưỡng, tôn giáo để vi phạm pháp luật, chia rẽ đồng bào có tín ngưỡng và không có tín ngưỡng, phá hoại an ninh quốc gia.",
+        "points": [20, 10]
+      }
+    ]
+  },
+  "round3": {
+    "question": {
+      "id": "r3_challenge",
+      "question": "Theo quan điểm của Đảng Cộng sản Việt Nam hiện nay, công tác tôn giáo là trách nhiệm của ai, và mục tiêu cốt lõi của chính sách tôn giáo là gì?",
+      "options": [
+        "A. Chỉ là trách nhiệm của riêng các cơ quan quản lý nhà nước về tôn giáo; mục tiêu là thu hẹp số lượng người theo đạo",
+        "B. Là trách nhiệm của cả hệ thống chính trị do Đảng lãnh đạo; mục tiêu cốt lõi là tăng cường đoàn kết đồng bào các tôn giáo trong khối đại đoàn kết toàn dân tộc, phát huy giá trị văn hóa đạo đức tốt đẹp vì mục tiêu dân giàu, nước mạnh, dân chủ, công bằng, văn minh",
+        "C. Là trách nhiệm độc quyền của Mặt trận Tổ quốc; mục tiêu là sáp nhập tất cả các tôn giáo thành một hệ tư tưởng duy nhất",
+        "D. Chỉ dành riêng cho các chức sắc tôn giáo tự quản lý mà không cần sự quản lý của pháp luật nhà nước"
+      ],
+      "correctIndex": 1,
+      "topic": "Chính sách Tôn giáo của Đảng và Nhà nước",
+      "source": "Nghị quyết số 25-NQ/TW của Ban Chấp hành Trung ương Khóa IX & Văn kiện Đại hội XIII",
+      "explanation": "Đảng ta khẳng định: Công tác tôn giáo là trách nhiệm của toàn bộ hệ thống chính trị do Đảng lãnh đạo. Nội dung cốt lõi của công tác tôn giáo là công tác vận động quần chúng, củng cố khối đại đoàn kết toàn dân tộc, thực hiện phương châm sống 'tốt đời, đẹp đạo', phụng sự Tổ quốc.",
+      "timeLimit": 5
+    }
+  }
+}

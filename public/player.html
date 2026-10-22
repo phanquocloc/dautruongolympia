@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ĐIỆN THOẠI ĐỘI CHƠI — ANIME RELIGION QUIZ ARENA</title>
+  <link rel="stylesheet" href="/assets/css/arena_theme.css">
+  <style>
+    body {
+      touch-action: manipulation;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #070a12;
+      overflow-x: hidden;
+    }
+    .player-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      max-width: 480px;
+      margin: 0 auto;
+      width: 100%;
+      gap: 14px;
+    }
+
+    /* Sticky Team Header */
+    .player-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+    .player-team-title {
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: 0.3px;
+    }
+    .player-score-pill {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #fbbf24;
+      text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+    }
+
+    /* Status Banner */
+    .player-status-card {
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    /* Main Interaction Canvas */
+    .interaction-canvas {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      min-height: 340px;
+    }
+
+    /* Massive Golden Bell Buzzer */
+    .big-buzzer-btn {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      border: 6px solid #fbbf24;
+      background: radial-gradient(circle at 35% 35%, #fef08a 0%, #f59e0b 50%, #b45309 100%);
+      color: #070a12;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 0 40px rgba(245, 158, 11, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.4);
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .big-buzzer-btn:active {
+      transform: scale(0.92);
+      box-shadow: 0 0 70px rgba(245, 158, 11, 0.9);
+    }
+    .big-buzzer-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      filter: grayscale(0.8);
+      box-shadow: none;
+      transform: none;
+    }
+    .buzzer-icon {
+      font-size: 4.2rem;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+    }
+    .buzzer-label {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* Round 2 Dual Buzzer Buttons */
+    .r2-buzzer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      width: 100%;
+    }
+    .dual-buzzer-btn {
+      width: 100%;
+      padding: 24px 16px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      cursor: pointer;
+      user-select: none;
+      border: 2px solid transparent;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      transition: all 0.15s ease;
+    }
+    .dual-buzzer-btn:active {
+      transform: scale(0.95);
+    }
+    .dual-buzzer-btn:disabled {
+      opacity: 0.3;
+      filter: grayscale(0.8);
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-piece-buzzer {
+      background: linear-gradient(135deg, #0d9488 0%, #042f2e 100%);
+      border-color: #5eead4;
+      color: #ffffff;
+      box-shadow: 0 0 25px rgba(13, 148, 136, 0.4);
+    }
+    .btn-keyword-buzzer {
+      background: linear-gradient(135deg, #f59e0b 0%, #78350f 100%);
+      border-color: #fbbf24;
+      color: #ffffff;
+      box-shadow: 0 0 30px rgba(245, 158, 11, 0.5);
+    }
+
+    /* Answer Selection Mode */
+    .player-options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+    }
+    .player-opt-btn {
+      padding: 22px 14px;
+      border-radius: var(--radius-md);
+      background: rgba(15, 23, 42, 0.85);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 900;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .player-opt-btn:active {
+      transform: scale(0.95);
+      background: rgba(56, 189, 248, 0.3);
+      border-color: #38bdf8;
+    }
+    .player-opt-btn.selected {
+      background: rgba(56, 189, 248, 0.35);
+      border-color: #38bdf8;
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+    }
+
+    /* Wager Section in Round 3 */
+    .wager-box {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 20px;
+      border-radius: var(--radius-md);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border-gold);
+    }
+    .wager-slider {
+      width: 100%;
+      height: 10px;
+      border-radius: 5px;
+      background: #1e293b;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    .wager-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #fbbf24;
+      cursor: pointer;
+      box-shadow: 0 0 15px #fbbf24;
+    }
+    .chips-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .chip-btn {
+      flex: 1;
+      padding: 10px 4px;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #cbd5e1;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .chip-btn:active {
+      background: rgba(245, 158, 11, 0.3);
+      border-color: #fbbf24;
+    }
+
+    /* Team Selector Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(16px);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .team-picker-card {
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .team-select-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .team-select-item:hover, .team-select-item:active {
+      transform: translateX(4px);
+      border-color: #fbbf24;
+    }
+  </style>
+</head>
+<body>
+  <div class="arena-bg">
+    <div class="particles-layer"></div>
+  </div>
+
+  <div class="player-container">
+    <!-- Sticky Team Header -->
+    <header class="player-header" id="playerHeader">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div class="team-avatar avatar-phoenix" id="playerAvatar"></div>
+        <div>
+          <div class="player-team-title" id="playerTeamName">Chọn Đội Của Bạn</div>
+          <span class="badge badge-gold" id="playerRoomBadge">PHÒNG: ARENA88</span>
+        </div>
+      </div>
+      <div style="text-align: right;">
+        <div style="font-size: 0.75rem; color: #94a3b8;">ĐIỂM HIỆN TẠI</div>
+        <div class="player-score-pill" id="playerScore">0</div>
+      </div>
+    </header>
+
+    <!-- Status Banner -->
+    <div class="player-status-card" id="playerStatusCard">
+      Đang kết nối tới máy chủ...
+    </div>
+
+    <!-- Main Interaction Canvas -->
+    <main class="interaction-canvas" id="playerCanvas">
+      <!-- Dynamic game action controls will render here -->
+    </main>
+
+    <!-- Bottom info -->
+    <footer style="text-align: center; color: #64748b; font-size: 0.8rem; padding-top: 8px;">
+      Anime Religion Quiz Arena • Chế độ tay cầm điện thoại
+    </footer>
+  </div>
+
+  <!-- Team Selection Modal (if team not specified in URL) -->
+  <div class="modal-overlay" id="teamSelectModal" style="display: none;">
+    <div class="team-picker-card">
+      <div style="text-align: center; margin-bottom: 8px;">
+        <span style="font-size: 2.5rem;">🔔</span>
+        <h2 class="gold-text" style="font-family: var(--font-title); font-size: 1.5rem; margin-top: 5px;">
+          CHỌN ĐỘI THI ĐẤU
+        </h2>
+        <p style="color: #94a3b8; font-size: 0.85rem;">Chọn đội bạn đại diện để nhận quyền bấm chuông</p>
+      </div>
+
+      <div id="teamSelectList" style="display: flex; flex-direction: column; gap: 10px;">
+        <!-- Populated dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/assets/js/sound_engine.js"></script>
+
+  <script>
+    const socket = io();
+    const urlParams = new URLSearchParams(window.location.search);
+    let myTeamId = urlParams.get('team') || localStorage.getItem('arena_team_id') || null;
+    let currentGameState = null;
+    let selectedWager = 0;
+
+    // Connect & Join Team
+    function joinTeam(teamId) {
+      myTeamId = teamId;
+      localStorage.setItem('arena_team_id', teamId);
+      document.getElementById('teamSelectModal').style.display = 'none';
+
+      socket.emit('team_join', {
+        teamId: myTeamId,
+        roomCode: 'ARENA88'
+      });
+    }
+
+    socket.on('join_success', ({ team, roomCode }) => {
+      document.getElementById('playerRoomBadge').innerText = `PHÒNG: ${roomCode}`;
+      updateTeamHeader(team);
+    });
+
+    socket.on('join_error', (msg) => {
+      alert(msg);
+      document.getElementById('teamSelectModal').style.display = 'flex';
+    });
+
+    // Sound from server
+    socket.on('play_sound', (name) => {
+      if (window.quizSound) {
+        window.quizSound.playSound(name);
+      }
+    });
+
+    // Main Game State Listener
+    socket.on('game_state', (state) => {
+      currentGameState = state;
+
+      // Show team selection modal if not yet joined
+      if (!myTeamId) {
+        renderTeamSelectModal(state.teams);
+        return;
+      }
+
+      const team = state.teams.find(t => t.id === myTeamId);
+      if (team) {
+        updateTeamHeader(team);
+      }
+
+      renderPlayerView(state);
+    });
+
+    function updateTeamHeader(team) {
+      document.getElementById('playerTeamName').innerText = team.name;
+      document.getElementById('playerTeamName').style.color = team.color;
+      document.getElementById('playerScore').innerText = team.score;
+      document.getElementById('playerHeader').style.borderLeft = `5px solid ${team.color}`;
+
+      let avatarClass = 'avatar-phoenix';
+      if (team.avatar === 'azure_dragon') avatarClass = 'avatar-dragon';
+      if (team.avatar === 'white_tiger') avatarClass = 'avatar-tiger';
+      if (team.avatar === 'black_tortoise') avatarClass = 'avatar-tortoise';
+      if (team.avatar === 'golden_qilin') avatarClass = 'avatar-qilin';
+
+      const av = document.getElementById('playerAvatar');
+      av.className = `team-avatar ${avatarClass}`;
+      av.style.borderColor = team.color;
+    }
+
+    function renderTeamSelectModal(teams) {
+      const modal = document.getElementById('teamSelectModal');
+      modal.style.display = 'flex';
+      const list = document.getElementById('teamSelectList');
+      list.innerHTML = '';
+
+      teams.forEach(team => {
+        const item = document.createElement('div');
+        item.className = 'team-select-item';
+        item.style.borderLeft = `5px solid ${team.color}`;
+        item.innerHTML = `
+          <div>
+            <div style="font-weight: 800; font-size: 1.05rem; color: ${team.color};">${team.name}</div>
+            <div style="font-size: 0.75rem; color: #94a3b8;">${team.mascot || 'Thần thú'}</div>
+          </div>
+          <span class="badge ${team.connected ? 'badge-ruby' : 'badge-live'}">
+            ${team.connected ? 'Đang có người dùng' : 'Sẵn sàng'}
+          </span>
+        `;
+        item.onclick = () => joinTeam(team.id);
+        list.appendChild(item);
+      });
+    }
+
+    // Render Canvas based on Game Stage
+    function renderPlayerView(state) {
+      const canvas = document.getElementById('playerCanvas');
+      const statusCard = document.getElementById('playerStatusCard');
+      const team = state.teams.find(t => t.id === myTeamId);
+
+      if (!team) return;
+
+      // 1. LOBBY
+      if (state.status === 'LOBBY') {
+        statusCard.innerHTML = `<span style="color: #4ade80;">● ĐÃ SẴN SÀNG THI ĐẤU</span>`;
+        canvas.innerHTML = `
+          <div style="text-align: center; padding: 20px;">
+            <div class="bell-pulse" style="font-size: 5rem; margin-bottom: 12px;">🔔</div>
+            <h3 class="gold-text" style="font-size: 1.3rem; font-weight: 800;">CHÀO MỪNG ${team.name.toUpperCase()}!</h3>
+            <p style="color: #cbd5e1; font-size: 0.95rem; margin-top: 8px;">
+              Vui lòng quan sát màn hình máy chiếu.<br>Nút bấm chuông sẽ kích hoạt khi MC bắt đầu câu hỏi.
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      // 2. ROUND 1 — CHUÔNG VÀNG TRI THỨC
+      if (state.status === 'ROUND1') {
+        const isBuzzerOpen = state.r1.stage === 'BUZZER_OPEN';
+        const isMyTurn = state.r1.currentTurn === myTeamId;
+        const alreadyBuzzed = state.r1.buzzerQueue.some(b => b.teamId === myTeamId);
+        const myQueuePos = state.r1.buzzerQueue.findIndex(b => b.teamId === myTeamId) + 1;
+
+        if (isMyTurn && state.r1.stage === 'ANSWERING') {
+          // My team has the turn! Render A B C D options
+          statusCard.innerHTML = `
+            <div style="color: #4ade80; font-weight: 900; font-size: 1.1rem; animation: bellPulse 1s infinite;">
+              🎉 CHÚC MỪNG! ĐỘI BẠN ĐÃ GIÀNH QUYỀN TRẢ LỜI! (5s)
+            </div>
+          `;
+          canvas.innerHTML = `
+            <div style="width: 100%; text-align: center;">
+              <p style="color: #fef08a; font-weight: 700; margin-bottom: 12px; font-size: 1.1rem;">
+                CHỌN ĐÁP ÁN TRÊN ĐIỆN THOẠI HOẶC ĐỌC CHO MC:
+              </p>
+              <div class="player-options-grid">
+                ${['A', 'B', 'C', 'D'].map((letter, idx) => `
+                  <button class="player-opt-btn ${state.r1.selectedAnswer === idx ? 'selected' : ''}" onclick="selectAnswer(${idx})">
+                    <span style="font-size: 2rem; color: #fbbf24;">${letter}</span>
+                    <span style="font-size: 0.8rem; color: #cbd5e1;">Phương án ${letter}</span>
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        // Buzzer state
+        if (isBuzzerOpen) {
+          if (alreadyBuzzed) {
+            statusCard.innerHTML = `<span style="color: #38bdf8;">ĐÃ BẤM CHUÔNG THÀNH CÔNG! (HẠNG #${myQueuePos})</span>`;
+          } else {
+            statusCard.innerHTML = `<span style="color: #fef08a; animation: bellPulse 1s infinite;">🔥 CHUÔNG ĐÃ MỞ! BẤM NGAY ĐỂ GIÀNH QUYỀN!</span>`;
+          }
+        } else if (state.r1.stage === 'QUESTION_OPEN') {
+          statusCard.innerHTML = `<span>📖 ĐANG ĐỌC CÂU HỎI ${state.r1.questionIndex + 1}...</span>`;
+        } else if (state.r1.stage === 'REVEALED') {
+          statusCard.innerHTML = `<span>💡 ĐÃ CÔNG BỐ ĐÁP ÁN</span>`;
+        } else if (team.locked) {
+          statusCard.innerHTML = `<span style="color: #f87171;">⚠️ ĐÃ MẤT LƯỢT TRẢ LỜI CÂU HỎI NÀY</span>`;
+        } else {
+          statusCard.innerHTML = `<span>ĐANG CHỜ LƯỢT CỦA MC...</span>`;
+        }
+
+        canvas.innerHTML = `
+          <button class="big-buzzer-btn ${isBuzzerOpen && !alreadyBuzzed ? 'bell-pulse' : ''}" 
+                  id="mainBuzzerBtn"
+                  ${(!isBuzzerOpen || alreadyBuzzed || team.locked) ? 'disabled' : ''}
+                  onclick="triggerBuzzer('NORMAL')">
+            <span class="buzzer-icon">🔔</span>
+            <span class="buzzer-label">BẤM CHUÔNG</span>
+          </button>
+          ${alreadyBuzzed ? `
+            <div style="font-size: 1rem; color: #5eead4; font-weight: 700;">
+              Thứ tự máy chủ ghi nhận: Hạng #${myQueuePos}
+            </div>
+          ` : ''}
+        `;
+        return;
+      }
+
+      // 3. ROUND 2 — BỨC TRANH BÍ ẨN (DUAL BUZZERS)
+      if (state.status === 'ROUND2') {
+        const isPieceBuzzerOpen = state.r2.stage === 'PIECE_BUZZER';
+        const isMyPieceTurn = state.r2.currentTurn === myTeamId && state.r2.stage === 'PIECE_ANSWERING';
+        const isMyKeywordTurn = state.r2.keywordTurn === myTeamId;
+
+        if (isMyPieceTurn) {
+          statusCard.innerHTML = `
+            <div style="color: #4ade80; font-weight: 900; font-size: 1.1rem; animation: bellPulse 1s infinite;">
+              🧩 BẠN GIÀNH QUYỀN TRẢ LỜI MẢNH GHÉP ${state.r2.pieceIndex + 1}!
+            </div>
+          `;
+          canvas.innerHTML = `
+            <div style="width: 100%; text-align: center;">
+              <p style="color: #5eead4; font-weight: 700; margin-bottom: 12px;">CHỌN ĐÁP ÁN CHO MẢNH GHÉP:</p>
+              <div class="player-options-grid">
+                ${['A', 'B', 'C', 'D'].map((letter, idx) => `
+                  <button class="player-opt-btn" onclick="selectAnswer(${idx})">
+                    <span style="font-size: 2rem; color: #5eead4;">${letter}</span>
+                    <span style="font-size: 0.8rem; color: #cbd5e1;">Phương án ${letter}</span>
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        if (isMyKeywordTurn) {
+          statusCard.innerHTML = `
+            <div style="color: #fbbf24; font-weight: 900; font-size: 1.1rem; animation: bellPulse 1s infinite;">
+              🔑 ĐỘI BẠN ĐANG ĐOÁN TỪ KHÓA CHỦ ĐỀ! (+100đ)
+            </div>
+          `;
+          canvas.innerHTML = `
+            <div style="text-align: center; padding: 20px;">
+              <span style="font-size: 4rem;">🔑</span>
+              <h3 class="gold-text" style="font-size: 1.4rem; font-weight: 900; margin-top: 10px;">
+                HÃY TRẢ LỜI TRỰC TIẾP VỚI MC!
+              </h3>
+              <p style="color: #cbd5e1; margin-top: 8px;">Nếu chính xác, đội bạn sẽ nhận ngay 100 điểm!</p>
+            </div>
+          `;
+          return;
+        }
+
+        statusCard.innerHTML = `<span>VÒNG 2: GIẢI MÃ BỨC TRANH BÍ ẨN</span>`;
+
+        canvas.innerHTML = `
+          <div class="r2-buzzer-grid">
+            <!-- Button 1: Piece Buzzer -->
+            <button class="dual-buzzer-btn btn-piece-buzzer" 
+                    ${(!isPieceBuzzerOpen || team.locked) ? 'disabled' : ''}
+                    onclick="triggerBuzzer('PIECE')">
+              <span style="font-size: 2.2rem;">🧩</span>
+              <div>
+                <div>CHUÔNG MẢNH GHÉP</div>
+                <div style="font-size: 0.75rem; font-weight: normal; opacity: 0.85;">Giành quyền mở mảnh ghép (+20đ)</div>
+              </div>
+            </button>
+
+            <!-- Button 2: Keyword Buzzer -->
+            <button class="dual-buzzer-btn btn-keyword-buzzer"
+                    ${(team.keywordLocked || state.r2.keywordSolved) ? 'disabled' : ''}
+                    onclick="triggerBuzzer('KEYWORD')">
+              <span style="font-size: 2.2rem;">🔑</span>
+              <div>
+                <div>CHUÔNG TỪ KHÓA</div>
+                <div style="font-size: 0.75rem; font-weight: normal; opacity: 0.85;">Giải mã toàn bộ bức tranh (+100đ)</div>
+              </div>
+            </button>
+          </div>
+          ${team.keywordLocked ? `
+            <div style="color: #f87171; font-size: 0.85rem; text-align: center;">
+              ⚠️ Đội bạn đã mất quyền bấm chuông từ khóa trong Vòng 2.
+            </div>
+          ` : ''}
+        `;
+        return;
+      }
+
+      // 4. ROUND 3 — CƯỢC ĐIỂM & VỀ ĐÍCH
+      if (state.status === 'ROUND3_BET') {
+        if (state.r3.stage === 'BETTING') {
+          statusCard.innerHTML = `<span style="color: #fbbf24; font-weight: 800;">⏳ ĐẶT CƯỢC: CÒN ${state.r3.betTimeLeft || 10} GIÂY!</span>`;
+
+          const maxPoints = team.score;
+          const isConfirmed = state.r3.bets[myTeamId] !== undefined;
+
+          canvas.innerHTML = `
+            <div class="wager-box">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.9rem; color: #cbd5e1;">Mức cược đang chọn:</span>
+                <span style="font-family: var(--font-display); font-size: 1.8rem; font-weight: 900; color: #fbbf24;" id="wagerDisplay">
+                  ${selectedWager} đ
+                </span>
+              </div>
+
+              <!-- Interactive Slider -->
+              <input type="range" class="wager-slider" id="wagerSliderInput" min="0" max="${maxPoints}" value="${selectedWager}" 
+                     oninput="updateWagerValue(this.value)">
+
+              <!-- Quick Chips -->
+              <div class="chips-row">
+                <button class="chip-btn" onclick="setWagerQuick(0)">0đ</button>
+                <button class="chip-btn" onclick="addWagerQuick(10)">+10đ</button>
+                <button class="chip-btn" onclick="addWagerQuick(20)">+20đ</button>
+                <button class="chip-btn" onclick="addWagerQuick(50)">+50đ</button>
+                <button class="chip-btn" style="color: #f43f5e; font-weight: 900;" onclick="setWagerQuick(${maxPoints})">TẤT TAY</button>
+              </div>
+
+              <button class="btn btn-gold" style="width: 100%; padding: 14px; font-size: 1.1rem; margin-top: 8px;"
+                      onclick="submitWager()">
+                ${isConfirmed ? '✓ ĐÃ XÁC NHẬN (CẬP NHẬT)' : '🔒 XÁC NHẬN CƯỢC'}
+              </button>
+            </div>
+          `;
+          return;
+        }
+
+        // Final Question Buzzer in Round 3
+        if (state.r3.stage === 'QUESTION' || state.r3.stage === 'ANSWERING') {
+          const isMyTurn = state.r3.currentTurn === myTeamId;
+          if (isMyTurn) {
+            statusCard.innerHTML = `<span style="color: #4ade80; font-weight: 900;">🔥 LƯỢT CỦA BẠN TRẢ LỜI CÂU HỎI VỀ ĐÍCH!</span>`;
+            canvas.innerHTML = `
+              <div style="width: 100%; text-align: center;">
+                <p style="color: #fef08a; font-weight: 700; margin-bottom: 12px;">CHỌN ĐÁP ÁN QUYẾT ĐỊNH:</p>
+                <div class="player-options-grid">
+                  ${['A', 'B', 'C', 'D'].map((letter, idx) => `
+                    <button class="player-opt-btn ${state.r3.selectedAnswer === idx ? 'selected' : ''}" onclick="selectAnswer(${idx})">
+                      <span style="font-size: 2rem; color: #fbbf24;">${letter}</span>
+                      <span style="font-size: 0.8rem; color: #cbd5e1;">Phương án ${letter}</span>
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+            `;
+            return;
+          }
+
+          statusCard.innerHTML = `<span>🔥 BẤM CHUÔNG ĐỂ GIÀNH QUYỀN TRẢ LỜI CÂU HỎI CUỐI!</span>`;
+          canvas.innerHTML = `
+            <button class="big-buzzer-btn bell-pulse" 
+                    ${team.locked ? 'disabled' : ''}
+                    onclick="triggerBuzzer('NORMAL')">
+              <span class="buzzer-icon">⚡</span>
+              <span class="buzzer-label">BẤM CHUÔNG</span>
+            </button>
+          `;
+          return;
+        }
+
+        statusCard.innerHTML = `<span>ĐANG CHỜ HIỆU LỆNH CỦA MC...</span>`;
+        canvas.innerHTML = `<div style="text-align: center; color: #94a3b8;">Hãy chú ý màn hình máy chiếu!</div>`;
+        return;
+      }
+
+      // 5. FINALE
+      if (state.status.startsWith('FINALE')) {
+        const lb = state.finale.leaderboard;
+        const myRank = lb.find(t => t.id === myTeamId);
+        statusCard.innerHTML = `<span style="color: #fbbf24; font-weight: 800;">🏆 KẾT QUẢ CHUNG CUỘC</span>`;
+        canvas.innerHTML = `
+          <div style="text-align: center; padding: 20px;">
+            ${myRank && myRank.rank === 1 ? `
+              <span style="font-size: 5rem;">👑</span>
+              <h2 class="ruby-text" style="font-size: 1.8rem; font-weight: 900; margin-top: 10px;">
+                XIN CHÚC MỪNG QUÁN QUÂN!
+              </h2>
+            ` : `
+              <span style="font-size: 4rem;">🎖️</span>
+              <h2 class="gold-text" style="font-size: 1.5rem; font-weight: 900; margin-top: 10px;">
+                ĐỘI ĐẠT HẠNG ${myRank ? myRank.rank : '-'}
+              </h2>
+            `}
+            <div style="font-family: var(--font-display); font-size: 2.4rem; font-weight: 900; color: #fef08a; margin: 12px 0;">
+              ${team.score} ĐIỂM
+            </div>
+            <p style="color: #cbd5e1; font-size: 0.95rem;">Cảm ơn đội bạn đã tham gia cuộc thi xuất sắc!</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Recaps
+      statusCard.innerHTML = `<span>TỔNG KẾT VÒNG THI</span>`;
+      canvas.innerHTML = `
+        <div style="text-align: center; color: #94a3b8;">
+          <span style="font-size: 3rem;">📊</span>
+          <p style="margin-top: 10px;">MC đang tổng kết điểm số trên màn hình chính.</p>
+        </div>
+      `;
+    }
+
+    // Trigger Buzzer
+    function triggerBuzzer(type) {
+      if (!myTeamId) return;
+      if (window.quizSound) window.quizSound.playBuzzer();
+      socket.emit('player_buzz', {
+        teamId: myTeamId,
+        buzzerType: type
+      });
+    }
+
+    // Select Answer
+    function selectAnswer(index) {
+      if (!myTeamId) return;
+      if (window.quizSound) window.quizSound.playTick();
+      socket.emit('player_select_answer', {
+        teamId: myTeamId,
+        answerIndex: index
+      });
+    }
+
+    // Wager Helpers
+    function updateWagerValue(val) {
+      selectedWager = Math.floor(Number(val));
+      const disp = document.getElementById('wagerDisplay');
+      if (disp) disp.innerText = `${selectedWager} đ`;
+    }
+
+    function setWagerQuick(val) {
+      selectedWager = Math.floor(Number(val));
+      const slider = document.getElementById('wagerSliderInput');
+      if (slider) slider.value = selectedWager;
+      updateWagerValue(selectedWager);
+    }
+
+    function addWagerQuick(delta) {
+      const team = currentGameState?.teams?.find(t => t.id === myTeamId);
+      const maxPoints = team ? team.score : 0;
+      selectedWager = Math.min(maxPoints, selectedWager + delta);
+      const slider = document.getElementById('wagerSliderInput');
+      if (slider) slider.value = selectedWager;
+      updateWagerValue(selectedWager);
+    }
+
+    function submitWager() {
+      if (!myTeamId) return;
+      socket.emit('player_submit_wager', {
+        teamId: myTeamId,
+        wager: selectedWager
+      });
+      if (window.quizSound) window.quizSound.playWagerLock();
+      alert(`Đã gửi mức cược: ${selectedWager} điểm!`);
+    }
+
+    // Init
+    if (myTeamId) {
+      joinTeam(myTeamId);
+    }
+  </script>
+</body>
+</html>

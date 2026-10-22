@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BẢNG ĐIỀU KHIỂN MC — ANIME RELIGION QUIZ ARENA</title>
+  <link rel="stylesheet" href="/assets/css/arena_theme.css">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #080d1a;
+    }
+    .mc-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 18px 24px 60px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* Top Control Bar */
+    .mc-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 22px;
+      border-radius: var(--radius-md);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border-gold);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .mc-top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* 5 Teams Quick Monitor */
+    .mc-teams-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+    .mc-team-card {
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+    }
+    .mc-team-card.has-turn {
+      border: 2px solid #fbbf24;
+      background: rgba(30, 41, 59, 0.95);
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+    }
+    .mc-team-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .mc-team-score {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #fbbf24;
+    }
+
+    /* Main Console Layout */
+    .mc-main-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 18px;
+    }
+
+    /* Round Stages Tabs */
+    .round-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+    }
+    .round-tab-btn {
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #cbd5e1;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .round-tab-btn.active {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(225, 29, 72, 0.25));
+      border-color: #fbbf24;
+      color: #fef08a;
+    }
+
+    /* Action Control Panels */
+    .action-panel {
+      padding: 22px;
+      border-radius: var(--radius-md);
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .action-btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* Buzzer Queue Box */
+    .buzzer-queue-box {
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .queue-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      font-size: 0.9rem;
+    }
+
+    /* Event Log Box */
+    .log-box {
+      height: 480px;
+      overflow-y: auto;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-family: monospace;
+      font-size: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .log-item {
+      padding: 6px 8px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.04);
+      border-left: 3px solid #64748b;
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-content {
+      width: 100%;
+      max-width: 750px;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 28px;
+      border-radius: var(--radius-md);
+      background: #0f172a;
+      border: 1px solid var(--border-gold);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      outline: none;
+    }
+    .form-input:focus {
+      border-color: #fbbf24;
+    }
+
+    @media (max-width: 1024px) {
+      .mc-teams-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .mc-main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="arena-bg">
+    <div class="particles-layer"></div>
+  </div>
+
+  <div class="mc-container">
+    <!-- Top Control Bar -->
+    <header class="mc-topbar">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 1.8rem;">👑</span>
+        <div>
+          <h2 class="gold-text" style="font-family: var(--font-title); font-size: 1.25rem;">BẢNG ĐIỀU KHIỂN MC / GIẢNG VIÊN</h2>
+          <div style="font-size: 0.8rem; color: #94a3b8;">
+            Trạng thái: <strong id="gameStatusText" style="color: #fbbf24;">LOBBY</strong> • Phòng: <strong id="roomCodeText" style="color: #5eead4;">ARENA88</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="mc-top-actions">
+        <button class="btn btn-gold" id="startOrResumeBtn" onclick="sendMcAction('START_GAME')">
+          🚀 BẮT ĐẦU CUỘC THI
+        </button>
+        <button class="btn btn-ghost" id="pauseBtn" onclick="sendMcAction('TOGGLE_PAUSE')">
+          ⏸️ Tạm Dừng
+        </button>
+        <a href="/projector" target="_blank" class="btn btn-ghost">
+          🖥️ Mở Máy Chiếu
+        </a>
+        <button class="btn btn-ghost" onclick="openQuestionsModal()">
+          📚 Sửa Câu Hỏi
+        </button>
+        <button class="btn btn-ruby" onclick="confirmResetGame()">
+          🔄 Khởi Tạo Lại
+        </button>
+      </div>
+    </header>
+
+    <!-- 5 Teams Live Monitor -->
+    <section class="mc-teams-row" id="mcTeamsMonitor">
+      <!-- Populated dynamically -->
+    </section>
+
+    <!-- Main Grid: Control Panel + Live Event Log -->
+    <div class="mc-main-grid">
+      <!-- Left: Stage Controls -->
+      <main class="action-panel">
+        <!-- Stage Tabs -->
+        <div class="round-tabs">
+          <button class="round-tab-btn active" id="tabR1" onclick="switchTab('R1')">Vòng 1: Khởi Động</button>
+          <button class="round-tab-btn" id="tabR2" onclick="switchTab('R2')">Vòng 2: Mảnh Ghép</button>
+          <button class="round-tab-btn" id="tabR3" onclick="switchTab('R3')">Vòng 3: Về Đích</button>
+          <button class="round-tab-btn" id="tabFinale" onclick="switchTab('FINALE')">Vinh Danh & Xếp Hạng</button>
+        </div>
+
+        <!-- Dynamic Controls View Container -->
+        <div id="tabContentArea">
+          <!-- Populated dynamically -->
+        </div>
+      </main>
+
+      <!-- Right: Real-time Buzzer Queue & Event Log -->
+      <aside style="display: flex; flex-direction: column; gap: 16px;">
+        <!-- Live Buzzer Queue -->
+        <div class="glass-panel" style="padding: 16px; border-radius: var(--radius-md);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h3 style="font-size: 1rem; font-weight: 800; color: #fbbf24;">🔔 HÀNG ĐỢI BẤM CHUÔNG (MS)</h3>
+            <span class="badge badge-gold" id="buzzerQueueCount">0 đội</span>
+          </div>
+          <div class="buzzer-queue-box" id="buzzerQueueList">
+            <div style="color: #64748b; font-size: 0.85rem; text-align: center;">Chưa có đội nào bấm chuông</div>
+          </div>
+        </div>
+
+        <!-- Audit Event Log -->
+        <div class="glass-panel" style="padding: 16px; border-radius: var(--radius-md); flex: 1;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h3 style="font-size: 1rem; font-weight: 800; color: #5eead4;">📋 LỊCH SỬ SỰ KIỆN TRẬN ĐẤU</h3>
+            <span style="font-size: 0.75rem; color: #94a3b8;">Xử lý tranh chấp</span>
+          </div>
+          <div class="log-box" id="eventLogContainer">
+            <!-- Event entries populated dynamically -->
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Manual Score Override Modal -->
+  <div class="modal" id="scoreModal" style="display: none;">
+    <div class="modal-content">
+      <h3 class="gold-text" style="font-size: 1.3rem;">⚖️ ĐIỀU CHỈNH ĐIỂM SỐ THỦ CÔNG</h3>
+      <p style="color: #cbd5e1; font-size: 0.9rem;">Áp dụng khi có tranh chấp hoặc xử lý khiếu nại của các đội.</p>
+
+      <div>
+        <label style="font-size: 0.85rem; color: #94a3b8;">Đội điều chỉnh:</label>
+        <select id="scoreTeamSelect" class="form-input" style="margin-top: 4px;"></select>
+      </div>
+
+      <div>
+        <label style="font-size: 0.85rem; color: #94a3b8;">Điểm cộng/trừ (Ví dụ: +20 hoặc -10):</label>
+        <input type="number" id="scoreDeltaInput" class="form-input" placeholder="Nhập số điểm (+/-)" value="20" style="margin-top: 4px;">
+      </div>
+
+      <div>
+        <label style="font-size: 0.85rem; color: #94a3b8;">Lý do can thiệp:</label>
+        <input type="text" id="scoreReasonInput" class="form-input" placeholder="Ví dụ: Bổ sung câu trả lời thấu đáo" style="margin-top: 4px;">
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+        <button class="btn btn-ghost" onclick="closeScoreModal()">Hủy</button>
+        <button class="btn btn-gold" onclick="submitScoreOverride()">Áp Dụng Điều Chỉnh</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Question Bank Editor Modal -->
+  <div class="modal" id="questionsModal" style="display: none;">
+    <div class="modal-content" style="max-width: 900px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 class="gold-text" style="font-size: 1.4rem;">📚 QUẢN LÝ NGÂN HÀNG CÂU HỎI</h3>
+        <button class="btn btn-ghost" onclick="closeQuestionsModal()">Đóng</button>
+      </div>
+      <p style="font-size: 0.85rem; color: #cbd5e1;">MC có thể chỉnh sửa trực tiếp nội dung câu hỏi, đáp án đúng và lời giải thích.</p>
+
+      <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+        <button class="btn btn-ghost" onclick="renderEditorRound('round1')">Vòng 1 (5 Câu)</button>
+        <button class="btn btn-ghost" onclick="renderEditorRound('round2')">Vòng 2 (Mảnh ghép & Từ khóa)</button>
+        <button class="btn btn-ghost" onclick="renderEditorRound('round3')">Vòng 3 (Thử thách cuối)</button>
+      </div>
+
+      <div id="questionsEditorBody" style="display: flex; flex-direction: column; gap: 14px; max-height: 55vh; overflow-y: auto;">
+        <!-- Populated dynamically -->
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+        <button class="btn btn-ghost" onclick="closeQuestionsModal()">Hủy</button>
+        <button class="btn btn-gold" onclick="saveQuestionsToServer()">💾 Lưu Tất Cả Vào Hệ Thống</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/assets/js/sound_engine.js"></script>
+
+  <script>
+    const socket = io();
+    let currentGameState = null;
+    let questionsData = null;
+    let currentTab = 'R1';
+
+    // Socket listeners
+    socket.on('game_state', (state) => {
+      currentGameState = state;
+      updateHeaderStatus(state);
+      renderTeamsMonitor(state);
+      renderBuzzerQueue(state);
+      renderEventLog(state.eventLog);
+      renderCurrentTabContent(state);
+    });
+
+    socket.on('play_sound', (name) => {
+      if (window.quizSound) window.quizSound.playSound(name);
+    });
+
+    function sendMcAction(action, payload = {}) {
+      socket.emit('mc_action', { action, payload });
+    }
+
+    function updateHeaderStatus(state) {
+      document.getElementById('gameStatusText').innerText = state.status + (state.paused ? ' (TẠM DỪNG)' : '');
+      document.getElementById('roomCodeText').innerText = state.roomCode;
+      const pauseBtn = document.getElementById('pauseBtn');
+      pauseBtn.innerText = state.paused ? '▶️ Tiếp Tục' : '⏸️ Tạm Dừng';
+
+      const startBtn = document.getElementById('startOrResumeBtn');
+      if (state.status === 'LOBBY') {
+        startBtn.style.display = 'inline-flex';
+        startBtn.innerText = '🚀 BẮT ĐẦU CUỘC THI';
+      } else {
+        startBtn.style.display = 'none';
+      }
+    }
+
+    // Render 5 Teams Row in MC
+    function renderTeamsMonitor(state) {
+      const container = document.getElementById('mcTeamsMonitor');
+      container.innerHTML = '';
+
+      state.teams.forEach(team => {
+        const isTurn = (state.status === 'ROUND1' && state.r1.currentTurn === team.id) ||
+                       (state.status === 'ROUND2' && (state.r2.currentTurn === team.id || state.r2.keywordTurn === team.id)) ||
+                       (state.status === 'ROUND3_BET' && state.r3.currentTurn === team.id);
+
+        const card = document.createElement('div');
+        card.className = `mc-team-card ${isTurn ? 'has-turn' : ''}`;
+        card.style.borderLeft = `4px solid ${team.color}`;
+
+        card.innerHTML = `
+          <div class="mc-team-header">
+            <span style="font-weight: 800; font-size: 0.95rem; color: ${team.color};">${team.name}</span>
+            <span class="status-dot ${team.connected ? '' : 'offline'}" title="${team.connected ? 'Trực tuyến' : 'Ngoại tuyến'}"></span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <div style="font-size: 0.75rem; color: #94a3b8;">
+              ${team.connected ? 'Đã kết nối' : 'Chưa vào'}
+            </div>
+            <div class="mc-team-score">${team.score} đ</div>
+          </div>
+          <div style="display: flex; gap: 4px; margin-top: 4px;">
+            <button class="btn btn-ghost" style="flex: 1; padding: 4px 6px; font-size: 0.75rem;" onclick="promptChangeTeamName('${team.id}', '${team.name}')">
+              ✏️ Sửa Tên
+            </button>
+            <button class="btn btn-ghost" style="flex: 1; padding: 4px 6px; font-size: 0.75rem;" onclick="openScoreModalFor('${team.id}')">
+              ⚖️ Điểm
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Render Buzzer Queue
+    function renderBuzzerQueue(state) {
+      const list = document.getElementById('buzzerQueueList');
+      const badge = document.getElementById('buzzerQueueCount');
+
+      let queue = [];
+      if (state.status === 'ROUND1') queue = state.r1.buzzerQueue;
+      else if (state.status === 'ROUND2') queue = state.r2.buzzerQueue;
+      else if (state.status === 'ROUND3_BET') queue = state.r3.buzzerQueue;
+
+      badge.innerText = `${queue.length} đội`;
+
+      if (queue.length === 0) {
+        list.innerHTML = `<div style="color: #64748b; font-size: 0.85rem; text-align: center;">Chưa có đội nào bấm chuông</div>`;
+        return;
+      }
+
+      list.innerHTML = queue.map((item, idx) => `
+        <div class="queue-item" style="border-left: 3px solid ${item.color || '#fbbf24'};">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-weight: 900; color: #fbbf24;">#${idx + 1}</span>
+            <strong style="color: ${item.color || '#fff'};">${item.teamName}</strong>
+          </div>
+          <span style="color: #94a3b8; font-size: 0.75rem;">+${idx === 0 ? '0ms (Nhanh nhất)' : 'sau lượt'}</span>
+        </div>
+      `).join('');
+    }
+
+    // Render Event Log
+    function renderEventLog(logs) {
+      const container = document.getElementById('eventLogContainer');
+      if (!logs || logs.length === 0) {
+        container.innerHTML = `<div style="color: #64748b; text-align: center;">Chưa có sự kiện nào</div>`;
+        return;
+      }
+      container.innerHTML = logs.map(l => `
+        <div class="log-item">
+          <span style="color: #5eead4;">[${l.time}]</span>
+          <span style="color: #fbbf24; font-weight: bold;">[${l.type}]</span>
+          <span style="color: #e2e8f0;">${l.message}</span>
+        </div>
+      `).join('');
+    }
+
+    // Switch Tabs
+    function switchTab(tab) {
+      currentTab = tab;
+      ['R1', 'R2', 'R3', 'FINALE'].forEach(t => {
+        document.getElementById(`tab${t}`).classList.toggle('active', t === tab);
+      });
+      if (currentGameState) renderCurrentTabContent(currentGameState);
+    }
+
+    // Render Controls View
+    function renderCurrentTabContent(state) {
+      const area = document.getElementById('tabContentArea');
+
+      // TAB 1: ROUND 1
+      if (currentTab === 'R1') {
+        const q = state.r1.currentQuestion;
+        const qIdx = state.r1.questionIndex;
+        const stage = state.r1.stage;
+        const turnTeam = state.teams.find(t => t.id === state.r1.currentTurn);
+
+        area.innerHTML = `
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <h3 class="gold-text" style="font-size: 1.25rem;">🔔 VÒNG 1: CÂU HỎI SỐ ${qIdx + 1} / ${state.r1.totalQuestions}</h3>
+              <span class="badge ${stage === 'BUZZER_OPEN' ? 'badge-ruby bell-pulse' : 'badge-gold'}">
+                TRẠNG THÁI: ${stage}
+              </span>
+            </div>
+
+            ${q ? `
+              <div style="padding: 16px; background: rgba(0,0,0,0.3); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                <div style="font-weight: 700; font-size: 1.1rem; color: #fff; margin-bottom: 8px;">
+                  ${q.question}
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 0.9rem;">
+                  ${q.options.map((opt, i) => `
+                    <div style="padding: 6px 10px; border-radius: 4px; background: ${i === q.correctIndex ? 'rgba(34,197,94,0.2)' : 'rgba(255,255,255,0.05)'}; border: 1px solid ${i === q.correctIndex ? '#22c55e' : 'transparent'};">
+                      ${opt} ${i === q.correctIndex ? '✓ (Đáp án đúng)' : ''}
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            ` : ''}
+
+            <!-- Current Answering Turn Banner -->
+            ${turnTeam ? `
+              <div style="padding: 14px; background: rgba(245,158,11,0.15); border: 2px solid #fbbf24; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <div style="font-weight: 900; font-size: 1.1rem; color: #fbbf24;">
+                    🎯 ĐANG CẤP QUYỀN TRẢ LỜI CHO: ${turnTeam.name.toUpperCase()}
+                  </div>
+                  <div style="font-size: 0.85rem; color: #cbd5e1;">
+                    Lượt nỗ lực: #${state.r1.activeAttempt + 1} (Điểm nếu đúng: +${[30, 20, 10][state.r1.activeAttempt] || 10}đ) • Đội đã chọn: [${state.r1.selectedAnswer !== null ? ['A','B','C','D'][state.r1.selectedAnswer] : 'Chưa bấm'}]
+                  </div>
+                </div>
+                <div class="action-btn-row">
+                  <button class="btn btn-jade" onclick="sendMcAction('R1_CONFIRM_CORRECT')">
+                    ✓ CHÍNH XÁC (+Điểm)
+                  </button>
+                  <button class="btn btn-ruby" onclick="sendMcAction('R1_CONFIRM_WRONG')">
+                    ✗ CHƯA ĐÚNG (Chuyển quyền)
+                  </button>
+                </div>
+              </div>
+            ` : ''}
+
+            <!-- MC Step Actions -->
+            <div class="action-btn-row">
+              <button class="btn btn-ghost" onclick="sendMcAction('R1_OPEN_QUESTION', { index: ${qIdx} })">
+                📖 1. Mở Câu Hỏi
+              </button>
+              <button class="btn btn-gold" onclick="sendMcAction('R1_START_BUZZER')">
+                🔔 2. Bắt Đầu Bấm Chuông
+              </button>
+              <button class="btn btn-ghost" onclick="sendMcAction('R1_FORCE_REVEAL')">
+                💡 3. Công Bố Đáp Án
+              </button>
+              <button class="btn btn-ruby" onclick="sendMcAction('R1_NEXT_QUESTION')">
+                ➡️ ${qIdx < 4 ? 'Câu Tiếp Theo' : 'Tổng Kết Vòng 1'}
+              </button>
+              <button class="btn btn-jade" onclick="sendMcAction('GO_TO_ROUND2')">
+                🚀 Tiến Vào Vòng 2
+              </button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // TAB 2: ROUND 2
+      if (currentTab === 'R2') {
+        const pIdx = state.r2.pieceIndex;
+        const currentP = state.r2.currentPiece;
+        const kwTurnTeam = state.teams.find(t => t.id === state.r2.keywordTurn);
+        const pTurnTeam = state.teams.find(t => t.id === state.r2.currentTurn);
+
+        area.innerHTML = `
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <h3 class="gold-text" style="font-size: 1.25rem;">🧩 VÒNG 2: BỨC TRANH BÍ ẨN (6 MẢNH GHÉP)</h3>
+              <span class="badge badge-gold">TỪ KHÓA: "${state.r2.keyword}"</span>
+            </div>
+
+            <!-- Keyword Guess Alert if a team rings Keyword Buzzer -->
+            ${kwTurnTeam ? `
+              <div style="padding: 16px; background: rgba(225,29,72,0.25); border: 2px solid #f43f5e; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; animation: bellPulse 1.2s infinite;">
+                <div>
+                  <h4 style="font-size: 1.2rem; font-weight: 900; color: #fbbf24;">
+                    🔑 CHUÔNG TỪ KHÓA: ${kwTurnTeam.name.toUpperCase()} ĐOÁN TỪ KHÓA!
+                  </h4>
+                  <p style="font-size: 0.9rem; color: #cbd5e1;">Từ khóa chuẩn: <strong style="color: #4ade80;">${state.r2.keyword}</strong></p>
+                </div>
+                <div class="action-btn-row">
+                  <button class="btn btn-gold" onclick="sendMcAction('R2_CONFIRM_KEYWORD_CORRECT')">
+                    ✓ ĐÚNG TỪ KHÓA (+100Đ & MỞ TRANH)
+                  </button>
+                  <button class="btn btn-ruby" onclick="sendMcAction('R2_CONFIRM_KEYWORD_WRONG')">
+                    ✗ SAI (KHÓA QUYỀN TỪ KHÓA)
+                  </button>
+                </div>
+              </div>
+            ` : ''}
+
+            <!-- 6 Pieces Grid Selectors -->
+            <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px;">
+              ${[0, 1, 2, 3, 4, 5].map(idx => `
+                <button class="btn ${state.r2.piecesUnlocked[idx] ? 'btn-jade' : 'btn-ghost'}" 
+                        style="padding: 12px 6px; font-size: 0.85rem;"
+                        onclick="sendMcAction('R2_SELECT_PIECE', { pieceIndex: ${idx} })">
+                  ${state.r2.piecesUnlocked[idx] ? '✓ Mảnh ' + (idx + 1) : '🔒 Mảnh ' + (idx + 1)}
+                </button>
+              `).join('')}
+            </div>
+
+            <!-- Current Piece Question Info -->
+            ${currentP ? `
+              <div style="padding: 14px; background: rgba(0,0,0,0.3); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                <div style="font-weight: 800; color: #5eead4; margin-bottom: 4px;">${currentP.title}</div>
+                <div style="font-size: 1rem; color: #fff; margin-bottom: 6px;">${currentP.question}</div>
+                <div style="font-size: 0.85rem; color: #cbd5e1;">Đáp án đúng: <strong>${currentP.options[currentP.correctIndex]}</strong></div>
+              </div>
+            ` : ''}
+
+            <!-- Piece Answering Turn -->
+            ${pTurnTeam ? `
+              <div style="padding: 12px; background: rgba(13,148,136,0.2); border: 2px solid #14b8a6; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 800; color: #5eead4;">
+                  Đang trả lời Mảnh ghép: ${pTurnTeam.name}
+                </span>
+                <div class="action-btn-row">
+                  <button class="btn btn-jade" onclick="sendMcAction('R2_CONFIRM_PIECE_CORRECT')">
+                    ✓ ĐÚNG (+20/10đ & Mở Mảnh)
+                  </button>
+                  <button class="btn btn-ruby" onclick="sendMcAction('R2_CONFIRM_PIECE_WRONG')">
+                    ✗ SAI (Chuyển quyền)
+                  </button>
+                </div>
+              </div>
+            ` : ''}
+
+            <div class="action-btn-row">
+              <button class="btn btn-jade" onclick="sendMcAction('R2_START_PIECE_BUZZER')">
+                🔔 Bật Chuông Mảnh Ghép
+              </button>
+              <button class="btn btn-ghost" onclick="sendMcAction('R2_FORCE_UNLOCK_PIECE')">
+                🔓 Mở Mảnh Ghép Này
+              </button>
+              <button class="btn btn-gold" onclick="sendMcAction('R2_FINISH_ROUND')">
+                📊 Tổng Kết Vòng 2
+              </button>
+              <button class="btn btn-ruby" onclick="sendMcAction('GO_TO_ROUND3')">
+                🎯 Tiến Vào Vòng 3 (Cược Điểm)
+              </button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // TAB 3: ROUND 3
+      if (currentTab === 'R3') {
+        const turnTeam = state.teams.find(t => t.id === state.r3.currentTurn);
+        const wager = turnTeam ? (state.r3.bets[turnTeam.id] || 0) : 0;
+
+        area.innerHTML = `
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <h3 class="gold-text" style="font-size: 1.25rem;">🎯 VÒNG 3: VỀ ĐÍCH VÀ THỬ THÁCH CƯỢC ĐIỂM</h3>
+              <span class="badge badge-ruby">GIAI ĐOẠN: ${state.r3.stage}</span>
+            </div>
+
+            <!-- Bets Table Status -->
+            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px;">
+              ${state.teams.map(t => `
+                <div style="text-align: center; border-top: 3px solid ${t.color}; padding: 6px;">
+                  <div style="font-size: 0.85rem; font-weight: bold; color: ${t.color};">${t.name}</div>
+                  <div style="font-size: 1.1rem; font-weight: 900; color: #fbbf24;">
+                    Cược: ${state.r3.bets[t.id] !== undefined ? state.r3.bets[t.id] + 'đ' : 'Đang chọn...'}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+
+            <!-- Turn Banner -->
+            ${turnTeam ? `
+              <div style="padding: 14px; background: rgba(225,29,72,0.2); border: 2px solid #f43f5e; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <h4 style="font-size: 1.15rem; font-weight: 900; color: #fbbf24;">
+                    🔥 ${turnTeam.name.toUpperCase()} ĐANG TRẢ LỜI CÂU HỎI CUỐI!
+                  </h4>
+                  <p style="font-size: 0.85rem; color: #cbd5e1;">Mức cược của đội: <strong style="color: #fef08a;">${wager} điểm</strong></p>
+                </div>
+                <div class="action-btn-row">
+                  <button class="btn btn-jade" onclick="sendMcAction('R3_CONFIRM_CORRECT')">
+                    ✓ ĐÚNG (+${wager} ĐIỂM)
+                  </button>
+                  <button class="btn btn-ruby" onclick="sendMcAction('R3_CONFIRM_WRONG')">
+                    ✗ SAI (-${wager} ĐIỂM)
+                  </button>
+                </div>
+              </div>
+            ` : ''}
+
+            <!-- Step Actions -->
+            <div class="action-btn-row">
+              <button class="btn btn-gold" onclick="sendMcAction('GO_TO_ROUND3')">
+                ⏳ 1. Bắt Đầu 10s Cược
+              </button>
+              <button class="btn btn-ghost" onclick="sendMcAction('R3_FORCE_LOCK_BETS')">
+                🔒 2. Khóa Cược Ngay
+              </button>
+              <button class="btn btn-ghost" onclick="sendMcAction('R3_START_TRANSITION')">
+                ⚡ 3. 3s Chuyển Cảnh
+              </button>
+              <button class="btn btn-jade" onclick="sendMcAction('R3_OPEN_QUESTION')">
+                📖 4. Mở Câu Hỏi & Chuông
+              </button>
+              <button class="btn btn-ruby" onclick="sendMcAction('R3_FINISH')">
+                🏆 5. Kết Thúc & Tiến Vào Lễ Vinh Danh
+              </button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // TAB 4: FINALE
+      if (currentTab === 'FINALE') {
+        const step = state.finale.step;
+        const stepsMap = {
+          1: 'Đóng băng sân khấu (Suspense)',
+          2: 'Công bố Hạng 5',
+          3: 'Công bố Hạng 4',
+          4: 'Công bố Hạng 3',
+          5: 'Công bố Hạng 2',
+          6: 'VINH DANH NHÀ VÔ ĐỊCH (Cúp Vàng)',
+          7: 'Bảng vàng vinh danh toàn trận'
+        };
+
+        area.innerHTML = `
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <h3 class="gold-text" style="font-size: 1.25rem;">🏆 LỄ VINH DANH & CÔNG BỐ KẾT QUẢ</h3>
+              <span class="badge badge-gold">BƯỚC HIỆN TẠI: ${stepsMap[step] || 'Chưa bắt đầu'}</span>
+            </div>
+
+            <div style="padding: 20px; background: rgba(0,0,0,0.4); border-radius: 8px; text-align: center;">
+              <p style="font-size: 1.1rem; color: #cbd5e1; margin-bottom: 14px;">
+                Nhấn nút bên dưới để điều khiển MC trình chiếu từng thứ hạng theo cao trào kịch tính:
+              </p>
+              <button class="btn btn-gold" style="padding: 14px 28px; font-size: 1.15rem;" onclick="sendMcAction('FINALE_NEXT_STEP')">
+                📢 TIẾP TỤC: ${step < 6 ? 'Công Bố Thứ Hạng Tiếp Theo' : (step === 6 ? 'Hiển Thị Bảng Tổng Kết Toàn Diện' : 'Đã Hoàn Tất')} &rarr;
+              </button>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // Modal Helpers
+    function promptChangeTeamName(teamId, currentName) {
+      const newName = prompt(`Nhập tên mới cho đội:`, currentName);
+      if (newName && newName.trim()) {
+        sendMcAction('UPDATE_TEAM_NAME', { teamId, newName: newName.trim() });
+      }
+    }
+
+    function openScoreModalFor(teamId) {
+      const modal = document.getElementById('scoreModal');
+      const sel = document.getElementById('scoreTeamSelect');
+      sel.innerHTML = currentGameState.teams.map(t => `
+        <option value="${t.id}" ${t.id === teamId ? 'selected' : ''}>${t.name} (Hiện tại: ${t.score}đ)</option>
+      `).join('');
+      modal.style.display = 'flex';
+    }
+
+    function closeScoreModal() {
+      document.getElementById('scoreModal').style.display = 'none';
+    }
+
+    function submitScoreOverride() {
+      const teamId = document.getElementById('scoreTeamSelect').value;
+      const delta = document.getElementById('scoreDeltaInput').value;
+      const reason = document.getElementById('scoreReasonInput').value;
+
+      sendMcAction('OVERRIDE_SCORE', { teamId, delta: Number(delta), reason });
+      closeScoreModal();
+    }
+
+    function confirmResetGame() {
+      if (confirm('BẠN CÓ CHẮC CHẮN MUỐN KHỞI TẠO LẠI TRẬN ĐẤU?\nTất cả điểm số và chuông sẽ quay về ban đầu!')) {
+        sendMcAction('RESET_GAME');
+      }
+    }
+
+    // Question Bank Editor
+    let editorCurrentRound = 'round1';
+
+    function openQuestionsModal() {
+      fetch('/api/questions')
+        .then(res => res.json())
+        .then(data => {
+          questionsData = data;
+          document.getElementById('questionsModal').style.display = 'flex';
+          renderEditorRound('round1');
+        });
+    }
+
+    function closeQuestionsModal() {
+      document.getElementById('questionsModal').style.display = 'none';
+    }
+
+    function renderEditorRound(round) {
+      editorCurrentRound = round;
+      const body = document.getElementById('questionsEditorBody');
+      if (!questionsData) return;
+
+      if (round === 'round1') {
+        body.innerHTML = questionsData.round1.map((q, idx) => `
+          <div style="padding: 12px; background: rgba(255,255,255,0.05); border-radius: 6px;">
+            <strong style="color: #fbbf24;">Câu hỏi ${idx + 1}:</strong>
+            <input type="text" class="form-input" value="${q.question}" onchange="questionsData.round1[${idx}].question = this.value" style="margin: 6px 0;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+              ${q.options.map((opt, oIdx) => `
+                <input type="text" class="form-input" value="${opt}" onchange="questionsData.round1[${idx}].options[${oIdx}] = this.value">
+              `).join('')}
+            </div>
+            <div style="margin-top: 6px;">
+              <label style="font-size: 0.8rem; color: #94a3b8;">Chỉ số đáp án đúng (0=A, 1=B, 2=C, 3=D):</label>
+              <input type="number" class="form-input" min="0" max="3" value="${q.correctIndex}" onchange="questionsData.round1[${idx}].correctIndex = Number(this.value)" style="width: 80px;">
+            </div>
+            <textarea class="form-input" style="margin-top: 6px;" onchange="questionsData.round1[${idx}].explanation = this.value">${q.explanation}</textarea>
+          </div>
+        `).join('');
+      } else if (round === 'round2') {
+        body.innerHTML = `
+          <div style="padding: 12px; background: rgba(255,255,255,0.05); border-radius: 6px;">
+            <strong style="color: #fbbf24;">Từ khóa chủ đề Vòng 2:</strong>
+            <input type="text" class="form-input" value="${questionsData.round2.keyword}" onchange="questionsData.round2.keyword = this.value" style="margin: 6px 0;">
+            <strong style="color: #fbbf24;">Giải thích từ khóa:</strong>
+            <textarea class="form-input" onchange="questionsData.round2.keywordExplanation = this.value">${questionsData.round2.keywordExplanation}</textarea>
+          </div>
+          ${questionsData.round2.pieces.map((p, idx) => `
+            <div style="padding: 12px; background: rgba(255,255,255,0.05); border-radius: 6px;">
+              <strong style="color: #5eead4;">Mảnh ghép ${idx + 1}:</strong>
+              <input type="text" class="form-input" value="${p.question}" onchange="questionsData.round2.pieces[${idx}].question = this.value" style="margin: 6px 0;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                ${p.options.map((opt, oIdx) => `
+                  <input type="text" class="form-input" value="${opt}" onchange="questionsData.round2.pieces[${idx}].options[${oIdx}] = this.value">
+                `).join('')}
+              </div>
+              <div style="margin-top: 6px;">
+                <label style="font-size: 0.8rem; color: #94a3b8;">Chỉ số đáp án đúng (0=A, 1=B, 2=C, 3=D):</label>
+                <input type="number" class="form-input" min="0" max="3" value="${p.correctIndex}" onchange="questionsData.round2.pieces[${idx}].correctIndex = Number(this.value)" style="width: 80px;">
+              </div>
+            </div>
+          `).join('')}
+        `;
+      } else if (round === 'round3') {
+        const q3 = questionsData.round3.question;
+        body.innerHTML = `
+          <div style="padding: 12px; background: rgba(255,255,255,0.05); border-radius: 6px;">
+            <strong style="color: #f43f5e;">Câu hỏi quyết định Vòng 3:</strong>
+            <input type="text" class="form-input" value="${q3.question}" onchange="questionsData.round3.question.question = this.value" style="margin: 6px 0;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 6px 0;">
+              ${q3.options.map((opt, oIdx) => `
+                <input type="text" class="form-input" value="${opt}" onchange="questionsData.round3.question.options[${oIdx}] = this.value">
+              `).join('')}
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; color: #94a3b8;">Chỉ số đáp án đúng (0=A, 1=B, 2=C, 3=D):</label>
+              <input type="number" class="form-input" min="0" max="3" value="${q3.correctIndex}" onchange="questionsData.round3.question.correctIndex = Number(this.value)" style="width: 80px;">
+            </div>
+            <textarea class="form-input" style="margin-top: 6px;" onchange="questionsData.round3.question.explanation = this.value">${q3.explanation}</textarea>
+          </div>
+        `;
+      }
+    }
+
+    function saveQuestionsToServer() {
+      fetch('/api/questions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(questionsData)
+      })
+      .then(r => r.json())
+      .then(res => {
+        alert(res.message);
+        closeQuestionsModal();
+      })
+      .catch(e => alert('Lỗi khi lưu câu hỏi: ' + e));
+    }
+  </script>
+</body>
+</html>

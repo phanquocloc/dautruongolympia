@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MÀN HÌNH TRÌNH CHIẾU — ANIME RELIGION QUIZ ARENA</title>
+  <link rel="stylesheet" href="/assets/css/arena_theme.css">
+  <style>
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+    .stage-container {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-rows: 75px 1fr 115px;
+      padding: 12px 24px;
+      gap: 12px;
+      position: relative;
+    }
+
+    /* Top Stage Header */
+    .stage-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      border-radius: var(--radius-md);
+      background: rgba(12, 18, 34, 0.75);
+      border: 1px solid var(--border-gold);
+    }
+    .stage-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .stage-logo-icon {
+      font-size: 2.2rem;
+      filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.6));
+    }
+    .stage-logo-text {
+      font-family: var(--font-title);
+      font-size: 1.3rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+    .stage-round-pill {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 6px 20px;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(225, 29, 72, 0.2));
+      border: 1px solid var(--gold);
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: #fef08a;
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+    }
+    .stage-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Main Stage Arena */
+    .stage-arena {
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+    }
+
+    /* 5 Teams Podium Bar */
+    .podium-bar {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      align-items: center;
+    }
+    .team-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      border-radius: var(--radius-md);
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    .team-card.active-turn {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 0 35px var(--gold), 0 10px 25px rgba(0, 0, 0, 0.6);
+      border: 2px solid #fbbf24;
+      background: rgba(30, 41, 59, 0.95);
+    }
+    .team-card.locked {
+      opacity: 0.5;
+      filter: grayscale(0.6);
+    }
+    .team-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .team-score {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #fbbf24;
+      text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+    }
+
+    /* --- LOBBY STAGE --- */
+    .lobby-view {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 20px;
+      max-width: 900px;
+    }
+    .lobby-title {
+      font-family: var(--font-title);
+      font-size: 3.2rem;
+      font-weight: 900;
+      line-height: 1.1;
+    }
+    .lobby-sub {
+      font-size: 1.4rem;
+      color: #cbd5e1;
+      font-style: italic;
+    }
+    .lobby-qr-box {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 20px 30px;
+      border-radius: var(--radius-md);
+    }
+    .lobby-qr-img {
+      width: 140px;
+      height: 140px;
+      border-radius: 12px;
+      background: white;
+      padding: 6px;
+    }
+
+    /* --- ROUND 1 QUESTION VIEW --- */
+    .q-box {
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .q-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .q-topic-tag {
+      font-size: 0.95rem;
+      color: #5eead4;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .q-timer-badge {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #fef08a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 18px;
+      border-radius: 9999px;
+      background: rgba(225, 29, 72, 0.25);
+      border: 1px solid #f43f5e;
+    }
+    .q-card {
+      padding: 28px 36px;
+      border-radius: var(--radius-md);
+      font-size: 1.6rem;
+      font-weight: 700;
+      line-height: 1.4;
+      background: rgba(15, 23, 42, 0.88);
+      border: 2px solid var(--border-gold);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      color: #ffffff;
+      text-align: center;
+    }
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .opt-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 22px;
+      border-radius: var(--radius-md);
+      background: rgba(15, 23, 42, 0.7);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      font-size: 1.25rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .opt-card .opt-letter {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(245, 158, 11, 0.2);
+      border: 2px solid #fbbf24;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 900;
+      color: #fbbf24;
+      flex-shrink: 0;
+    }
+    .opt-card.selected {
+      border-color: #38bdf8;
+      background: rgba(14, 165, 233, 0.25);
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
+    }
+    .opt-card.correct-answer {
+      border-color: #22c55e;
+      background: rgba(34, 197, 94, 0.28);
+      box-shadow: 0 0 35px rgba(34, 197, 94, 0.6);
+    }
+    .opt-card.wrong-answer {
+      border-color: #ef4444;
+      background: rgba(239, 68, 68, 0.25);
+      opacity: 0.7;
+    }
+
+    /* Buzzer Notification Banner */
+    .buzzer-alert-banner {
+      position: absolute;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 10px 30px;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, rgba(225, 29, 72, 0.95), rgba(15, 23, 42, 0.95));
+      border: 2px solid #fbbf24;
+      box-shadow: 0 0 35px rgba(245, 158, 11, 0.8);
+      animation: alertSlideDown 0.4s ease-out;
+      z-index: 100;
+    }
+    @keyframes alertSlideDown {
+      from { transform: translate(-50%, -40px); opacity: 0; }
+      to { transform: translate(-50%, 0); opacity: 1; }
+    }
+
+    /* Explanation Overlay */
+    .explanation-overlay {
+      position: absolute;
+      inset: 20px;
+      background: rgba(10, 15, 30, 0.96);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius-lg);
+      border: 2px solid var(--gold);
+      padding: 35px 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      z-index: 90;
+      box-shadow: 0 0 60px rgba(0, 0, 0, 0.8);
+      animation: fadeIn 0.4s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* --- ROUND 2 PUZZLE STAGE --- */
+    .r2-container {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+      align-items: center;
+    }
+    .puzzle-board-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      max-height: 520px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 3px solid var(--border-gold);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+    }
+    .puzzle-bg-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .puzzle-grid {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 3px;
+      background: rgba(0, 0, 0, 0.6);
+    }
+    .puzzle-tile {
+      position: relative;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      border: 2px solid rgba(245, 158, 11, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      user-select: none;
+    }
+    .puzzle-tile.unlocked {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.85) rotateY(90deg);
+    }
+    .puzzle-tile-num {
+      font-family: var(--font-title);
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: #fbbf24;
+      text-shadow: 0 0 15px rgba(245, 158, 11, 0.6);
+    }
+    .puzzle-tile-label {
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Round 2 Side Panel */
+    .r2-side-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      height: 100%;
+      justify-content: center;
+    }
+
+    /* --- ROUND 3 WAGER VIEW --- */
+    .r3-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 24px;
+    }
+    .r3-timer-circle {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(225, 29, 72, 0.3), transparent 70%);
+      border: 4px solid #f43f5e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: #fef08a;
+      box-shadow: 0 0 40px rgba(225, 29, 72, 0.7);
+    }
+    .wagers-table {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+    }
+    .wager-col {
+      padding: 20px 14px;
+      border-radius: var(--radius-md);
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .wager-amount {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 900;
+      color: #fbbf24;
+      text-shadow: 0 0 15px rgba(245, 158, 11, 0.6);
+    }
+
+    /* --- FINALE PODIUM --- */
+    .podium-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+    }
+    .champion-trophy-img {
+      width: 220px;
+      height: 220px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 40px rgba(245, 158, 11, 0.9));
+      animation: bellPulse 2s infinite ease-in-out;
+      margin-bottom: 15px;
+    }
+
+    /* Fullscreen & Mute buttons */
+    .hud-btn {
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .hud-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+  </style>
+</head>
+<body>
+  <div class="arena-bg">
+    <div class="particles-layer"></div>
+  </div>
+
+  <div class="stage-container">
+    <!-- Top Header Bar -->
+    <header class="stage-header">
+      <div class="stage-logo">
+        <span class="stage-logo-icon">🔔</span>
+        <div>
+          <h1 class="stage-logo-text gold-text">ANIME RELIGION QUIZ ARENA</h1>
+          <p style="font-size: 0.75rem; color: #94a3b8; letter-spacing: 0.5px;">RUNG CHUÔNG VÀNG HỌC THUẬT 5 ĐỘI</p>
+        </div>
+      </div>
+
+      <!-- Current Round Badge -->
+      <div class="stage-round-pill" id="stageRoundBadge">
+        <span id="roundIcon">🏛️</span>
+        <span id="roundTitle">PHÒNG CHỜ KHAI MẠC</span>
+      </div>
+
+      <!-- Controls -->
+      <div class="stage-controls">
+        <button class="hud-btn" onclick="toggleAudio()" id="audioBtn">🔊 Âm Thanh</button>
+        <button class="hud-btn" onclick="toggleFullscreen()">⛶ Toàn Màn Hình</button>
+      </div>
+    </header>
+
+    <!-- Center Stage Area -->
+    <main class="stage-arena glass-panel" id="mainArena">
+      <!-- Content populated dynamically -->
+    </main>
+
+    <!-- Bottom 5-Team Live Scoreboard -->
+    <footer class="podium-bar" id="teamsPodiumBar">
+      <!-- 5 Team cards populated dynamically -->
+    </footer>
+  </div>
+
+  <!-- Buzzer Notification Alert Floating Banner -->
+  <div id="buzzerAlert" class="buzzer-alert-banner" style="display: none;">
+    <span style="font-size: 2rem;">🔔</span>
+    <div>
+      <h3 id="buzzerTeamName" style="font-size: 1.3rem; font-weight: 800; color: #fef08a;">ĐỘI ... BẤM CHUÔNG!</h3>
+      <p id="buzzerDetails" style="font-size: 0.85rem; color: #cbd5e1;">Đang giữ quyền trả lời (5 giây)</p>
+    </div>
+  </div>
+
+  <!-- Vendor Scripts -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/assets/vendor/confetti.browser.js"></script>
+  <script src="/assets/js/sound_engine.js"></script>
+
+  <script>
+    const socket = io();
+    let currentGameState = null;
+    let turnTimerInterval = null;
+
+    // Toggle Audio
+    function toggleAudio() {
+      const isMuted = window.quizSound.toggleMute();
+      document.getElementById('audioBtn').innerText = isMuted ? '🔇 Tắt Âm' : '🔊 Âm Thanh';
+    }
+
+    // Toggle Fullscreen
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => console.log(err));
+      } else {
+        document.exitFullscreen().catch(err => console.log(err));
+      }
+    }
+
+    // Sound dispatcher from server
+    socket.on('play_sound', (name) => {
+      if (window.quizSound) {
+        window.quizSound.playSound(name);
+      }
+      if (name === 'victory') {
+        launchConfetti();
+      }
+    });
+
+    // Confetti Fireworks helper
+    function launchConfetti() {
+      if (typeof confetti === 'function') {
+        const count = 200;
+        const defaults = { origin: { y: 0.7 } };
+        function fire(particleRatio, opts) {
+          confetti(Object.assign({}, defaults, opts, {
+            particleCount: Math.floor(count * particleRatio)
+          }));
+        }
+        fire(0.25, { spread: 26, startVelocity: 55 });
+        fire(0.2, { spread: 60 });
+        fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+        fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+        fire(0.1, { spread: 120, startVelocity: 45 });
+      }
+    }
+
+    // Main Game State Listener
+    socket.on('game_state', (state) => {
+      currentGameState = state;
+      renderStage(state);
+      renderPodiumBar(state);
+    });
+
+    // Timer Ticks
+    socket.on('turn_timer_tick', ({ timeLeft }) => {
+      const timerEl = document.getElementById('qTimerDisplay');
+      if (timerEl) {
+        timerEl.innerText = `⏱️ ${timeLeft}s`;
+        if (timeLeft <= 2) {
+          timerEl.style.color = '#ef4444';
+        }
+      }
+    });
+
+    socket.on('bet_timer_tick', ({ timeLeft }) => {
+      const betEl = document.getElementById('betTimerNumber');
+      if (betEl) {
+        betEl.innerText = timeLeft;
+      }
+    });
+
+    // Render 5 Team Cards
+    function renderPodiumBar(state) {
+      const container = document.getElementById('teamsPodiumBar');
+      container.innerHTML = '';
+
+      state.teams.forEach(team => {
+        const isTurn = (state.status === 'ROUND1' && state.r1.currentTurn === team.id) ||
+                       (state.status === 'ROUND2' && (state.r2.currentTurn === team.id || state.r2.keywordTurn === team.id)) ||
+                       (state.status === 'ROUND3_BET' && state.r3.currentTurn === team.id);
+
+        const card = document.createElement('div');
+        card.className = `team-card ${team.id} ${isTurn ? 'active-turn bell-pulse' : ''} ${team.locked ? 'locked' : ''}`;
+        card.style.borderLeft = `5px solid ${team.color}`;
+
+        let avatarClass = 'avatar-phoenix';
+        if (team.avatar === 'azure_dragon') avatarClass = 'avatar-dragon';
+        if (team.avatar === 'white_tiger') avatarClass = 'avatar-tiger';
+        if (team.avatar === 'black_tortoise') avatarClass = 'avatar-tortoise';
+        if (team.avatar === 'golden_qilin') avatarClass = 'avatar-qilin';
+
+        card.innerHTML = `
+          <div class="team-info">
+            <div class="team-avatar ${avatarClass}"></div>
+            <div>
+              <div style="font-weight: 800; font-size: 1.05rem; color: ${team.color};">${team.name}</div>
+              <div style="font-size: 0.75rem; color: ${team.connected ? '#4ade80' : '#64748b'};">
+                ${team.connected ? '● Đã kết nối' : '○ Ngoại tuyến'}
+              </div>
+            </div>
+          </div>
+          <div class="team-score">${team.score}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Render Main Arena View based on Game Status
+    function renderStage(state) {
+      const arena = document.getElementById('mainArena');
+      const badgeTitle = document.getElementById('roundTitle');
+      const roundIcon = document.getElementById('roundIcon');
+      const buzzerAlert = document.getElementById('buzzerAlert');
+
+      // Buzzer Alert Handling
+      let activeTurnTeam = null;
+      if (state.status === 'ROUND1' && state.r1.currentTurn) {
+        activeTurnTeam = state.teams.find(t => t.id === state.r1.currentTurn);
+      } else if (state.status === 'ROUND2' && state.r2.currentTurn) {
+        activeTurnTeam = state.teams.find(t => t.id === state.r2.currentTurn);
+      } else if (state.status === 'ROUND2' && state.r2.keywordTurn) {
+        activeTurnTeam = state.teams.find(t => t.id === state.r2.keywordTurn);
+      } else if (state.status === 'ROUND3_BET' && state.r3.currentTurn) {
+        activeTurnTeam = state.teams.find(t => t.id === state.r3.currentTurn);
+      }
+
+      if (activeTurnTeam) {
+        buzzerAlert.style.display = 'flex';
+        document.getElementById('buzzerTeamName').innerText = `🔔 ${activeTurnTeam.name.toUpperCase()} GIÀNH QUYỀN!`;
+        document.getElementById('buzzerTeamName').style.color = activeTurnTeam.color;
+        document.getElementById('buzzerDetails').innerText = state.r2.keywordTurn ? 'Đang đoán từ khóa chủ đề (+100 điểm)' : 'Thời gian trả lời: 5 giây';
+      } else {
+        buzzerAlert.style.display = 'none';
+      }
+
+      // 1. LOBBY
+      if (state.status === 'LOBBY') {
+        roundIcon.innerText = '🏛️';
+        badgeTitle.innerText = 'PHÒNG CHỜ KHAI MẠC';
+        arena.innerHTML = `
+          <div class="lobby-view">
+            <h1 class="lobby-title gold-text">ANIME RELIGION QUIZ ARENA</h1>
+            <p class="lobby-sub">“Giải mã tri thức – Khám phá niềm tin – Chinh phục chuông vàng!”</p>
+            
+            <div class="lobby-qr-box glass-panel gold-frame">
+              <img src="${state.qrUrl}" class="lobby-qr-img" alt="QR Code">
+              <div style="text-align: left;">
+                <h3 style="color: #fbbf24; font-size: 1.25rem; font-weight: 800; margin-bottom: 6px;">
+                  📲 QUÉT MÃ ĐỂ VÀO PHÒNG
+                </h3>
+                <p style="color: #cbd5e1; font-size: 0.95rem; margin-bottom: 8px;">
+                  Mã phòng thi đấu: <strong style="color: #5eead4; font-size: 1.2rem;">${state.roomCode}</strong>
+                </p>
+                <code style="background: rgba(0,0,0,0.5); padding: 4px 10px; border-radius: 4px; color: #a5f3fc; font-size: 0.9rem;">
+                  http://${state.localIP}:3000/player
+                </code>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; margin-top: 10px;">
+              <span class="badge badge-gold">VÒNG 1: CHUÔNG VÀNG TRI THỨC</span>
+              <span class="badge badge-jade">VÒNG 2: BỨC TRANH BÍ ẨN</span>
+              <span class="badge badge-ruby">VÒNG 3: VỀ ĐÍCH CƯỢC ĐIỂM</span>
+            </div>
+            <p style="color: #94a3b8; font-size: 0.95rem;">MC vui lòng xác nhận đủ 5 đội trên Bảng điều khiển để bắt đầu.</p>
+          </div>
+        `;
+        return;
+      }
+
+      // 2. ROUND 1 — CHUÔNG VÀNG TRI THỨC
+      if (state.status === 'ROUND1') {
+        roundIcon.innerText = '🔔';
+        badgeTitle.innerText = `VÒNG 1: CÂU HỎI ${state.r1.questionIndex + 1} / ${state.r1.totalQuestions}`;
+
+        const q = state.r1.currentQuestion;
+        if (!q) {
+          arena.innerHTML = `<div style="font-size: 1.5rem; color: #94a3b8;">Đang tải câu hỏi...</div>`;
+          return;
+        }
+
+        const letters = ['A', 'B', 'C', 'D'];
+        const isRevealed = state.r1.stage === 'REVEALED';
+
+        arena.innerHTML = `
+          <div class="q-box">
+            <div class="q-header-row">
+              <span class="q-topic-tag">📚 ${q.topic || 'Triết học Mác – Lênin'}</span>
+              <div class="q-timer-badge" id="qTimerDisplay">
+                ⏱️ ${state.r1.timeLeft || 5}s
+              </div>
+            </div>
+
+            <div class="q-card">
+              ${q.question}
+            </div>
+
+            <div class="options-grid">
+              ${q.options.map((optText, idx) => {
+                let optClass = 'opt-card';
+                if (state.r1.selectedAnswer === idx) optClass += ' selected';
+                if (isRevealed) {
+                  if (idx === q.correctIndex) optClass += ' correct-answer';
+                  else if (state.r1.selectedAnswer === idx) optClass += ' wrong-answer';
+                }
+                return `
+                  <div class="${optClass}">
+                    <span class="opt-letter">${letters[idx]}</span>
+                    <span>${optText.replace(/^[A-D]\.\s*/, '')}</span>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+
+            ${isRevealed ? `
+              <div class="explanation-overlay">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                  <span style="font-size: 2rem;">💡</span>
+                  <h2 style="color: #fbbf24; font-family: var(--font-title); font-size: 1.6rem;">ĐÁP ÁN CHÍNH XÁC & GIẢI THÍCH</h2>
+                </div>
+                <p style="font-size: 1.25rem; line-height: 1.6; color: #f1f5f9; margin-bottom: 16px;">
+                  ${q.explanation}
+                </p>
+                <div style="font-size: 0.9rem; color: #94a3b8; font-style: italic;">
+                  Nguồn trích dẫn: ${q.source || 'Giáo trình Triết học Mác - Lênin'}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+        return;
+      }
+
+      // 3. ROUND 1 RECAP
+      if (state.status === 'ROUND1_RECAP') {
+        roundIcon.innerText = '📊';
+        badgeTitle.innerText = 'TỔNG KẾT BẢNG ĐIỂM VÒNG 1';
+        renderRecapBoard(arena, state, 'VÒNG 1: CHUÔNG VÀNG TRI THỨC');
+        return;
+      }
+
+      // 4. ROUND 2 — BỨC TRANH BÍ ẨN
+      if (state.status === 'ROUND2') {
+        roundIcon.innerText = '🧩';
+        badgeTitle.innerText = 'VÒNG 2: GIẢI MÃ BỨC TRANH BÍ ẨN';
+
+        const p = state.r2.currentPiece;
+        const pieces = state.r2.piecesUnlocked;
+
+        arena.innerHTML = `
+          <div class="r2-container">
+            <!-- Left: 6-Piece Puzzle Image -->
+            <div class="puzzle-board-wrapper">
+              <img src="/assets/images/round2_mystery.jpg" alt="Bức Tranh Bí Ẩn" class="puzzle-bg-image">
+              <div class="puzzle-grid">
+                ${[0, 1, 2, 3, 4, 5].map(idx => `
+                  <div class="puzzle-tile ${pieces[idx] ? 'unlocked' : ''}">
+                    <span class="puzzle-tile-num">${idx + 1}</span>
+                    <span class="puzzle-tile-label">Mảnh Ghép ${idx + 1}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <!-- Right: Live Clue / Question Box -->
+            <div class="r2-side-panel">
+              <div class="glass-panel gold-frame" style="padding: 20px; border-radius: var(--radius-md);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                  <span class="badge badge-gold">🔑 TỪ KHÓA CHỦ ĐỀ</span>
+                  <span style="font-weight: 800; color: #fbbf24;">+100 ĐIỂM</span>
+                </div>
+                <p style="font-size: 0.95rem; color: #cbd5e1; margin-bottom: 10px;">
+                  Bấm <strong>CHUÔNG TỪ KHÓA</strong> trên điện thoại bất kỳ lúc nào để giải mã bức tranh!
+                </p>
+                ${state.r2.keywordSolved ? `
+                  <div style="padding: 12px; background: rgba(34, 197, 94, 0.25); border: 1px solid #22c55e; border-radius: 8px; text-align: center;">
+                    <div style="font-weight: 900; font-size: 1.3rem; color: #4ade80;">🎉 ${state.r2.keyword}</div>
+                    <div style="font-size: 0.85rem; color: #f1f5f9; margin-top: 4px;">${state.r2.keywordExplanation}</div>
+                  </div>
+                ` : `
+                  <div style="letter-spacing: 5px; font-weight: 900; font-size: 1.2rem; color: #64748b; text-align: center;">
+                    ★ ★ ★ ★ ★ ★ ★ ★
+                  </div>
+                `}
+              </div>
+
+              <!-- Current Piece Question if active -->
+              ${p && state.r2.stage !== 'IDLE' ? `
+                <div class="glass-panel" style="padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--jade);">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span class="badge badge-jade">${p.title}</span>
+                    <span style="font-weight: 800; color: #5eead4;">+20 / 10 ĐIỂM</span>
+                  </div>
+                  <h4 style="font-size: 1.15rem; font-weight: 700; line-height: 1.4; margin-bottom: 12px; color: #ffffff;">
+                    ${p.question}
+                  </h4>
+                  <div style="display: flex; flex-direction: column; gap: 8px;">
+                    ${p.options.map((opt, i) => `
+                      <div style="padding: 8px 12px; background: rgba(255,255,255,0.06); border-radius: 6px; font-size: 0.95rem; border: 1px solid rgba(255,255,255,0.1); ${state.r2.stage === 'PIECE_REVEALED' && i === p.correctIndex ? 'border-color: #22c55e; background: rgba(34,197,94,0.3); font-weight: bold;' : ''}">
+                        ${opt}
+                      </div>
+                    `).join('')}
+                  </div>
+                  ${state.r2.stage === 'PIECE_REVEALED' ? `
+                    <div style="margin-top: 10px; font-size: 0.85rem; color: #a7f3d0; font-style: italic;">
+                      💡 ${p.explanation}
+                    </div>
+                  ` : ''}
+                </div>
+              ` : `
+                <div class="glass-panel" style="padding: 24px; text-align: center; border-radius: var(--radius-md); color: #94a3b8;">
+                  <span style="font-size: 2rem;">🧩</span>
+                  <p style="margin-top: 8px; font-size: 0.95rem;">Đang chờ MC mở câu hỏi mảnh ghép tiếp theo...</p>
+                </div>
+              `}
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // 5. ROUND 2 RECAP
+      if (state.status === 'ROUND2_RECAP') {
+        roundIcon.innerText = '📊';
+        badgeTitle.innerText = 'TỔNG KẾT BẢNG ĐIỂM VÒNG 2';
+        renderRecapBoard(arena, state, 'VÒNG 2: GIẢI MÃ BỨC TRANH BÍ ẨN');
+        return;
+      }
+
+      // 6. ROUND 3 — CƯỢC ĐIỂM & VỀ ĐÍCH
+      if (state.status === 'ROUND3_BET') {
+        roundIcon.innerText = '🎯';
+        badgeTitle.innerText = 'VÒNG 3: VỀ ĐÍCH VÀ THỬ THÁCH CUỐI';
+
+        if (state.r3.stage === 'BETTING') {
+          arena.innerHTML = `
+            <div class="r3-container">
+              <h2 class="gold-text" style="font-family: var(--font-title); font-size: 2.2rem;">
+                ⏳ THỜI GIAN ĐẶT CƯỢC CHIẾN THUẬT
+              </h2>
+              <p style="font-size: 1.15rem; color: #cbd5e1;">
+                Các đội có 10 giây để kéo thả và xác nhận mức cược trên điện thoại (từ 0 đến toàn bộ điểm hiện có).
+              </p>
+              
+              <div class="r3-timer-circle" id="betTimerCircle">
+                <span id="betTimerNumber">${state.r3.betTimeLeft || 10}</span>
+              </div>
+
+              <p style="color: #f43f5e; font-weight: 700; font-size: 1rem;">
+                ⚠️ Hết giờ hệ thống sẽ tự động khóa cược! Đội không cược mặc định 0 điểm.
+              </p>
+            </div>
+          `;
+          return;
+        }
+
+        if (state.r3.stage === 'TRANSITION') {
+          arena.innerHTML = `
+            <div class="r3-container" style="animation: bellPulse 1s infinite;">
+              <span style="font-size: 5rem;">⚡</span>
+              <h2 class="gold-text" style="font-size: 2.5rem; font-family: var(--font-title);">
+                CHUẨN BỊ MỞ KHÓA THỬ THÁCH QUYẾT ĐỊNH...
+              </h2>
+              <p style="font-size: 1.3rem; color: #cbd5e1;">Cánh cửa vinh quang đang rộng mở!</p>
+            </div>
+          `;
+          return;
+        }
+
+        if (state.r3.stage === 'REVEAL_BETS') {
+          arena.innerHTML = `
+            <div class="r3-container">
+              <h2 class="gold-text" style="font-family: var(--font-title); font-size: 2.2rem; margin-bottom: 10px;">
+                📋 CÔNG BỐ ĐIỂM CƯỢC CỦA 5 ĐỘI
+              </h2>
+              <div class="wagers-table">
+                ${state.teams.map(team => `
+                  <div class="wager-col" style="border-top: 4px solid ${team.color};">
+                    <div style="font-weight: 800; font-size: 1.1rem; color: ${team.color};">${team.name}</div>
+                    <div style="font-size: 0.85rem; color: #94a3b8;">Điểm trước cược: ${team.score}</div>
+                    <div class="wager-amount">🔥 ${state.r3.bets[team.id] || 0}</div>
+                    <span class="badge badge-gold">ĐÃ KHÓA CƯỢC</span>
+                  </div>
+                `).join('')}
+              </div>
+              <p style="color: #cbd5e1; font-size: 1rem; margin-top: 15px;">
+                Đúng: +Điểm cược • Sai/Hết giờ: -Điểm cược • Không bấm: Giữ nguyên điểm
+              </p>
+            </div>
+          `;
+          return;
+        }
+
+        // Final Question in Round 3
+        if (state.r3.stage === 'QUESTION' || state.r3.stage === 'ANSWERING' || state.r3.stage === 'REVEALED') {
+          const q = state.r3.question;
+          const isRevealed = state.r3.stage === 'REVEALED';
+          arena.innerHTML = `
+            <div class="q-box">
+              <div class="q-header-row">
+                <span class="q-topic-tag">🔥 CÂU HỎI QUYẾT ĐỊNH VẬN MỆNH</span>
+                <div class="q-timer-badge" id="qTimerDisplay">
+                  ⏱️ ${state.r3.timeLeft || 5}s
+                </div>
+              </div>
+
+              <div class="q-card" style="border-color: #f43f5e;">
+                ${q.question}
+              </div>
+
+              <div class="options-grid">
+                ${q.options.map((optText, idx) => {
+                  let optClass = 'opt-card';
+                  if (state.r3.selectedAnswer === idx) optClass += ' selected';
+                  if (isRevealed) {
+                    if (idx === q.correctIndex) optClass += ' correct-answer';
+                    else if (state.r3.selectedAnswer === idx) optClass += ' wrong-answer';
+                  }
+                  return `
+                    <div class="${optClass}">
+                      <span class="opt-letter">${['A','B','C','D'][idx]}</span>
+                      <span>${optText.replace(/^[A-D]\.\s*/, '')}</span>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+
+              ${isRevealed ? `
+                <div class="explanation-overlay">
+                  <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                    <span style="font-size: 2rem;">🏆</span>
+                    <h2 style="color: #fbbf24; font-family: var(--font-title); font-size: 1.6rem;">ĐÁP ÁN CHÍNH THỨC & Ý NGHĨA HỌC THUẬT</h2>
+                  </div>
+                  <p style="font-size: 1.25rem; line-height: 1.6; color: #f1f5f9; margin-bottom: 16px;">
+                    ${q.explanation}
+                  </p>
+                  <div style="font-size: 0.9rem; color: #94a3b8; font-style: italic;">
+                    Nguồn: ${q.source}
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+          `;
+          return;
+        }
+      }
+
+      // 7. FINALE PODIUM CEREMONY
+      if (state.status.startsWith('FINALE')) {
+        roundIcon.innerText = '🏆';
+        badgeTitle.innerText = 'LỄ VINH DANH & CÔNG BỐ KẾT QUẢ';
+        renderFinaleCeremony(arena, state);
+      }
+    }
+
+    // Recap Board renderer
+    function renderRecapBoard(arena, state, title) {
+      const sorted = [...state.teams].sort((a,b) => b.score - a.score);
+      arena.innerHTML = `
+        <div style="width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 20px;">
+          <h2 class="gold-text" style="font-family: var(--font-title); font-size: 2.2rem; text-align: center;">
+            ${title}
+          </h2>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            ${sorted.map((t, idx) => `
+              <div class="glass-panel" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-left: 6px solid ${t.color};">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                  <span style="font-family: var(--font-display); font-size: 1.4rem; font-weight: 900; color: #fbbf24;">#${idx + 1}</span>
+                  <div style="font-weight: 800; font-size: 1.2rem; color: ${t.color};">${t.name}</div>
+                </div>
+                <div style="font-family: var(--font-display); font-size: 1.8rem; font-weight: 900; color: #fef08a;">
+                  ${t.score} <span style="font-size: 1rem; color: #94a3b8;">Điểm</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // Finale Ceremony Renderer
+    function renderFinaleCeremony(arena, state) {
+      const step = state.finale.step;
+      const lb = state.finale.leaderboard;
+
+      if (step === 1) {
+        // Suspense
+        arena.innerHTML = `
+          <div class="podium-container">
+            <span style="font-size: 4.5rem; animation: bellPulse 1.5s infinite;">🔔</span>
+            <h1 class="gold-text" style="font-family: var(--font-title); font-size: 2.8rem; margin-top: 20px;">
+              KẾT QUẢ CUỐI CÙNG ĐÃ ĐƯỢC XÁC NHẬN!
+            </h1>
+            <p style="font-size: 1.3rem; color: #cbd5e1; margin-top: 10px;">
+              Sân khấu đóng băng • Chuẩn bị vinh danh các thứ hạng...
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      if (step >= 2 && step <= 6) {
+        // Step 2: Rank 5; Step 3: Rank 4; Step 4: Rank 3; Step 5: Rank 2; Step 6: CHAMPION!
+        const revealRank = 7 - step; // step 2 -> rank 5; step 6 -> rank 1
+        const targetTeam = lb.find(t => t.rank === revealRank) || lb[lb.length - 1];
+        const isChampion = revealRank === 1;
+
+        if (isChampion) {
+          launchConfetti();
+        }
+
+        arena.innerHTML = `
+          <div class="podium-container" style="animation: fadeIn 0.5s ease;">
+            ${isChampion ? `
+              <img src="/assets/images/golden_trophy.jpg" alt="Cúp Chuông Vàng" class="champion-trophy-img">
+              <h2 class="ruby-text" style="font-family: var(--font-title); font-size: 1.8rem; letter-spacing: 2px;">
+                ★ NHÀ VÔ ĐỊCH ANIME RELIGION QUIZ ARENA ★
+              </h2>
+            ` : `
+              <div style="font-size: 1.4rem; color: #94a3b8; font-weight: 800; letter-spacing: 2px;">
+                VINH DANH HẠNG ${revealRank}
+              </div>
+            `}
+
+            <h1 style="font-family: var(--font-title); font-size: 3.5rem; font-weight: 900; color: ${targetTeam.color}; margin: 10px 0; text-shadow: 0 0 25px ${targetTeam.color};">
+              ${targetTeam.name}
+            </h1>
+
+            <div style="font-family: var(--font-display); font-size: 2.8rem; font-weight: 900; color: #fef08a; margin-bottom: 20px;">
+              ${targetTeam.score} <span style="font-size: 1.4rem; color: #94a3b8;">ĐIỂM CHUNG CUỘC</span>
+            </div>
+
+            <div style="display: flex; gap: 20px;">
+              <span class="badge badge-gold">Vòng 1: +${targetTeam.r1Score}đ</span>
+              <span class="badge badge-jade">Vòng 2: +${targetTeam.r2Score}đ</span>
+              <span class="badge badge-ruby">Vòng 3: ${targetTeam.r3Result >= 0 ? '+' : ''}${targetTeam.r3Result}đ</span>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // Step 7: Full Final Leaderboard Table
+      if (step >= 7) {
+        arena.innerHTML = `
+          <div style="width: 100%; max-width: 1050px; display: flex; flex-direction: column; gap: 15px;">
+            <div style="text-align: center;">
+              <h1 class="gold-text" style="font-family: var(--font-title); font-size: 2.2rem;">
+                BẢNG VÀNG DANH DỰ TOÀN TRẬN ĐẤU
+              </h1>
+              <p style="color: #cbd5e1; font-size: 0.95rem;">Chúc mừng tất cả các đội thi đã hoàn thành xuất sắc các nội dung học thuật!</p>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              ${lb.map(t => `
+                <div class="glass-panel" style="display: grid; grid-template-columns: 80px 1fr 120px 120px 120px 150px; align-items: center; padding: 14px 20px; border-left: 6px solid ${t.color};">
+                  <span style="font-family: var(--font-display); font-size: 1.5rem; font-weight: 900; color: ${t.rank === 1 ? '#fbbf24' : '#94a3b8'};">
+                    ${t.rank === 1 ? '👑 1' : `#${t.rank}`}
+                  </span>
+                  <div style="font-weight: 800; font-size: 1.15rem; color: ${t.color};">${t.name}</div>
+                  <div style="color: #cbd5e1; font-size: 0.9rem;">V1: <strong style="color: #fbbf24;">+${t.r1Score}</strong></div>
+                  <div style="color: #cbd5e1; font-size: 0.9rem;">V2: <strong style="color: #5eead4;">+${t.r2Score}</strong></div>
+                  <div style="color: #cbd5e1; font-size: 0.9rem;">V3: <strong style="color: ${t.r3Result >= 0 ? '#4ade80' : '#f87171'};">${t.r3Result >= 0 ? '+' : ''}${t.r3Result}</strong></div>
+                  <div style="font-family: var(--font-display); font-size: 1.6rem; font-weight: 900; color: #fef08a; text-align: right;">
+                    ${t.score} <span style="font-size: 0.9rem; color: #94a3b8;">đ</span>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+    }
+  </script>
+</body>
+</html>
