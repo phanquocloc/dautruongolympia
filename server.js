@@ -254,6 +254,7 @@ class GameRoom {
     this.r2ActiveAttempt = 0;
     this.r2CurrentTurn = null;
     this.r2KeywordTurn = null;
+    this.r2SelectedAnswer = null;
 
     this.r3Stage = 'IDLE';
     this.r3BetTimeLeft = 10;
@@ -305,6 +306,7 @@ class GameRoom {
         activeAttempt: this.r2ActiveAttempt,
         currentTurn: this.r2CurrentTurn,
         keywordTurn: this.r2KeywordTurn,
+        selectedAnswer: this.r2SelectedAnswer,
         timeLeft: this.r1TurnTimeLeft
       },
       // Round 3
@@ -680,6 +682,7 @@ function handleMcAction(action, payload) {
         game.r2BuzzerQueue = [];
         game.r2ActiveAttempt = 0;
         game.r2CurrentTurn = null;
+        game.r2SelectedAnswer = null;
         game.teams.forEach(t => (t.locked = false));
         game.stopTurnCountdown();
         game.logEvent('GAME', `Vòng 2: Mở Mảnh ghép ${pieceIndex + 1} & Bật chuông ngay!`);
@@ -696,6 +699,7 @@ function handleMcAction(action, payload) {
         game.r2BuzzerQueue = [];
         game.r2ActiveAttempt = 0;
         game.r2CurrentTurn = null;
+        game.r2SelectedAnswer = null;
         game.teams.forEach(t => (t.locked = false));
         game.stopTurnCountdown();
         game.logEvent('GAME', `Vòng 2: Mở câu hỏi Mảnh ghép số ${pieceIndex + 1}`);
@@ -941,15 +945,16 @@ function handlePlayerBuzz(teamId, buzzerType) {
   const serverTime = Date.now();
 
   // Round 1 Buzzer
-  if (game.status === 'ROUND1' && game.r1Stage === 'BUZZER_OPEN') {
-    // Check if already in queue
+  if (game.status === 'ROUND1' && (game.r1Stage === 'BUZZER_OPEN' || game.r1Stage === 'ANSWERING')) {
+    if (team.locked) return;
     if (game.r1BuzzerQueue.some(b => b.teamId === teamId)) return;
+    if (game.r1BuzzerQueue.length >= 3) return;
 
     game.r1BuzzerQueue.push({ teamId, timestamp: serverTime, teamName: team.name, color: team.color });
-    game.logEvent('BUZZER', `${team.name} đã bấm chuông giành quyền! (${game.r1BuzzerQueue.length})`);
+    game.logEvent('BUZZER', `${team.name} đã bấm chuông giành quyền! (Hàng đợi #${game.r1BuzzerQueue.length})`);
 
-    // If this is the first team in queue, award turn immediately!
-    if (game.r1BuzzerQueue.length === 1) {
+    // If no team is currently answering, grant turn immediately!
+    if (!game.r1CurrentTurn) {
       grantR1Turn(teamId);
     } else {
       broadcastState('buzzer');
@@ -972,11 +977,13 @@ function handlePlayerBuzz(teamId, buzzerType) {
 
     // 2.2 Piece buzzer
     if (buzzerType === 'PIECE' || buzzerType === 'NORMAL') {
-      if (game.r2Stage === 'PIECE_BUZZER' && !game.r2KeywordTurn) {
+      if ((game.r2Stage === 'PIECE_BUZZER' || game.r2Stage === 'PIECE_ANSWERING') && !game.r2KeywordTurn) {
+        if (team.locked) return;
         if (game.r2BuzzerQueue.some(b => b.teamId === teamId)) return;
+        if (game.r2BuzzerQueue.length >= 2) return;
         game.r2BuzzerQueue.push({ teamId, timestamp: serverTime, teamName: team.name, color: team.color });
-        game.logEvent('BUZZER', `${team.name} bấm chuông mảnh ghép (${game.r2BuzzerQueue.length})`);
-        if (game.r2BuzzerQueue.length === 1) {
+        game.logEvent('BUZZER', `${team.name} bấm chuông mảnh ghép (Hàng đợi #${game.r2BuzzerQueue.length})`);
+        if (!game.r2CurrentTurn) {
           grantR2Turn(teamId);
         } else {
           broadcastState('buzzer');
@@ -987,11 +994,12 @@ function handlePlayerBuzz(teamId, buzzerType) {
   }
 
   // Round 3 Buzzer
-  if (game.status === 'ROUND3_BET' && game.r3Stage === 'QUESTION') {
+  if (game.status === 'ROUND3_BET' && (game.r3Stage === 'QUESTION' || game.r3Stage === 'ANSWERING')) {
+    if (team.locked) return;
     if (game.r3BuzzerQueue.some(b => b.teamId === teamId)) return;
     game.r3BuzzerQueue.push({ teamId, timestamp: serverTime, teamName: team.name, color: team.color });
-    game.logEvent('BUZZER', `${team.name} bấm chuông quyết định Vòng 3!`);
-    if (game.r3BuzzerQueue.length === 1) {
+    game.logEvent('BUZZER', `${team.name} bấm chuông quyết định Vòng 3! (Hàng đợi #${game.r3BuzzerQueue.length})`);
+    if (!game.r3CurrentTurn) {
       grantR3Turn(teamId);
     } else {
       broadcastState('buzzer');
@@ -1051,6 +1059,7 @@ function handleR1WrongOrTimeout() {
 
 function grantR2Turn(teamId) {
   game.r2CurrentTurn = teamId;
+  game.r2SelectedAnswer = null;
   game.r2Stage = 'PIECE_ANSWERING';
   const team = game.getTeam(teamId);
   game.logEvent('TURN', `Lượt trả lời Mảnh ghép ${game.r2CurrentPieceIndex + 1} cấp cho ${team ? team.name : teamId} (45 giây)`);
@@ -1128,23 +1137,92 @@ function handleR3WrongOrTimeout() {
   }
 }
 
-// Player Action: Select Answer
+// Player Action: Select Answer — Tự động chấm điểm & tự động cộng/trừ điểm theo luật
 function handlePlayerSelectAnswer(teamId, answerIndex) {
   if (game.paused) return;
-  // Round 1
+
+  // 1. ROUND 1: Tự động chấm điểm câu hỏi trắc nghiệm
   if (game.status === 'ROUND1' && game.r1CurrentTurn === teamId && game.r1Stage === 'ANSWERING') {
     game.r1SelectedAnswer = answerIndex;
     const team = game.getTeam(teamId);
-    game.logEvent('SELECT', `${team ? team.name : teamId} đã chọn phương án [${['A', 'B', 'C', 'D'][answerIndex]}]`);
-    broadcastState();
+    const q = game.questions.round1[game.r1QuestionIndex];
+    const letter = ['A', 'B', 'C', 'D'][answerIndex];
+
+    if (!q || !team) return;
+
+    if (answerIndex === q.correctIndex) {
+      // Đúng -> Tự động cộng điểm: Lượt 1 (+30đ), Lượt 2 (+20đ), Lượt 3 (+10đ)
+      const pointsTable = [30, 20, 10];
+      const pts = pointsTable[game.r1ActiveAttempt] || 10;
+      team.score += pts;
+      team.r1Score += pts;
+      team.answerCount = (team.answerCount || 0) + 1;
+      game.stopTurnCountdown();
+      game.r1Stage = 'REVEALED';
+      game.logEvent('ANSWER_AUTO', `⚡ CHÍNH XÁC! ${team.name} chọn [${letter}] và tự động nhận +${pts} điểm!`);
+      broadcastState('correct');
+    } else {
+      // Sai -> Tự động khóa lượt câu này và chuyển quyền cho đội tiếp theo
+      game.logEvent('ANSWER_AUTO', `⚡ CHƯA CHÍNH XÁC! ${team.name} chọn [${letter}] (sai). Mất lượt câu hỏi này!`);
+      handleR1WrongOrTimeout();
+    }
     return;
   }
-  // Round 3
+
+  // 2. ROUND 2: Tự động chấm điểm mảnh ghép & mở mảnh
+  if (game.status === 'ROUND2' && game.r2CurrentTurn === teamId && game.r2Stage === 'PIECE_ANSWERING') {
+    game.r2SelectedAnswer = answerIndex;
+    const team = game.getTeam(teamId);
+    const piece = game.r2CurrentPieceIndex >= 0 ? game.questions.round2.pieces[game.r2CurrentPieceIndex] : null;
+    const letter = ['A', 'B', 'C', 'D'][answerIndex];
+
+    if (!piece || !team) return;
+
+    if (answerIndex === piece.correctIndex) {
+      // Đúng -> Tự động cộng điểm: Lượt 1 (+20đ), Lượt 2 (+10đ) và mở mảnh ghép
+      const pts = game.r2ActiveAttempt === 0 ? 20 : 10;
+      team.score += pts;
+      team.r2Score += pts;
+      team.answerCount = (team.answerCount || 0) + 1;
+      game.stopTurnCountdown();
+      if (game.r2CurrentPieceIndex >= 0) {
+        game.r2PiecesUnlocked[game.r2CurrentPieceIndex] = true;
+      }
+      game.r2Stage = 'PIECE_REVEALED';
+      game.logEvent('ANSWER_AUTO', `⚡ CHÍNH XÁC! ${team.name} chọn [${letter}] và tự động mở Mảnh ghép ${game.r2CurrentPieceIndex + 1} (+${pts}đ)!`);
+      broadcastState('puzzle_unlock');
+    } else {
+      // Sai -> Tự động khóa lượt mảnh này và chuyển lượt
+      game.logEvent('ANSWER_AUTO', `⚡ CHƯA CHÍNH XÁC! ${team.name} chọn [${letter}] (sai). Mất lượt mảnh ghép này!`);
+      handleR2PieceWrongOrTimeout();
+    }
+    return;
+  }
+
+  // 3. ROUND 3: Tự động cộng / trừ điểm cược
   if (game.status === 'ROUND3_BET' && game.r3CurrentTurn === teamId && game.r3Stage === 'ANSWERING') {
     game.r3SelectedAnswer = answerIndex;
     const team = game.getTeam(teamId);
-    game.logEvent('SELECT', `${team ? team.name : teamId} đã chọn phương án [${['A', 'B', 'C', 'D'][answerIndex]}]`);
-    broadcastState();
+    const q = game.questions.round3.question;
+    const wager = game.r3Bets[teamId] || 0;
+    const letter = ['A', 'B', 'C', 'D'][answerIndex];
+
+    if (!q || !team) return;
+
+    if (answerIndex === q.correctIndex) {
+      // Đúng -> Tự động cộng trọn vẹn điểm cược
+      team.score += wager;
+      team.r3Result = wager;
+      team.answerCount = (team.answerCount || 0) + 1;
+      game.stopTurnCountdown();
+      game.r3Stage = 'REVEALED';
+      game.logEvent('R3_AUTO', `⚡ CHÍNH XÁC HOÀN TOÀN! ${team.name} chọn [${letter}], tự động nhận trọn vẹn +${wager} điểm cược!`);
+      broadcastState('correct');
+    } else {
+      // Sai -> Tự động trừ điểm cược theo luật và chuyển lượt nếu có đội bấm chuông kế tiếp
+      game.logEvent('R3_AUTO', `⚡ CHƯA ĐÚNG! ${team.name} chọn [${letter}], tự động bị trừ -${wager} điểm cược!`);
+      handleR3WrongOrTimeout();
+    }
   }
 }
 

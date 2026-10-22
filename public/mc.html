@@ -645,21 +645,22 @@
 
             <!-- Current Answering Turn Banner -->
             ${turnTeam ? `
-              <div style="padding: 16px; background: rgba(255, 95, 0, 0.2); border: 3px solid var(--psy-orange); border-radius: var(--radius-sm); display: flex; justify-content: space-between; align-items: center;">
+              <div style="padding: 16px; background: rgba(255, 95, 0, 0.2); border: 3px solid var(--psy-orange); border-radius: var(--radius-sm); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                 <div>
-                  <div style="font-family: var(--font-display); font-size: 1.25rem; color: var(--psy-yellow);">
+                  <div style="font-family: var(--font-display); font-size: 1.25rem; color: var(--psy-yellow); display: flex; align-items: center; gap: 8px;">
                     QUYỀN TRẢ LỜI: ${turnTeam.name.toUpperCase()}
+                    <span class="badge badge-jade" style="font-size: 0.75rem;">⚡ TỰ ĐỘNG CHẤM ĐIỂM KHI BẤM</span>
                   </div>
                   <div style="font-size: 0.9rem; color: #cbd5e1; font-family: var(--font-code);">
-                    Lượt nỗ lực: #${state.r1.activeAttempt + 1} (Điểm nếu đúng: +${[30, 20, 10][state.r1.activeAttempt] || 10}đ) • Lựa chọn: [${state.r1.selectedAnswer !== null ? ['A','B','C','D'][state.r1.selectedAnswer] : 'Chưa bấm'}]
+                    Lượt nỗ lực: #${state.r1.activeAttempt + 1} (Điểm nếu đúng: +${[30, 20, 10][state.r1.activeAttempt] || 10}đ) • Lựa chọn: [${state.r1.selectedAnswer !== null ? ['A','B','C','D'][state.r1.selectedAnswer] : 'Đang chờ thí sinh chọn...'}]
                   </div>
                 </div>
                 <div class="action-btn-row">
-                  <button class="btn btn-jade" onclick="sendMcAction('R1_CONFIRM_CORRECT')" style="display: inline-flex; align-items: center; gap: 6px;">
-                    ${SVGS.check} <span>CHÍNH XÁC (+Điểm)</span>
+                  <button class="btn btn-jade" onclick="sendMcAction('R1_CONFIRM_CORRECT')" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem;" title="Hệ thống tự động chấm, nút này dùng khi muốn can thiệp thủ công">
+                    ${SVGS.check} <span>Đúng (+Điểm) [Dự phòng]</span>
                   </button>
-                  <button class="btn btn-ruby" onclick="sendMcAction('R1_CONFIRM_WRONG')" style="display: inline-flex; align-items: center; gap: 6px;">
-                    ${SVGS.cross} <span>CHƯA ĐÚNG (Chuyển quyền)</span>
+                  <button class="btn btn-ruby" onclick="sendMcAction('R1_CONFIRM_WRONG')" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem;" title="Hệ thống tự động chấm, nút này dùng khi muốn can thiệp thủ công">
+                    ${SVGS.cross} <span>Sai (Chuyển quyền) [Dự phòng]</span>
                   </button>
                 </div>
               </div>
@@ -748,16 +749,19 @@
 
             <!-- Piece Answering Turn -->
             ${pTurnTeam ? `
-              <div style="padding: 14px; background: rgba(194, 247, 0, 0.15); border: 2px solid var(--psy-lime); border-radius: var(--radius-sm); display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-family: var(--font-display); font-size: 1.15rem; color: var(--psy-lime);">
-                  Đang trả lời Mảnh ghép: ${pTurnTeam.name}
-                </span>
+              <div style="padding: 14px; background: rgba(194, 247, 0, 0.15); border: 2px solid var(--psy-lime); border-radius: var(--radius-sm); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <div>
+                  <span style="font-family: var(--font-display); font-size: 1.15rem; color: var(--psy-lime);">
+                    Đang trả lời Mảnh ghép: ${pTurnTeam.name}
+                  </span>
+                  <span class="badge badge-jade" style="font-size: 0.75rem; margin-left: 8px;">⚡ TỰ ĐỘNG CHẤM ĐIỂM</span>
+                </div>
                 <div class="action-btn-row">
-                  <button class="btn btn-jade" onclick="sendMcAction('R2_CONFIRM_PIECE_CORRECT')" style="display: inline-flex; align-items: center; gap: 6px;">
-                    ${SVGS.check} <span>ĐÚNG (+20/10đ & Mở Mảnh)</span>
+                  <button class="btn btn-jade" onclick="sendMcAction('R2_CONFIRM_PIECE_CORRECT')" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem;">
+                    ${SVGS.check} <span>Đúng (+Mở Mảnh) [Dự phòng]</span>
                   </button>
-                  <button class="btn btn-ruby" onclick="sendMcAction('R2_CONFIRM_PIECE_WRONG')" style="display: inline-flex; align-items: center; gap: 6px;">
-                    ${SVGS.cross} <span>SAI (Chuyển quyền)</span>
+                  <button class="btn btn-ruby" onclick="sendMcAction('R2_CONFIRM_PIECE_WRONG')" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem;">
+                    ${SVGS.cross} <span>Sai (Chuyển quyền) [Dự phòng]</span>
                   </button>
                 </div>
               </div>
@@ -813,21 +817,22 @@
 
             <!-- Turn Banner -->
             ${turnTeam ? `
-              <div style="padding: 16px; background: rgba(255,29,142,0.25); border: 3px solid var(--psy-pink); border-radius: var(--radius-sm); display: flex; justify-content: space-between; align-items: center;">
+              <div style="padding: 16px; background: rgba(255,29,142,0.25); border: 3px solid var(--psy-pink); border-radius: var(--radius-sm); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                 <div>
-                  <h4 style="font-family: var(--font-display); font-size: 1.3rem; color: var(--psy-yellow); margin: 0;">
+                  <h4 style="font-family: var(--font-display); font-size: 1.3rem; color: var(--psy-yellow); margin: 0; display: flex; align-items: center; gap: 8px;">
                     ${turnTeam.name.toUpperCase()} ĐANG TRẢ LỜI CÂU HỎI CUỐI!
+                    <span class="badge badge-jade" style="font-size: 0.75rem;">⚡ TỰ ĐỘNG CHẤM CỘNG/TRỪ ĐIỂM</span>
                   </h4>
                   <p style="font-size: 0.95rem; color: #cbd5e1; margin: 4px 0 0; font-family: var(--font-code);">
-                    Mức cược của đội: <strong style="color: var(--psy-lime);">${wager} điểm</strong>
+                    Mức cược của đội: <strong style="color: var(--psy-lime);">${wager} điểm</strong> • Lựa chọn: [${state.r3.selectedAnswer !== null ? ['A','B','C','D'][state.r3.selectedAnswer] : 'Đang chờ thí sinh chọn...'}]
                   </p>
                 </div>
                 <div class="action-btn-row">
-                  <button class="btn btn-jade" onclick="sendMcAction('R3_CONFIRM_CORRECT')" style="display: inline-flex; align-items: center; gap: 6px;">
-                    ${SVGS.check} <span>ĐÚNG (+${wager} ĐIỂM)</span>
+                  <button class="btn btn-jade" onclick="sendMcAction('R3_CONFIRM_CORRECT')" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem;" title="Hệ thống tự động chấm, nút này dùng khi muốn can thiệp thủ công">
+                    ${SVGS.check} <span>Đúng (+${wager}đ) [Dự phòng]</span>
                   </button>
-                  <button class="btn btn-ruby" onclick="sendMcAction('R3_CONFIRM_WRONG')" style="display: inline-flex; align-items: center; gap: 6px;">
-                    ${SVGS.cross} <span>SAI (-${wager} ĐIỂM)</span>
+                  <button class="btn btn-ruby" onclick="sendMcAction('R3_CONFIRM_WRONG')" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem;" title="Hệ thống tự động chấm, nút này dùng khi muốn can thiệp thủ công">
+                    ${SVGS.cross} <span>Sai (-${wager}đ) [Dự phòng]</span>
                   </button>
                 </div>
               </div>
