@@ -3,17 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BẢNG ĐIỀU KHIỂN MC — ANIME RELIGION QUIZ ARENA</title>
+  <title>BẢNG ĐIỀU KHIỂN MC — ANIME RELIGION QUIZ ARENA (60s PSYCHEDELIC)</title>
   <link rel="stylesheet" href="/assets/css/arena_theme.css">
   <style>
     body {
-      min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
-      background: #080d1a;
+      background: radial-gradient(circle at center, #1b0a33 0%, #120722 100%);
+      color: #fff;
+      font-family: var(--font-body);
     }
     .mc-container {
-      max-width: 1400px;
+      max-width: 1440px;
       margin: 0 auto;
       padding: 18px 24px 60px;
       width: 100%;
@@ -27,12 +29,21 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 14px 22px;
-      border-radius: var(--radius-md);
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid var(--border-gold);
+      padding: 16px 24px;
+      border-radius: var(--radius-sm);
+      background: rgba(18, 7, 34, 0.95);
+      border: 3px solid var(--psy-orange);
+      box-shadow: 0 4px 25px rgba(255, 95, 0, 0.25);
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 14px;
+    }
+    .mc-topbar-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--psy-yellow);
+      text-shadow: 2px 2px 0 var(--psy-pink);
+      margin: 0;
+      letter-spacing: 0.5px;
     }
     .mc-top-actions {
       display: flex;
@@ -48,19 +59,21 @@
       gap: 12px;
     }
     .mc-team-card {
-      padding: 12px 14px;
+      padding: 14px;
       border-radius: var(--radius-sm);
-      background: rgba(15, 23, 42, 0.75);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(18, 7, 34, 0.9);
+      border: 2px solid rgba(255, 255, 255, 0.15);
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
       position: relative;
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     .mc-team-card.has-turn {
-      border: 2px solid #fbbf24;
-      background: rgba(30, 41, 59, 0.95);
-      box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+      border: 3px solid var(--psy-yellow);
+      background: rgba(71, 0, 165, 0.8);
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+      transform: scale(1.02);
     }
     .mc-team-header {
       display: flex;
@@ -69,9 +82,10 @@
     }
     .mc-team-score {
       font-family: var(--font-display);
-      font-size: 1.4rem;
-      font-weight: 900;
-      color: #fbbf24;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--psy-yellow);
+      text-shadow: 1px 1px 0 var(--psy-pink);
     }
 
     /* Main Console Layout */
@@ -84,438 +98,536 @@
     /* Round Stages Tabs */
     .round-tabs {
       display: flex;
-      gap: 8px;
-      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-      padding-bottom: 8px;
+      gap: 10px;
+      border-bottom: 3px solid var(--psy-blue);
+      padding-bottom: 12px;
       margin-bottom: 16px;
+      flex-wrap: wrap;
     }
     .round-tab-btn {
-      padding: 10px 18px;
+      padding: 10px 20px;
       border-radius: var(--radius-sm);
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: #cbd5e1;
+      background: rgba(71, 0, 165, 0.4);
+      border: 2px solid var(--psy-blue);
+      color: #fff;
       font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 1.1rem;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .round-tab-btn:hover {
+      transform: scale(1.03);
+      border-color: var(--psy-lime);
+      color: var(--psy-lime);
     }
     .round-tab-btn.active {
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(225, 29, 72, 0.25));
-      border-color: #fbbf24;
-      color: #fef08a;
+      background: var(--psy-pink);
+      border-color: var(--psy-yellow);
+      color: #fff;
+      box-shadow: 0 0 18px rgba(255, 29, 142, 0.5);
+      text-shadow: 1px 1px 0 var(--psy-blue);
     }
 
     /* Action Control Panels */
     .action-panel {
-      padding: 22px;
-      border-radius: var(--radius-md);
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 24px;
+      border-radius: var(--radius-sm);
+      background: rgba(18, 7, 34, 0.95);
+      border: 2px solid var(--psy-blue);
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 18px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
     }
     .action-btn-row {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       flex-wrap: wrap;
+      align-items: center;
     }
 
     /* Buzzer Queue Box */
     .buzzer-queue-box {
-      padding: 14px;
+      padding: 16px;
       border-radius: var(--radius-sm);
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(18, 7, 34, 0.9);
+      border: 2px solid var(--psy-purple);
     }
     .queue-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 8px 12px;
-      border-radius: 6px;
-      margin-bottom: 6px;
-      background: rgba(255, 255, 255, 0.05);
-      font-size: 0.9rem;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+      background: rgba(71, 0, 165, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.95rem;
     }
 
     /* Event Log Box */
     .log-box {
       height: 480px;
       overflow-y: auto;
-      padding: 12px;
+      padding: 14px;
       border-radius: var(--radius-sm);
-      background: rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      font-family: monospace;
+      background: rgba(18, 7, 34, 0.95);
+      border: 2px solid var(--psy-blue);
+      font-family: var(--font-code);
       font-size: 0.85rem;
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
-    .log-item {
-      padding: 6px 8px;
+    .log-entry {
+      padding: 6px 10px;
       border-radius: 4px;
       background: rgba(255, 255, 255, 0.04);
-      border-left: 3px solid #64748b;
+      border-left: 3px solid var(--psy-yellow);
+      line-height: 1.4;
+    }
+    .log-time {
+      color: var(--psy-lime);
+      font-weight: 700;
+      margin-right: 6px;
     }
 
-    /* Modal */
-    .modal {
+    /* Modals */
+    .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(12px);
-      z-index: 1000;
-      display: flex;
-      align-items: center;
+      background: rgba(18, 7, 34, 0.85);
+      backdrop-filter: blur(8px);
+      display: none;
       justify-content: center;
+      align-items: center;
+      z-index: 1000;
       padding: 20px;
     }
-    .modal-content {
+    .modal-card {
       width: 100%;
-      max-width: 750px;
-      max-height: 85vh;
+      max-width: 760px;
+      max-height: 90vh;
       overflow-y: auto;
+      background: #120722;
+      border: 3px solid var(--psy-orange);
+      border-radius: var(--radius-sm);
+      box-shadow: 0 0 40px rgba(255, 95, 0, 0.4);
       padding: 28px;
-      border-radius: var(--radius-md);
-      background: #0f172a;
-      border: 1px solid var(--border-gold);
       display: flex;
       flex-direction: column;
-      gap: 16px;
-    }
-    .form-input {
-      width: 100%;
-      padding: 10px 14px;
-      border-radius: var(--radius-sm);
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #ffffff;
-      font-family: var(--font-body);
-      font-size: 0.95rem;
-      outline: none;
-    }
-    .form-input:focus {
-      border-color: #fbbf24;
+      gap: 18px;
     }
 
-    @media (max-width: 1024px) {
-      .mc-teams-row {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .mc-main-grid {
-        grid-template-columns: 1fr;
-      }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-group label {
+      font-size: 0.95rem;
+      color: var(--psy-lime);
+      font-family: var(--font-body);
+      font-weight: 700;
+    }
+    .form-input {
+      padding: 10px 14px;
+      background: rgba(71, 0, 165, 0.35);
+      border: 1px solid var(--psy-blue);
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-family: var(--font-code);
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+    }
+    .form-input:focus {
+      outline: 2px solid var(--psy-lime);
+      outline-offset: 2px;
+      border-color: var(--psy-lime);
+      background: rgba(71, 0, 165, 0.6);
+    }
+    textarea.form-input {
+      min-height: 80px;
+      resize: vertical;
+      font-family: var(--font-body);
     }
   </style>
 </head>
 <body>
-  <div class="arena-bg">
-    <div class="particles-layer"></div>
-  </div>
-
   <div class="mc-container">
     <!-- Top Control Bar -->
     <header class="mc-topbar">
-      <div style="display: flex; align-items: center; gap: 12px;">
-        <span style="font-size: 1.8rem;">👑</span>
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--psy-yellow)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+          <line x1="4" y1="22" x2="4" y2="15"></line>
+        </svg>
         <div>
-          <h2 class="gold-text" style="font-family: var(--font-title); font-size: 1.25rem;">BẢNG ĐIỀU KHIỂN MC / GIẢNG VIÊN</h2>
-          <div style="font-size: 0.8rem; color: #94a3b8;">
-            Trạng thái: <strong id="gameStatusText" style="color: #fbbf24;">LOBBY</strong> • Phòng: <strong id="roomCodeText" style="color: #5eead4;">ARENA88</strong>
+          <h1 class="mc-topbar-title">BẢNG ĐIỀU KHIỂN MC / GIẢNG VIÊN</h1>
+          <div style="font-size: 0.85rem; color: var(--psy-lime); font-family: var(--font-code);">
+            Trạng thái: <strong id="gameStatusText" style="color: var(--psy-yellow);">LOBBY</strong> • Phòng: <strong id="roomCodeText" style="color: var(--psy-pink);">ARENA88</strong>
           </div>
         </div>
       </div>
 
       <div class="mc-top-actions">
-        <button class="btn btn-gold" id="startOrResumeBtn" onclick="sendMcAction('START_GAME')">
-          🚀 BẮT ĐẦU CUỘC THI
+        <button class="btn btn-gold" id="startBtn" onclick="sendMcAction('START_ROUND1')" style="display: inline-flex; align-items: center; gap: 8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+          <span>BẮT ĐẦU CUỘC THI</span>
         </button>
-        <button class="btn btn-ghost" id="pauseBtn" onclick="sendMcAction('TOGGLE_PAUSE')">
-          ⏸️ Tạm Dừng
+        <button class="btn btn-ghost" id="pauseBtn" onclick="sendMcAction('TOGGLE_PAUSE')" style="display: inline-flex; align-items: center; gap: 8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="6" y="4" width="4" height="16"></rect>
+            <rect x="14" y="4" width="4" height="16"></rect>
+          </svg>
+          <span id="pauseBtnText">Tạm Dừng</span>
         </button>
-        <a href="/projector" target="_blank" class="btn btn-ghost">
-          🖥️ Mở Máy Chiếu
+        <a href="/projector" target="_blank" class="btn btn-ruby" style="display: inline-flex; align-items: center; gap: 8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+          <span>Mở Máy Chiếu</span>
         </a>
-        <button class="btn btn-ghost" onclick="openQuestionsModal()">
-          📚 Sửa Câu Hỏi
+        <button class="btn btn-ghost" onclick="openQuestionsModal()" style="display: inline-flex; align-items: center; gap: 8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+          <span>Sửa Câu Hỏi</span>
         </button>
-        <button class="btn btn-ruby" onclick="confirmResetGame()">
-          🔄 Khởi Tạo Lại
+        <button class="btn btn-ghost" onclick="confirmResetGame()" style="display: inline-flex; align-items: center; gap: 8px; color: var(--psy-pink);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+          </svg>
+          <span>Khởi Tạo Lại</span>
         </button>
       </div>
     </header>
 
-    <!-- 5 Teams Live Monitor -->
-    <section class="mc-teams-row" id="mcTeamsMonitor">
-      <!-- Populated dynamically -->
-    </section>
+    <!-- 5 Teams Quick Monitor -->
+    <div class="mc-teams-row" id="mcTeamsRow">
+      <!-- Dynamically filled -->
+    </div>
 
-    <!-- Main Grid: Control Panel + Live Event Log -->
+    <!-- Main Console Grid -->
     <div class="mc-main-grid">
-      <!-- Left: Stage Controls -->
-      <main class="action-panel">
-        <!-- Stage Tabs -->
+      <!-- Left Panel: Stage Control -->
+      <section class="action-panel">
         <div class="round-tabs">
-          <button class="round-tab-btn active" id="tabR1" onclick="switchTab('R1')">Vòng 1: Khởi Động</button>
-          <button class="round-tab-btn" id="tabR2" onclick="switchTab('R2')">Vòng 2: Mảnh Ghép</button>
-          <button class="round-tab-btn" id="tabR3" onclick="switchTab('R3')">Vòng 3: Về Đích</button>
-          <button class="round-tab-btn" id="tabFinale" onclick="switchTab('FINALE')">Vinh Danh & Xếp Hạng</button>
+          <button class="round-tab-btn active" id="tabR1" onclick="switchTab('R1')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            <span>Vòng 1: Khởi Động</span>
+          </button>
+          <button class="round-tab-btn" id="tabR2" onclick="switchTab('R2')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>Vòng 2: Mảnh Ghép</span>
+          </button>
+          <button class="round-tab-btn" id="tabR3" onclick="switchTab('R3')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+            <span>Vòng 3: Về Đích</span>
+          </button>
+          <button class="round-tab-btn" id="tabFinale" onclick="switchTab('FINALE')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <span>Vinh Danh & Xếp Hạng</span>
+          </button>
         </div>
 
-        <!-- Dynamic Controls View Container -->
         <div id="tabContentArea">
-          <!-- Populated dynamically -->
+          <!-- Dynamically populated per tab -->
         </div>
-      </main>
+      </section>
 
-      <!-- Right: Real-time Buzzer Queue & Event Log -->
+      <!-- Right Panel: Buzzer Queue & Live Logs -->
       <aside style="display: flex; flex-direction: column; gap: 16px;">
-        <!-- Live Buzzer Queue -->
-        <div class="glass-panel" style="padding: 16px; border-radius: var(--radius-md);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h3 style="font-size: 1rem; font-weight: 800; color: #fbbf24;">🔔 HÀNG ĐỢI BẤM CHUÔNG (MS)</h3>
-            <span class="badge badge-gold" id="buzzerQueueCount">0 đội</span>
+        <!-- Buzzer Queue Box -->
+        <div class="buzzer-queue-box">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--psy-yellow)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              <h3 style="font-family: var(--font-display); font-size: 1.15rem; color: var(--psy-yellow); margin: 0;">HÀNG ĐỢI CHUÔNG (MS)</h3>
+            </div>
+            <span class="badge badge-gold" id="buzzerQueueCount" style="font-family: var(--font-code);">0 đội</span>
           </div>
-          <div class="buzzer-queue-box" id="buzzerQueueList">
-            <div style="color: #64748b; font-size: 0.85rem; text-align: center;">Chưa có đội nào bấm chuông</div>
+          <div id="buzzerQueueList">
+            <div style="color: #94a3b8; font-size: 0.9rem; text-align: center; padding: 12px 0;">Chưa có đội nào bấm chuông</div>
           </div>
         </div>
 
-        <!-- Audit Event Log -->
-        <div class="glass-panel" style="padding: 16px; border-radius: var(--radius-md); flex: 1;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h3 style="font-size: 1rem; font-weight: 800; color: #5eead4;">📋 LỊCH SỬ SỰ KIỆN TRẬN ĐẤU</h3>
-            <span style="font-size: 0.75rem; color: #94a3b8;">Xử lý tranh chấp</span>
+        <!-- Event Log Box -->
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--psy-lime)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+              <h3 style="font-family: var(--font-display); font-size: 1.15rem; color: var(--psy-lime); margin: 0;">LỊCH SỬ SỰ KIỆN TRẬN ĐẤU</h3>
+            </div>
+            <span style="font-size: 0.8rem; color: var(--psy-yellow);">Xử lý tranh chấp</span>
           </div>
-          <div class="log-box" id="eventLogContainer">
-            <!-- Event entries populated dynamically -->
+          <div class="log-box" id="mcEventLogs">
+            <!-- Event logs -->
           </div>
         </div>
       </aside>
     </div>
   </div>
 
-  <!-- Manual Score Override Modal -->
-  <div class="modal" id="scoreModal" style="display: none;">
-    <div class="modal-content">
-      <h3 class="gold-text" style="font-size: 1.3rem;">⚖️ ĐIỀU CHỈNH ĐIỂM SỐ THỦ CÔNG</h3>
-      <p style="color: #cbd5e1; font-size: 0.9rem;">Áp dụng khi có tranh chấp hoặc xử lý khiếu nại của các đội.</p>
+  <!-- Modal: Manual Score Adjustment -->
+  <div class="modal-overlay" id="scoreModal">
+    <div class="modal-card">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--psy-yellow)" stroke-width="2.5">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+        </svg>
+        <h3 style="font-family: var(--font-display); font-size: 1.5rem; color: var(--psy-yellow); margin: 0;">ĐIỀU CHỈNH ĐIỂM SỐ THỦ CÔNG</h3>
+      </div>
+      <p style="color: #cbd5e1; font-size: 0.95rem; margin: 0;">Áp dụng khi có tranh chấp hoặc xử lý khiếu nại của các đội trong trận đấu.</p>
 
-      <div>
-        <label style="font-size: 0.85rem; color: #94a3b8;">Đội điều chỉnh:</label>
-        <select id="scoreTeamSelect" class="form-input" style="margin-top: 4px;"></select>
+      <div class="form-group">
+        <label>Đội điều chỉnh:</label>
+        <select id="scoreTeamSelect" class="form-input"></select>
       </div>
 
-      <div>
-        <label style="font-size: 0.85rem; color: #94a3b8;">Điểm cộng/trừ (Ví dụ: +20 hoặc -10):</label>
-        <input type="number" id="scoreDeltaInput" class="form-input" placeholder="Nhập số điểm (+/-)" value="20" style="margin-top: 4px;">
+      <div class="form-group">
+        <label>Điểm cộng/trừ (Ví dụ: +20 hoặc -10):</label>
+        <input type="number" id="scoreDeltaInput" class="form-input" placeholder="Nhập số điểm (+/-)" value="20">
       </div>
 
-      <div>
-        <label style="font-size: 0.85rem; color: #94a3b8;">Lý do can thiệp:</label>
-        <input type="text" id="scoreReasonInput" class="form-input" placeholder="Ví dụ: Bổ sung câu trả lời thấu đáo" style="margin-top: 4px;">
+      <div class="form-group">
+        <label>Lý do can thiệp:</label>
+        <input type="text" id="scoreReasonInput" class="form-input" placeholder="Ví dụ: Bổ sung câu trả lời thấu đáo">
       </div>
 
-      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+      <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 10px;">
         <button class="btn btn-ghost" onclick="closeScoreModal()">Hủy</button>
         <button class="btn btn-gold" onclick="submitScoreOverride()">Áp Dụng Điều Chỉnh</button>
       </div>
     </div>
   </div>
 
-  <!-- Question Bank Editor Modal -->
-  <div class="modal" id="questionsModal" style="display: none;">
-    <div class="modal-content" style="max-width: 900px;">
+  <!-- Modal: Question Bank Editor -->
+  <div class="modal-overlay" id="questionsModal">
+    <div class="modal-card" style="max-width: 900px;">
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h3 class="gold-text" style="font-size: 1.4rem;">📚 QUẢN LÝ NGÂN HÀNG CÂU HỎI</h3>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--psy-yellow)" stroke-width="2.5">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+          <h3 style="font-family: var(--font-display); font-size: 1.5rem; color: var(--psy-yellow); margin: 0;">QUẢN LÝ NGÂN HÀNG CÂU HỎI</h3>
+        </div>
         <button class="btn btn-ghost" onclick="closeQuestionsModal()">Đóng</button>
       </div>
-      <p style="font-size: 0.85rem; color: #cbd5e1;">MC có thể chỉnh sửa trực tiếp nội dung câu hỏi, đáp án đúng và lời giải thích.</p>
+      <p style="font-size: 0.95rem; color: #cbd5e1; margin: 0;">MC có thể chỉnh sửa trực tiếp nội dung câu hỏi, các phương án lựa chọn và giải thích triết học.</p>
 
-      <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+      <div style="display: flex; gap: 10px; margin-bottom: 8px;">
         <button class="btn btn-ghost" onclick="renderEditorRound('round1')">Vòng 1 (5 Câu)</button>
         <button class="btn btn-ghost" onclick="renderEditorRound('round2')">Vòng 2 (Mảnh ghép & Từ khóa)</button>
         <button class="btn btn-ghost" onclick="renderEditorRound('round3')">Vòng 3 (Thử thách cuối)</button>
       </div>
 
-      <div id="questionsEditorBody" style="display: flex; flex-direction: column; gap: 14px; max-height: 55vh; overflow-y: auto;">
-        <!-- Populated dynamically -->
+      <div id="questionsEditorBody" style="display: flex; flex-direction: column; gap: 14px; max-height: 480px; overflow-y: auto; padding-right: 6px;">
+        <!-- Filled dynamically -->
       </div>
 
-      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+      <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 10px;">
         <button class="btn btn-ghost" onclick="closeQuestionsModal()">Hủy</button>
-        <button class="btn btn-gold" onclick="saveQuestionsToServer()">💾 Lưu Tất Cả Vào Hệ Thống</button>
+        <button class="btn btn-gold" onclick="saveQuestionsToServer()" style="display: inline-flex; align-items: center; gap: 8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+          <span>Lưu Tất Cả Vào Hệ Thống</span>
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- Scripts -->
   <script src="/socket.io/socket.io.js"></script>
-  <script src="/assets/js/sound_engine.js"></script>
-
   <script>
     const socket = io();
     let currentGameState = null;
-    let questionsData = null;
     let currentTab = 'R1';
+    let questionsData = null;
 
-    // Socket listeners
-    socket.on('game_state', (state) => {
-      currentGameState = state;
-      updateHeaderStatus(state);
-      renderTeamsMonitor(state);
-      renderBuzzerQueue(state);
-      renderEventLog(state.eventLog);
-      renderCurrentTabContent(state);
-    });
+    // SVG helper snippets for dynamic UI
+    const SVGS = {
+      check: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>',
+      cross: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>',
+      bell: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>',
+      book: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>',
+      bulb: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18h6m-4 4h2m-7-12a7 7 0 1 1 12 0c0 3-2 5-2 6H9c0-1-2-3-2-6z"></path></svg>',
+      arrowRight: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>',
+      rocket: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path></svg>',
+      lock: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>',
+      unlock: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>',
+      trophy: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path></svg>',
+      edit: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>',
+      scale: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>',
+      key: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="7.5" cy="15.5" r="5.5"></circle><path d="m21 2-9.6 9.6"></path><path d="m15.5 7.5 3 3L22 7l-3-3"></path></svg>'
+    };
 
-    socket.on('play_sound', (name) => {
-      if (window.quizSound) window.quizSound.playSound(name);
-    });
-
-    function sendMcAction(action, payload = {}) {
-      socket.emit('mc_action', { action, payload });
-    }
-
-    function updateHeaderStatus(state) {
-      document.getElementById('gameStatusText').innerText = state.status + (state.paused ? ' (TẠM DỪNG)' : '');
-      document.getElementById('roomCodeText').innerText = state.roomCode;
-      const pauseBtn = document.getElementById('pauseBtn');
-      pauseBtn.innerText = state.paused ? '▶️ Tiếp Tục' : '⏸️ Tạm Dừng';
-
-      const startBtn = document.getElementById('startOrResumeBtn');
-      if (state.status === 'LOBBY') {
-        startBtn.style.display = 'inline-flex';
-        startBtn.innerText = '🚀 BẮT ĐẦU CUỘC THI';
+    // Authenticate as MC
+    socket.emit('mc:auth', { pass: 'ARENAMC2026' }, (res) => {
+      if (res && res.ok) {
+        console.log('MC authenticated successfully');
       } else {
-        startBtn.style.display = 'none';
+        alert('Sai mật khẩu MC!');
       }
+    });
+
+    // Listeners
+    socket.on('gameState', (state) => {
+      currentGameState = state;
+      updateMcUI(state);
+    });
+
+    socket.on('buzzerQueue', (queue) => {
+      updateBuzzerQueue(queue);
+    });
+
+    socket.on('logs', (logs) => {
+      updateLogs(logs);
+    });
+
+    // Send actions to server
+    function sendMcAction(action, payload = {}) {
+      socket.emit('mcAction', { action, ...payload });
     }
 
-    // Render 5 Teams Row in MC
-    function renderTeamsMonitor(state) {
-      const container = document.getElementById('mcTeamsMonitor');
-      container.innerHTML = '';
+    function switchTab(tab) {
+      currentTab = tab;
+      ['tabR1', 'tabR2', 'tabR3', 'tabFinale'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('active');
+      });
+      const activeBtn = document.getElementById(tab === 'R1' ? 'tabR1' : (tab === 'R2' ? 'tabR2' : (tab === 'R3' ? 'tabR3' : 'tabFinale')));
+      if (activeBtn) activeBtn.classList.add('active');
+      if (currentGameState) renderTabContent(currentGameState);
+    }
 
-      state.teams.forEach(team => {
-        const isTurn = (state.status === 'ROUND1' && state.r1.currentTurn === team.id) ||
-                       (state.status === 'ROUND2' && (state.r2.currentTurn === team.id || state.r2.keywordTurn === team.id)) ||
-                       (state.status === 'ROUND3_BET' && state.r3.currentTurn === team.id);
+    function updateMcUI(state) {
+      document.getElementById('gameStatusText').innerText = state.status + (state.paused ? ' (TẠM DỪNG)' : '');
+      const pauseBtnText = document.getElementById('pauseBtnText');
+      pauseBtnText.innerText = state.paused ? 'Tiếp Tục' : 'Tạm Dừng';
 
-        const card = document.createElement('div');
-        card.className = `mc-team-card ${isTurn ? 'has-turn' : ''}`;
-        card.style.borderLeft = `4px solid ${team.color}`;
+      const startBtn = document.getElementById('startBtn');
+      if (state.status !== 'LOBBY') {
+        startBtn.style.display = 'none';
+      } else {
+        startBtn.style.display = 'inline-flex';
+      }
 
-        card.innerHTML = `
-          <div class="mc-team-header">
-            <span style="font-weight: 800; font-size: 0.95rem; color: ${team.color};">${team.name}</span>
-            <span class="status-dot ${team.connected ? '' : 'offline'}" title="${team.connected ? 'Trực tuyến' : 'Ngoại tuyến'}"></span>
-          </div>
-          <div style="display: flex; justify-content: space-between; align-items: baseline;">
-            <div style="font-size: 0.75rem; color: #94a3b8;">
-              ${team.connected ? 'Đã kết nối' : 'Chưa vào'}
+      renderTeams(state);
+      renderTabContent(state);
+    }
+
+    function renderTeams(state) {
+      const row = document.getElementById('mcTeamsRow');
+      row.innerHTML = state.teams.map(team => {
+        const hasTurn = (state.r1 && state.r1.currentTurn === team.id) ||
+                        (state.r2 && state.r2.currentTurn === team.id) ||
+                        (state.r3 && state.r3.currentTurn === team.id);
+        return `
+          <div class="mc-team-card ${hasTurn ? 'has-turn' : ''}" style="border-top: 5px solid ${team.color};">
+            <div class="mc-team-header">
+              <span class="status-dot ${team.connected ? '' : 'offline'}" title="${team.connected ? 'Trực tuyến' : 'Ngoại tuyến'}"></span>
+              <span style="font-size: 0.8rem; font-family: var(--font-code); color: ${team.connected ? 'var(--psy-lime)' : '#94a3b8'};">
+                ${team.connected ? 'Online' : 'Offline'}
+              </span>
             </div>
+            <div style="font-weight: 700; font-size: 1.05rem; color: #fff; font-family: var(--font-display);">${team.name}</div>
             <div class="mc-team-score">${team.score} đ</div>
-          </div>
-          <div style="display: flex; gap: 4px; margin-top: 4px;">
-            <button class="btn btn-ghost" style="flex: 1; padding: 4px 6px; font-size: 0.75rem;" onclick="promptChangeTeamName('${team.id}', '${team.name}')">
-              ✏️ Sửa Tên
-            </button>
-            <button class="btn btn-ghost" style="flex: 1; padding: 4px 6px; font-size: 0.75rem;" onclick="openScoreModalFor('${team.id}')">
-              ⚖️ Điểm
-            </button>
+            <div style="display: flex; gap: 6px; margin-top: 4px;">
+              <button class="btn btn-ghost" style="padding: 6px 8px; font-size: 0.8rem; flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 4px;" onclick="promptChangeTeamName('${team.id}', '${team.name}')">
+                ${SVGS.edit} <span>Đổi Tên</span>
+              </button>
+              <button class="btn btn-ghost" style="padding: 6px 8px; font-size: 0.8rem; flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 4px;" onclick="openScoreModalFor('${team.id}')">
+                ${SVGS.scale} <span>Điểm</span>
+              </button>
+            </div>
           </div>
         `;
-        container.appendChild(card);
-      });
+      }).join('');
     }
 
-    // Render Buzzer Queue
-    function renderBuzzerQueue(state) {
-      const list = document.getElementById('buzzerQueueList');
+    function updateBuzzerQueue(queue) {
       const badge = document.getElementById('buzzerQueueCount');
-
-      let queue = [];
-      if (state.status === 'ROUND1') queue = state.r1.buzzerQueue;
-      else if (state.status === 'ROUND2') queue = state.r2.buzzerQueue;
-      else if (state.status === 'ROUND3_BET') queue = state.r3.buzzerQueue;
-
+      const list = document.getElementById('buzzerQueueList');
       badge.innerText = `${queue.length} đội`;
 
-      if (queue.length === 0) {
-        list.innerHTML = `<div style="color: #64748b; font-size: 0.85rem; text-align: center;">Chưa có đội nào bấm chuông</div>`;
+      if (!queue.length) {
+        list.innerHTML = `<div style="color: #94a3b8; font-size: 0.9rem; text-align: center; padding: 12px 0;">Chưa có đội nào bấm chuông</div>`;
         return;
       }
 
       list.innerHTML = queue.map((item, idx) => `
-        <div class="queue-item" style="border-left: 3px solid ${item.color || '#fbbf24'};">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="font-weight: 900; color: #fbbf24;">#${idx + 1}</span>
-            <strong style="color: ${item.color || '#fff'};">${item.teamName}</strong>
+        <div class="queue-item" style="border-left: 4px solid ${item.teamColor};">
+          <div>
+            <strong style="color: var(--psy-yellow); font-family: var(--font-code);">#${idx + 1}</strong>
+            <strong style="color: ${item.teamColor}; margin-left: 6px; font-family: var(--font-display);">${item.teamName}</strong>
           </div>
-          <span style="color: #94a3b8; font-size: 0.75rem;">+${idx === 0 ? '0ms (Nhanh nhất)' : 'sau lượt'}</span>
+          <span style="color: var(--psy-lime); font-size: 0.85rem; font-family: var(--font-code);">
+            +${idx === 0 ? '0ms (Nhanh nhất)' : (item.timeDiff !== undefined ? item.timeDiff + 'ms' : 'sau')}
+          </span>
         </div>
       `).join('');
     }
 
-    // Render Event Log
-    function renderEventLog(logs) {
-      const container = document.getElementById('eventLogContainer');
-      if (!logs || logs.length === 0) {
-        container.innerHTML = `<div style="color: #64748b; text-align: center;">Chưa có sự kiện nào</div>`;
+    function updateLogs(logs) {
+      const container = document.getElementById('mcEventLogs');
+      if (!logs || !logs.length) {
+        container.innerHTML = `<div style="color: #94a3b8; text-align: center; padding: 16px 0;">Chưa có sự kiện nào</div>`;
         return;
       }
       container.innerHTML = logs.map(l => `
-        <div class="log-item">
-          <span style="color: #5eead4;">[${l.time}]</span>
-          <span style="color: #fbbf24; font-weight: bold;">[${l.type}]</span>
-          <span style="color: #e2e8f0;">${l.message}</span>
+        <div class="log-entry">
+          <span class="log-time">[${l.time || ''}]</span>
+          <span>${l.message || ''}</span>
         </div>
       `).join('');
+      container.scrollTop = container.scrollHeight;
     }
 
-    // Switch Tabs
-    function switchTab(tab) {
-      currentTab = tab;
-      ['R1', 'R2', 'R3', 'FINALE'].forEach(t => {
-        document.getElementById(`tab${t}`).classList.toggle('active', t === tab);
-      });
-      if (currentGameState) renderCurrentTabContent(currentGameState);
-    }
-
-    // Render Controls View
-    function renderCurrentTabContent(state) {
+    function renderTabContent(state) {
       const area = document.getElementById('tabContentArea');
 
       // TAB 1: ROUND 1
       if (currentTab === 'R1') {
-        const q = state.r1.currentQuestion;
         const qIdx = state.r1.questionIndex;
+        const q = state.r1.currentQuestion;
         const stage = state.r1.stage;
         const turnTeam = state.teams.find(t => t.id === state.r1.currentTurn);
 
         area.innerHTML = `
-          <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; flex-direction: column; gap: 16px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <h3 class="gold-text" style="font-size: 1.25rem;">🔔 VÒNG 1: CÂU HỎI SỐ ${qIdx + 1} / ${state.r1.totalQuestions}</h3>
-              <span class="badge ${stage === 'BUZZER_OPEN' ? 'badge-ruby bell-pulse' : 'badge-gold'}">
+              <h3 style="font-family: var(--font-display); font-size: 1.4rem; color: var(--psy-yellow); margin: 0; text-shadow: 1px 1px 0 var(--psy-pink);">
+                VÒNG 1: CÂU HỎI SỐ ${qIdx + 1} / ${state.r1.totalQuestions}
+              </h3>
+              <span class="badge ${stage === 'BUZZER_OPEN' ? 'badge-ruby bell-pulse' : 'badge-gold'}" style="font-family: var(--font-code);">
                 TRẠNG THÁI: ${stage}
               </span>
             </div>
 
             ${q ? `
-              <div style="padding: 16px; background: rgba(0,0,0,0.3); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                <div style="font-weight: 700; font-size: 1.1rem; color: #fff; margin-bottom: 8px;">
+              <div style="padding: 18px; background: rgba(71,0,165,0.3); border-radius: var(--radius-sm); border: 2px solid var(--psy-blue);">
+                <div style="font-weight: 700; font-size: 1.15rem; color: #fff; margin-bottom: 12px; font-family: var(--font-display);">
                   ${q.question}
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 0.9rem;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.95rem;">
                   ${q.options.map((opt, i) => `
-                    <div style="padding: 6px 10px; border-radius: 4px; background: ${i === q.correctIndex ? 'rgba(34,197,94,0.2)' : 'rgba(255,255,255,0.05)'}; border: 1px solid ${i === q.correctIndex ? '#22c55e' : 'transparent'};">
-                      ${opt} ${i === q.correctIndex ? '✓ (Đáp án đúng)' : ''}
+                    <div style="padding: 8px 12px; border-radius: var(--radius-sm); background: ${i === q.correctIndex ? 'rgba(194, 247, 0, 0.2)' : 'rgba(255,255,255,0.05)'}; border: 1.5px solid ${i === q.correctIndex ? 'var(--psy-lime)' : 'transparent'}; display: flex; align-items: center; justify-content: space-between;">
+                      <span>${opt}</span>
+                      ${i === q.correctIndex ? '<span style="color: var(--psy-lime); font-weight: bold; font-family: var(--font-code); display: flex; align-items: center; gap: 4px;">' + SVGS.check + ' Đáp án đúng</span>' : ''}
                     </div>
                   `).join('')}
                 </div>
@@ -524,21 +636,21 @@
 
             <!-- Current Answering Turn Banner -->
             ${turnTeam ? `
-              <div style="padding: 14px; background: rgba(245,158,11,0.15); border: 2px solid #fbbf24; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+              <div style="padding: 16px; background: rgba(255, 95, 0, 0.2); border: 3px solid var(--psy-orange); border-radius: var(--radius-sm); display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                  <div style="font-weight: 900; font-size: 1.1rem; color: #fbbf24;">
-                    🎯 ĐANG CẤP QUYỀN TRẢ LỜI CHO: ${turnTeam.name.toUpperCase()}
+                  <div style="font-family: var(--font-display); font-size: 1.25rem; color: var(--psy-yellow);">
+                    QUYỀN TRẢ LỜI: ${turnTeam.name.toUpperCase()}
                   </div>
-                  <div style="font-size: 0.85rem; color: #cbd5e1;">
-                    Lượt nỗ lực: #${state.r1.activeAttempt + 1} (Điểm nếu đúng: +${[30, 20, 10][state.r1.activeAttempt] || 10}đ) • Đội đã chọn: [${state.r1.selectedAnswer !== null ? ['A','B','C','D'][state.r1.selectedAnswer] : 'Chưa bấm'}]
+                  <div style="font-size: 0.9rem; color: #cbd5e1; font-family: var(--font-code);">
+                    Lượt nỗ lực: #${state.r1.activeAttempt + 1} (Điểm nếu đúng: +${[30, 20, 10][state.r1.activeAttempt] || 10}đ) • Lựa chọn: [${state.r1.selectedAnswer !== null ? ['A','B','C','D'][state.r1.selectedAnswer] : 'Chưa bấm'}]
                   </div>
                 </div>
                 <div class="action-btn-row">
-                  <button class="btn btn-jade" onclick="sendMcAction('R1_CONFIRM_CORRECT')">
-                    ✓ CHÍNH XÁC (+Điểm)
+                  <button class="btn btn-jade" onclick="sendMcAction('R1_CONFIRM_CORRECT')" style="display: inline-flex; align-items: center; gap: 6px;">
+                    ${SVGS.check} <span>CHÍNH XÁC (+Điểm)</span>
                   </button>
-                  <button class="btn btn-ruby" onclick="sendMcAction('R1_CONFIRM_WRONG')">
-                    ✗ CHƯA ĐÚNG (Chuyển quyền)
+                  <button class="btn btn-ruby" onclick="sendMcAction('R1_CONFIRM_WRONG')" style="display: inline-flex; align-items: center; gap: 6px;">
+                    ${SVGS.cross} <span>CHƯA ĐÚNG (Chuyển quyền)</span>
                   </button>
                 </div>
               </div>
@@ -546,20 +658,20 @@
 
             <!-- MC Step Actions -->
             <div class="action-btn-row">
-              <button class="btn btn-ghost" onclick="sendMcAction('R1_OPEN_QUESTION', { index: ${qIdx} })">
-                📖 1. Mở Câu Hỏi
+              <button class="btn btn-ghost" onclick="sendMcAction('R1_OPEN_QUESTION', { index: ${qIdx} })" style="display: inline-flex; align-items: center; gap: 6px;">
+                ${SVGS.book} <span>1. Mở Câu Hỏi</span>
               </button>
-              <button class="btn btn-gold" onclick="sendMcAction('R1_START_BUZZER')">
-                🔔 2. Bắt Đầu Bấm Chuông
+              <button class="btn btn-gold" onclick="sendMcAction('R1_START_BUZZER')" style="display: inline-flex; align-items: center; gap: 6px;">
+                ${SVGS.bell} <span>2. Bắt Đầu Bấm Chuông</span>
               </button>
-              <button class="btn btn-ghost" onclick="sendMcAction('R1_FORCE_REVEAL')">
-                💡 3. Công Bố Đáp Án
+              <button class="btn btn-ghost" onclick="sendMcAction('R1_FORCE_REVEAL')" style="display: inline-flex; align-items: center; gap: 6px;">
+                ${SVGS.bulb} <span>3. Công Bố Đáp Án</span>
               </button>
-              <button class="btn btn-ruby" onclick="sendMcAction('R1_NEXT_QUESTION')">
-                ➡️ ${qIdx < 4 ? 'Câu Tiếp Theo' : 'Tổng Kết Vòng 1'}
+              <button class="btn btn-ruby" onclick="sendMcAction('R1_NEXT_QUESTION')" style="display: inline-flex; align-items: center; gap: 6px;">
+                ${SVGS.arrowRight} <span>${qIdx < 4 ? 'Câu Tiếp Theo' : 'Tổng Kết Vòng 1'}</span>
               </button>
-              <button class="btn btn-jade" onclick="sendMcAction('GO_TO_ROUND2')">
-                🚀 Tiến Vào Vòng 2
+              <button class="btn btn-jade" onclick="sendMcAction('GO_TO_ROUND2')" style="display: inline-flex; align-items: center; gap: 6px;">
+                ${SVGS.rocket} <span>Tiến Vào Vòng 2</span>
               </button>
             </div>
           </div>
@@ -569,87 +681,88 @@
 
       // TAB 2: ROUND 2
       if (currentTab === 'R2') {
-        const pIdx = state.r2.pieceIndex;
         const currentP = state.r2.currentPiece;
         const kwTurnTeam = state.teams.find(t => t.id === state.r2.keywordTurn);
         const pTurnTeam = state.teams.find(t => t.id === state.r2.currentTurn);
 
         area.innerHTML = `
-          <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; flex-direction: column; gap: 16px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <h3 class="gold-text" style="font-size: 1.25rem;">🧩 VÒNG 2: BỨC TRANH BÍ ẨN (6 MẢNH GHÉP)</h3>
-              <span class="badge badge-gold">TỪ KHÓA: "${state.r2.keyword}"</span>
+              <h3 style="font-family: var(--font-display); font-size: 1.4rem; color: var(--psy-yellow); margin: 0; text-shadow: 1px 1px 0 var(--psy-pink);">
+                VÒNG 2: BỨC TRANH BÍ ẨN (6 MẢNH GHÉP)
+              </h3>
+              <span class="badge badge-gold" style="font-family: var(--font-code);">TỪ KHÓA: "${state.r2.keyword}"</span>
             </div>
 
-            <!-- Keyword Guess Alert if a team rings Keyword Buzzer -->
+            <!-- Keyword Guess Alert -->
             ${kwTurnTeam ? `
-              <div style="padding: 16px; background: rgba(225,29,72,0.25); border: 2px solid #f43f5e; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; animation: bellPulse 1.2s infinite;">
+              <div style="padding: 18px; background: rgba(255,29,142,0.3); border: 3px solid var(--psy-pink); border-radius: var(--radius-sm); display: flex; justify-content: space-between; align-items: center; animation: bellPulse 1.2s infinite;">
                 <div>
-                  <h4 style="font-size: 1.2rem; font-weight: 900; color: #fbbf24;">
-                    🔑 CHUÔNG TỪ KHÓA: ${kwTurnTeam.name.toUpperCase()} ĐOÁN TỪ KHÓA!
-                  </h4>
-                  <p style="font-size: 0.9rem; color: #cbd5e1;">Từ khóa chuẩn: <strong style="color: #4ade80;">${state.r2.keyword}</strong></p>
+                  <div style="font-family: var(--font-display); font-size: 1.3rem; color: var(--psy-yellow); display: flex; align-items: center; gap: 8px;">
+                    ${SVGS.key} <span>CHUÔNG TỪ KHÓA: ${kwTurnTeam.name.toUpperCase()} ĐOÁN TỪ KHÓA!</span>
+                  </div>
+                  <div style="font-size: 0.95rem; color: #fff;">Từ khóa chuẩn: <strong style="color: var(--psy-lime);">${state.r2.keyword}</strong></div>
                 </div>
                 <div class="action-btn-row">
-                  <button class="btn btn-gold" onclick="sendMcAction('R2_CONFIRM_KEYWORD_CORRECT')">
-                    ✓ ĐÚNG TỪ KHÓA (+100Đ & MỞ TRANH)
+                  <button class="btn btn-gold" onclick="sendMcAction('R2_CONFIRM_KEYWORD_CORRECT')" style="display: inline-flex; align-items: center; gap: 6px;">
+                    ${SVGS.check} <span>ĐÚNG TỪ KHÓA (+100Đ & MỞ TRANH)</span>
                   </button>
-                  <button class="btn btn-ruby" onclick="sendMcAction('R2_CONFIRM_KEYWORD_WRONG')">
-                    ✗ SAI (KHÓA QUYỀN TỪ KHÓA)
+                  <button class="btn btn-ruby" onclick="sendMcAction('R2_CONFIRM_KEYWORD_WRONG')" style="display: inline-flex; align-items: center; gap: 6px;">
+                    ${SVGS.cross} <span>SAI (KHÓA QUYỀN TỪ KHÓA)</span>
                   </button>
                 </div>
               </div>
             ` : ''}
 
             <!-- 6 Pieces Grid Selectors -->
-            <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px;">
+            <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px;">
               ${[0, 1, 2, 3, 4, 5].map(idx => `
                 <button class="btn ${state.r2.piecesUnlocked[idx] ? 'btn-jade' : 'btn-ghost'}" 
-                        style="padding: 12px 6px; font-size: 0.85rem;"
+                        style="padding: 12px 6px; font-size: 0.9rem; display: inline-flex; align-items: center; justify-content: center; gap: 6px;"
                         onclick="sendMcAction('R2_SELECT_PIECE', { pieceIndex: ${idx} })">
-                  ${state.r2.piecesUnlocked[idx] ? '✓ Mảnh ' + (idx + 1) : '🔒 Mảnh ' + (idx + 1)}
+                  ${state.r2.piecesUnlocked[idx] ? SVGS.check + ' Mảnh ' + (idx + 1) : SVGS.lock + ' Mảnh ' + (idx + 1)}
                 </button>
               `).join('')}
             </div>
 
             <!-- Current Piece Question Info -->
             ${currentP ? `
-              <div style="padding: 14px; background: rgba(0,0,0,0.3); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                <div style="font-weight: 800; color: #5eead4; margin-bottom: 4px;">${currentP.title}</div>
-                <div style="font-size: 1rem; color: #fff; margin-bottom: 6px;">${currentP.question}</div>
-                <div style="font-size: 0.85rem; color: #cbd5e1;">Đáp án đúng: <strong>${currentP.options[currentP.correctIndex]}</strong></div>
+              <div style="padding: 16px; background: rgba(71,0,165,0.3); border-radius: var(--radius-sm); border: 2px solid var(--psy-blue);">
+                <div style="font-weight: 700; color: var(--psy-lime); margin-bottom: 6px; font-family: var(--font-display);">${currentP.title}</div>
+                <div style="font-size: 1.05rem; color: #fff; margin-bottom: 8px;">${currentP.question}</div>
+                <div style="font-size: 0.9rem; color: #cbd5e1; font-family: var(--font-code);">Đáp án đúng: <strong style="color: var(--psy-yellow);">${currentP.options[currentP.correctIndex]}</strong></div>
               </div>
             ` : ''}
 
             <!-- Piece Answering Turn -->
             ${pTurnTeam ? `
-              <div style="padding: 12px; background: rgba(13,148,136,0.2); border: 2px solid #14b8a6; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-weight: 800; color: #5eead4;">
+              <div style="padding: 14px; background: rgba(194, 247, 0, 0.15); border: 2px solid var(--psy-lime); border-radius: var(--radius-sm); display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-family: var(--font-display); font-size: 1.15rem; color: var(--psy-lime);">
                   Đang trả lời Mảnh ghép: ${pTurnTeam.name}
                 </span>
                 <div class="action-btn-row">
-                  <button class="btn btn-jade" onclick="sendMcAction('R2_CONFIRM_PIECE_CORRECT')">
-                    ✓ ĐÚNG (+20/10đ & Mở Mảnh)
+                  <button class="btn btn-jade" onclick="sendMcAction('R2_CONFIRM_PIECE_CORRECT')" style="display: inline-flex; align-items: center; gap: 6px;">
+                    ${SVGS.check} <span>ĐÚNG (+20/10đ & Mở Mảnh)</span>
                   </button>
-                  <button class="btn btn-ruby" onclick="sendMcAction('R2_CONFIRM_PIECE_WRONG')">
-                    ✗ SAI (Chuyển quyền)
+                  <button class="btn btn-ruby" onclick="sendMcAction('R2_CONFIRM_PIECE_WRONG')" style="display: inline-flex; align-items: center; gap: 6px;">
+                    ${SVGS.cross} <span>SAI (Chuyển quyền)</span>
                   </button>
                 </div>
               </div>
             ` : ''}
 
             <div class="action-btn-row">
-              <button class="btn btn-jade" onclick="sendMcAction('R2_START_PIECE_BUZZER')">
-                🔔 Bật Chuông Mảnh Ghép
+              <button class="btn btn-jade" onclick="sendMcAction('R2_START_PIECE_BUZZER')" style="display: inline-flex; align-items: center; gap: 6px;">
+                ${SVGS.bell} <span>Bật Chuông Mảnh Ghép</span>
               </button>
-              <button class="btn btn-ghost" onclick="sendMcAction('R2_FORCE_UNLOCK_PIECE')">
-                🔓 Mở Mảnh Ghép Này
+              <button class="btn btn-ghost" onclick="sendMcAction('R2_FORCE_UNLOCK_PIECE')" style="display: inline-flex; align-items: center; gap: 6px;">
+                ${SVGS.unlock} <span>Mở Mảnh Ghép Này</span>
               </button>
-              <button class="btn btn-gold" onclick="sendMcAction('R2_FINISH_ROUND')">
-                📊 Tổng Kết Vòng 2
+              <button class="btn btn-gold" onclick="sendMcAction('R2_FINISH_ROUND')" style="display: inline-flex; align-items: center; gap: 6px;">
+                ${SVGS.trophy} <span>Tổng Kết Vòng 2</span>
               </button>
-              <button class="btn btn-ruby" onclick="sendMcAction('GO_TO_ROUND3')">
-                🎯 Tiến Vào Vòng 3 (Cược Điểm)
+              <button class="btn btn-ruby" onclick="sendMcAction('GO_TO_ROUND3')" style="display: inline-flex; align-items: center; gap: 6px;">
+                ${SVGS.rocket} <span>Tiến Vào Vòng 3 (Cược Điểm)</span>
               </button>
             </div>
           </div>
@@ -663,18 +776,20 @@
         const wager = turnTeam ? (state.r3.bets[turnTeam.id] || 0) : 0;
 
         area.innerHTML = `
-          <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; flex-direction: column; gap: 16px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <h3 class="gold-text" style="font-size: 1.25rem;">🎯 VÒNG 3: VỀ ĐÍCH VÀ THỬ THÁCH CƯỢC ĐIỂM</h3>
-              <span class="badge badge-ruby">GIAI ĐOẠN: ${state.r3.stage}</span>
+              <h3 style="font-family: var(--font-display); font-size: 1.4rem; color: var(--psy-yellow); margin: 0; text-shadow: 1px 1px 0 var(--psy-pink);">
+                VÒNG 3: VỀ ĐÍCH VÀ THỬ THÁCH CƯỢC ĐIỂM
+              </h3>
+              <span class="badge badge-ruby" style="font-family: var(--font-code);">GIAI ĐOẠN: ${state.r3.stage}</span>
             </div>
 
             <!-- Bets Table Status -->
-            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px;">
+            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; background: rgba(71,0,165,0.25); padding: 14px; border-radius: var(--radius-sm); border: 2px solid var(--psy-blue);">
               ${state.teams.map(t => `
-                <div style="text-align: center; border-top: 3px solid ${t.color}; padding: 6px;">
-                  <div style="font-size: 0.85rem; font-weight: bold; color: ${t.color};">${t.name}</div>
-                  <div style="font-size: 1.1rem; font-weight: 900; color: #fbbf24;">
+                <div style="text-align: center; border-top: 4px solid ${t.color}; padding: 8px;">
+                  <div style="font-size: 0.95rem; font-family: var(--font-display); color: ${t.color};">${t.name}</div>
+                  <div style="font-size: 1.25rem; font-weight: 700; color: var(--psy-yellow); font-family: var(--font-code);">
                     Cược: ${state.r3.bets[t.id] !== undefined ? state.r3.bets[t.id] + 'đ' : 'Đang chọn...'}
                   </div>
                 </div>
@@ -683,19 +798,21 @@
 
             <!-- Turn Banner -->
             ${turnTeam ? `
-              <div style="padding: 14px; background: rgba(225,29,72,0.2); border: 2px solid #f43f5e; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+              <div style="padding: 16px; background: rgba(255,29,142,0.25); border: 3px solid var(--psy-pink); border-radius: var(--radius-sm); display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                  <h4 style="font-size: 1.15rem; font-weight: 900; color: #fbbf24;">
-                    🔥 ${turnTeam.name.toUpperCase()} ĐANG TRẢ LỜI CÂU HỎI CUỐI!
+                  <h4 style="font-family: var(--font-display); font-size: 1.3rem; color: var(--psy-yellow); margin: 0;">
+                    ${turnTeam.name.toUpperCase()} ĐANG TRẢ LỜI CÂU HỎI CUỐI!
                   </h4>
-                  <p style="font-size: 0.85rem; color: #cbd5e1;">Mức cược của đội: <strong style="color: #fef08a;">${wager} điểm</strong></p>
+                  <p style="font-size: 0.95rem; color: #cbd5e1; margin: 4px 0 0; font-family: var(--font-code);">
+                    Mức cược của đội: <strong style="color: var(--psy-lime);">${wager} điểm</strong>
+                  </p>
                 </div>
                 <div class="action-btn-row">
-                  <button class="btn btn-jade" onclick="sendMcAction('R3_CONFIRM_CORRECT')">
-                    ✓ ĐÚNG (+${wager} ĐIỂM)
+                  <button class="btn btn-jade" onclick="sendMcAction('R3_CONFIRM_CORRECT')" style="display: inline-flex; align-items: center; gap: 6px;">
+                    ${SVGS.check} <span>ĐÚNG (+${wager} ĐIỂM)</span>
                   </button>
-                  <button class="btn btn-ruby" onclick="sendMcAction('R3_CONFIRM_WRONG')">
-                    ✗ SAI (-${wager} ĐIỂM)
+                  <button class="btn btn-ruby" onclick="sendMcAction('R3_CONFIRM_WRONG')" style="display: inline-flex; align-items: center; gap: 6px;">
+                    ${SVGS.cross} <span>SAI (-${wager} ĐIỂM)</span>
                   </button>
                 </div>
               </div>
@@ -703,20 +820,20 @@
 
             <!-- Step Actions -->
             <div class="action-btn-row">
-              <button class="btn btn-gold" onclick="sendMcAction('GO_TO_ROUND3')">
-                ⏳ 1. Bắt Đầu 10s Cược
+              <button class="btn btn-gold" onclick="sendMcAction('GO_TO_ROUND3')" style="display: inline-flex; align-items: center; gap: 6px;">
+                <span>1. Bắt Đầu 10s Cược</span>
               </button>
-              <button class="btn btn-ghost" onclick="sendMcAction('R3_FORCE_LOCK_BETS')">
-                🔒 2. Khóa Cược Ngay
+              <button class="btn btn-ghost" onclick="sendMcAction('R3_FORCE_LOCK_BETS')" style="display: inline-flex; align-items: center; gap: 6px;">
+                ${SVGS.lock} <span>2. Khóa Cược Ngay</span>
               </button>
-              <button class="btn btn-ghost" onclick="sendMcAction('R3_START_TRANSITION')">
-                ⚡ 3. 3s Chuyển Cảnh
+              <button class="btn btn-ghost" onclick="sendMcAction('R3_START_TRANSITION')" style="display: inline-flex; align-items: center; gap: 6px;">
+                <span>3. 3s Chuyển Cảnh</span>
               </button>
-              <button class="btn btn-jade" onclick="sendMcAction('R3_OPEN_QUESTION')">
-                📖 4. Mở Câu Hỏi & Chuông
+              <button class="btn btn-jade" onclick="sendMcAction('R3_OPEN_QUESTION')" style="display: inline-flex; align-items: center; gap: 6px;">
+                ${SVGS.book} <span>4. Mở Câu Hỏi & Chuông</span>
               </button>
-              <button class="btn btn-ruby" onclick="sendMcAction('R3_FINISH')">
-                🏆 5. Kết Thúc & Tiến Vào Lễ Vinh Danh
+              <button class="btn btn-ruby" onclick="sendMcAction('R3_FINISH')" style="display: inline-flex; align-items: center; gap: 6px;">
+                ${SVGS.trophy} <span>5. Tiến Vào Lễ Vinh Danh</span>
               </button>
             </div>
           </div>
@@ -738,18 +855,21 @@
         };
 
         area.innerHTML = `
-          <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; flex-direction: column; gap: 16px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <h3 class="gold-text" style="font-size: 1.25rem;">🏆 LỄ VINH DANH & CÔNG BỐ KẾT QUẢ</h3>
-              <span class="badge badge-gold">BƯỚC HIỆN TẠI: ${stepsMap[step] || 'Chưa bắt đầu'}</span>
+              <h3 style="font-family: var(--font-display); font-size: 1.4rem; color: var(--psy-yellow); margin: 0; text-shadow: 1px 1px 0 var(--psy-pink);">
+                LỄ VINH DANH & CÔNG BỐ KẾT QUẢ
+              </h3>
+              <span class="badge badge-gold" style="font-family: var(--font-code);">BƯỚC HIỆN TẠI: ${stepsMap[step] || 'Chưa bắt đầu'}</span>
             </div>
 
-            <div style="padding: 20px; background: rgba(0,0,0,0.4); border-radius: 8px; text-align: center;">
-              <p style="font-size: 1.1rem; color: #cbd5e1; margin-bottom: 14px;">
+            <div style="padding: 24px; background: rgba(71,0,165,0.3); border-radius: var(--radius-sm); border: 2px solid var(--psy-blue); text-align: center;">
+              <p style="font-size: 1.15rem; color: #cbd5e1; margin-bottom: 18px; font-family: var(--font-body);">
                 Nhấn nút bên dưới để điều khiển MC trình chiếu từng thứ hạng theo cao trào kịch tính:
               </p>
-              <button class="btn btn-gold" style="padding: 14px 28px; font-size: 1.15rem;" onclick="sendMcAction('FINALE_NEXT_STEP')">
-                📢 TIẾP TỤC: ${step < 6 ? 'Công Bố Thứ Hạng Tiếp Theo' : (step === 6 ? 'Hiển Thị Bảng Tổng Kết Toàn Diện' : 'Đã Hoàn Tất')} &rarr;
+              <button class="btn btn-gold" style="padding: 16px 32px; font-size: 1.25rem; display: inline-flex; align-items: center; gap: 10px;" onclick="sendMcAction('FINALE_NEXT_STEP')">
+                ${SVGS.trophy}
+                <span>TIẾP TỤC: ${step < 6 ? 'Công Bố Thứ Hạng Tiếp Theo' : (step === 6 ? 'Hiển Thị Bảng Tổng Kết Toàn Diện' : 'Đã Hoàn Tất')}</span>
               </button>
             </div>
           </div>
@@ -817,41 +937,41 @@
 
       if (round === 'round1') {
         body.innerHTML = questionsData.round1.map((q, idx) => `
-          <div style="padding: 12px; background: rgba(255,255,255,0.05); border-radius: 6px;">
-            <strong style="color: #fbbf24;">Câu hỏi ${idx + 1}:</strong>
-            <input type="text" class="form-input" value="${q.question}" onchange="questionsData.round1[${idx}].question = this.value" style="margin: 6px 0;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+          <div style="padding: 14px; background: rgba(71,0,165,0.3); border-radius: var(--radius-sm); border: 1px solid var(--psy-blue);">
+            <strong style="color: var(--psy-yellow); font-family: var(--font-display); font-size: 1.1rem;">Câu hỏi ${idx + 1}:</strong>
+            <input type="text" class="form-input" value="${q.question}" onchange="questionsData.round1[${idx}].question = this.value" style="margin: 8px 0; width: 100%;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
               ${q.options.map((opt, oIdx) => `
                 <input type="text" class="form-input" value="${opt}" onchange="questionsData.round1[${idx}].options[${oIdx}] = this.value">
               `).join('')}
             </div>
-            <div style="margin-top: 6px;">
-              <label style="font-size: 0.8rem; color: #94a3b8;">Chỉ số đáp án đúng (0=A, 1=B, 2=C, 3=D):</label>
-              <input type="number" class="form-input" min="0" max="3" value="${q.correctIndex}" onchange="questionsData.round1[${idx}].correctIndex = Number(this.value)" style="width: 80px;">
+            <div style="margin-top: 8px;">
+              <label style="font-size: 0.85rem; color: var(--psy-lime);">Chỉ số đáp án đúng (0=A, 1=B, 2=C, 3=D):</label>
+              <input type="number" class="form-input" min="0" max="3" value="${q.correctIndex}" onchange="questionsData.round1[${idx}].correctIndex = Number(this.value)" style="width: 80px; margin-left: 8px;">
             </div>
-            <textarea class="form-input" style="margin-top: 6px;" onchange="questionsData.round1[${idx}].explanation = this.value">${q.explanation}</textarea>
+            <textarea class="form-input" style="margin-top: 8px; width: 100%;" onchange="questionsData.round1[${idx}].explanation = this.value">${q.explanation}</textarea>
           </div>
         `).join('');
       } else if (round === 'round2') {
         body.innerHTML = `
-          <div style="padding: 12px; background: rgba(255,255,255,0.05); border-radius: 6px;">
-            <strong style="color: #fbbf24;">Từ khóa chủ đề Vòng 2:</strong>
-            <input type="text" class="form-input" value="${questionsData.round2.keyword}" onchange="questionsData.round2.keyword = this.value" style="margin: 6px 0;">
-            <strong style="color: #fbbf24;">Giải thích từ khóa:</strong>
-            <textarea class="form-input" onchange="questionsData.round2.keywordExplanation = this.value">${questionsData.round2.keywordExplanation}</textarea>
+          <div style="padding: 14px; background: rgba(71,0,165,0.3); border-radius: var(--radius-sm); border: 1px solid var(--psy-blue);">
+            <strong style="color: var(--psy-yellow); font-family: var(--font-display); font-size: 1.1rem;">Từ khóa chủ đề Vòng 2:</strong>
+            <input type="text" class="form-input" value="${questionsData.round2.keyword}" onchange="questionsData.round2.keyword = this.value" style="margin: 8px 0; width: 100%;">
+            <strong style="color: var(--psy-yellow); font-family: var(--font-display); font-size: 1.1rem;">Giải thích từ khóa:</strong>
+            <textarea class="form-input" style="width: 100%; margin-top: 6px;" onchange="questionsData.round2.keywordExplanation = this.value">${questionsData.round2.keywordExplanation}</textarea>
           </div>
           ${questionsData.round2.pieces.map((p, idx) => `
-            <div style="padding: 12px; background: rgba(255,255,255,0.05); border-radius: 6px;">
-              <strong style="color: #5eead4;">Mảnh ghép ${idx + 1}:</strong>
-              <input type="text" class="form-input" value="${p.question}" onchange="questionsData.round2.pieces[${idx}].question = this.value" style="margin: 6px 0;">
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+            <div style="padding: 14px; background: rgba(71,0,165,0.3); border-radius: var(--radius-sm); border: 1px solid var(--psy-blue);">
+              <strong style="color: var(--psy-lime); font-family: var(--font-display); font-size: 1.1rem;">Mảnh ghép ${idx + 1}:</strong>
+              <input type="text" class="form-input" value="${p.question}" onchange="questionsData.round2.pieces[${idx}].question = this.value" style="margin: 8px 0; width: 100%;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                 ${p.options.map((opt, oIdx) => `
                   <input type="text" class="form-input" value="${opt}" onchange="questionsData.round2.pieces[${idx}].options[${oIdx}] = this.value">
                 `).join('')}
               </div>
-              <div style="margin-top: 6px;">
-                <label style="font-size: 0.8rem; color: #94a3b8;">Chỉ số đáp án đúng (0=A, 1=B, 2=C, 3=D):</label>
-                <input type="number" class="form-input" min="0" max="3" value="${p.correctIndex}" onchange="questionsData.round2.pieces[${idx}].correctIndex = Number(this.value)" style="width: 80px;">
+              <div style="margin-top: 8px;">
+                <label style="font-size: 0.85rem; color: var(--psy-lime);">Chỉ số đáp án đúng (0=A, 1=B, 2=C, 3=D):</label>
+                <input type="number" class="form-input" min="0" max="3" value="${p.correctIndex}" onchange="questionsData.round2.pieces[${idx}].correctIndex = Number(this.value)" style="width: 80px; margin-left: 8px;">
               </div>
             </div>
           `).join('')}
@@ -859,19 +979,19 @@
       } else if (round === 'round3') {
         const q3 = questionsData.round3.question;
         body.innerHTML = `
-          <div style="padding: 12px; background: rgba(255,255,255,0.05); border-radius: 6px;">
-            <strong style="color: #f43f5e;">Câu hỏi quyết định Vòng 3:</strong>
-            <input type="text" class="form-input" value="${q3.question}" onchange="questionsData.round3.question.question = this.value" style="margin: 6px 0;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 6px 0;">
+          <div style="padding: 14px; background: rgba(71,0,165,0.3); border-radius: var(--radius-sm); border: 1px solid var(--psy-blue);">
+            <strong style="color: var(--psy-pink); font-family: var(--font-display); font-size: 1.1rem;">Câu hỏi quyết định Vòng 3:</strong>
+            <input type="text" class="form-input" value="${q3.question}" onchange="questionsData.round3.question.question = this.value" style="margin: 8px 0; width: 100%;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 8px 0;">
               ${q3.options.map((opt, oIdx) => `
                 <input type="text" class="form-input" value="${opt}" onchange="questionsData.round3.question.options[${oIdx}] = this.value">
               `).join('')}
             </div>
             <div>
-              <label style="font-size: 0.8rem; color: #94a3b8;">Chỉ số đáp án đúng (0=A, 1=B, 2=C, 3=D):</label>
-              <input type="number" class="form-input" min="0" max="3" value="${q3.correctIndex}" onchange="questionsData.round3.question.correctIndex = Number(this.value)" style="width: 80px;">
+              <label style="font-size: 0.85rem; color: var(--psy-lime);">Chỉ số đáp án đúng (0=A, 1=B, 2=C, 3=D):</label>
+              <input type="number" class="form-input" min="0" max="3" value="${q3.correctIndex}" onchange="questionsData.round3.question.correctIndex = Number(this.value)" style="width: 80px; margin-left: 8px;">
             </div>
-            <textarea class="form-input" style="margin-top: 6px;" onchange="questionsData.round3.question.explanation = this.value">${q3.explanation}</textarea>
+            <textarea class="form-input" style="margin-top: 8px; width: 100%;" onchange="questionsData.round3.question.explanation = this.value">${q3.explanation}</textarea>
           </div>
         `;
       }

@@ -8,10 +8,10 @@
   <style>
     body {
       touch-action: manipulation;
-      min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
-      background: #070a12;
+      background: var(--c-dark);
       overflow-x: hidden;
     }
     .player-container {
@@ -31,33 +31,30 @@
       align-items: center;
       justify-content: space-between;
       padding: 12px 18px;
-      border-radius: var(--radius-md);
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-base);
+      background: var(--c-dark-surface);
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     }
     .player-team-title {
-      font-weight: 800;
-      font-size: 1.15rem;
+      font-size: 1.3rem;
       letter-spacing: 0.3px;
     }
     .player-score-pill {
-      font-family: var(--font-display);
-      font-size: 1.5rem;
-      font-weight: 900;
-      color: #fbbf24;
-      text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+      font-family: var(--font-mono);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--c-surface);
     }
 
     /* Status Banner */
     .player-status-card {
       padding: 14px;
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius-base);
       text-align: center;
-      font-weight: 700;
-      font-size: 0.95rem;
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 1.15rem;
+      background: var(--c-dark-surface);
+      border: 1px solid var(--c-primary);
       transition: all 0.3s ease;
     }
 
@@ -72,27 +69,27 @@
       min-height: 340px;
     }
 
-    /* Massive Golden Bell Buzzer */
+    /* Massive Psychedelic Bell Buzzer */
     .big-buzzer-btn {
       width: 220px;
       height: 220px;
       border-radius: 50%;
-      border: 6px solid #fbbf24;
-      background: radial-gradient(circle at 35% 35%, #fef08a 0%, #f59e0b 50%, #b45309 100%);
-      color: #070a12;
+      border: 6px solid var(--c-surface);
+      background: radial-gradient(circle at 35% 35%, var(--c-surface) 0%, var(--c-primary) 60%, var(--c-neutral) 100%);
+      color: var(--c-neutral);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 0 40px rgba(245, 158, 11, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.4);
-      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 35px rgba(255, 95, 0, 0.7);
+      transition: var(--spring-transition);
       user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
     .big-buzzer-btn:active {
       transform: scale(0.92);
-      box-shadow: 0 0 70px rgba(245, 158, 11, 0.9);
+      box-shadow: 0 0 60px rgba(255, 215, 0, 0.9);
     }
     .big-buzzer-btn:disabled {
       opacity: 0.35;
@@ -102,16 +99,17 @@
       transform: none;
     }
     .buzzer-icon {
-      font-size: 4.2rem;
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+      width: 64px;
+      height: 64px;
+      stroke: var(--c-neutral);
     }
     .buzzer-label {
       font-family: var(--font-display);
-      font-size: 1.25rem;
-      font-weight: 900;
+      font-size: 1.4rem;
       letter-spacing: 1px;
       text-transform: uppercase;
-      margin-top: 4px;
+      margin-top: 6px;
+      color: var(--c-neutral);
     }
 
     /* Round 2 Dual Buzzer Buttons */
@@ -124,20 +122,19 @@
     .dual-buzzer-btn {
       width: 100%;
       padding: 24px 16px;
-      border-radius: var(--radius-md);
+      border-radius: var(--radius-base);
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 14px;
       font-family: var(--font-display);
-      font-size: 1.3rem;
-      font-weight: 900;
+      font-size: 1.4rem;
       text-transform: uppercase;
       cursor: pointer;
       user-select: none;
       border: 2px solid transparent;
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-      transition: all 0.15s ease;
+      transition: var(--spring-transition);
     }
     .dual-buzzer-btn:active {
       transform: scale(0.95);
@@ -149,16 +146,14 @@
       transform: none;
     }
     .btn-piece-buzzer {
-      background: linear-gradient(135deg, #0d9488 0%, #042f2e 100%);
-      border-color: #5eead4;
-      color: #ffffff;
-      box-shadow: 0 0 25px rgba(13, 148, 136, 0.4);
+      background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-neutral) 100%);
+      border-color: var(--c-tertiary);
+      color: var(--c-white);
     }
     .btn-keyword-buzzer {
-      background: linear-gradient(135deg, #f59e0b 0%, #78350f 100%);
-      border-color: #fbbf24;
-      color: #ffffff;
-      box-shadow: 0 0 30px rgba(245, 158, 11, 0.5);
+      background: linear-gradient(135deg, var(--c-surface) 0%, var(--c-secondary) 100%);
+      border-color: var(--c-surface);
+      color: var(--c-neutral);
     }
 
     /* Answer Selection Mode */
@@ -170,15 +165,14 @@
     }
     .player-opt-btn {
       padding: 22px 14px;
-      border-radius: var(--radius-md);
-      background: rgba(15, 23, 42, 0.85);
+      border-radius: var(--radius-base);
+      background: var(--c-dark-surface);
       border: 2px solid rgba(255, 255, 255, 0.2);
       color: #ffffff;
       font-family: var(--font-display);
-      font-size: 1.5rem;
-      font-weight: 900;
+      font-size: 1.6rem;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: var(--spring-transition);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -186,13 +180,12 @@
     }
     .player-opt-btn:active {
       transform: scale(0.95);
-      background: rgba(56, 189, 248, 0.3);
-      border-color: #38bdf8;
+      background: rgba(255, 215, 0, 0.25);
+      border-color: var(--c-surface);
     }
     .player-opt-btn.selected {
-      background: rgba(56, 189, 248, 0.35);
-      border-color: #38bdf8;
-      box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+      background: rgba(255, 215, 0, 0.3);
+      border-color: var(--c-surface);
     }
 
     /* Wager Section in Round 3 */
@@ -202,26 +195,17 @@
       flex-direction: column;
       gap: 14px;
       padding: 20px;
-      border-radius: var(--radius-md);
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-base);
+      background: var(--c-dark-surface);
+      border: 2px solid var(--c-primary);
     }
     .wager-slider {
       width: 100%;
-      height: 10px;
-      border-radius: 5px;
+      height: 12px;
+      border-radius: 6px;
       background: #1e293b;
       outline: none;
-      -webkit-appearance: none;
-    }
-    .wager-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: #fbbf24;
-      cursor: pointer;
-      box-shadow: 0 0 15px #fbbf24;
+      accent-color: var(--c-surface);
     }
     .chips-row {
       display: flex;
@@ -231,25 +215,26 @@
     .chip-btn {
       flex: 1;
       padding: 10px 4px;
-      border-radius: var(--radius-sm);
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #cbd5e1;
+      border-radius: var(--radius-base);
+      background: var(--c-neutral);
+      border: 1px solid var(--c-surface);
+      color: var(--c-surface);
+      font-family: var(--font-mono);
       font-weight: 700;
       font-size: 0.85rem;
       cursor: pointer;
     }
     .chip-btn:active {
-      background: rgba(245, 158, 11, 0.3);
-      border-color: #fbbf24;
+      background: var(--c-primary);
+      color: #fff;
     }
 
-    /* Team Selector Modal */
+    /* Modal */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.88);
-      backdrop-filter: blur(16px);
+      background: rgba(18, 7, 34, 0.92);
+      backdrop-filter: blur(12px);
       z-index: 1000;
       display: flex;
       flex-direction: column;
@@ -269,15 +254,15 @@
       align-items: center;
       justify-content: space-between;
       padding: 14px 18px;
-      border-radius: var(--radius-md);
-      background: rgba(15, 23, 42, 0.8);
+      border-radius: var(--radius-base);
+      background: var(--c-dark-surface);
       border: 1px solid rgba(255, 255, 255, 0.15);
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: var(--spring-transition);
     }
-    .team-select-item:hover, .team-select-item:active {
+    .team-select-item:active {
       transform: translateX(4px);
-      border-color: #fbbf24;
+      border-color: var(--c-surface);
     }
   </style>
 </head>
@@ -297,7 +282,7 @@
         </div>
       </div>
       <div style="text-align: right;">
-        <div style="font-size: 0.75rem; color: #94a3b8;">ĐIỂM HIỆN TẠI</div>
+        <div style="font-family: var(--font-mono); font-size: 0.75rem; color: #cbd5e1;">ĐIỂM HIỆN TẠI</div>
         <div class="player-score-pill" id="playerScore">0</div>
       </div>
     </header>
@@ -309,24 +294,23 @@
 
     <!-- Main Interaction Canvas -->
     <main class="interaction-canvas" id="playerCanvas">
-      <!-- Dynamic game action controls will render here -->
+      <!-- Dynamic action controls render here -->
     </main>
 
     <!-- Bottom info -->
-    <footer style="text-align: center; color: #64748b; font-size: 0.8rem; padding-top: 8px;">
-      Anime Religion Quiz Arena • Chế độ tay cầm điện thoại
+    <footer style="text-align: center; color: #94a3b8; font-size: 0.85rem; font-family: var(--font-mono);">
+      ANIME RELIGION QUIZ ARENA • PSICODÉLICO ANOS 60
     </footer>
   </div>
 
-  <!-- Team Selection Modal (if team not specified in URL) -->
+  <!-- Team Selection Modal -->
   <div class="modal-overlay" id="teamSelectModal" style="display: none;">
     <div class="team-picker-card">
       <div style="text-align: center; margin-bottom: 8px;">
-        <span style="font-size: 2.5rem;">🔔</span>
-        <h2 class="gold-text" style="font-family: var(--font-title); font-size: 1.5rem; margin-top: 5px;">
+        <h2 class="electric-heading" style="font-size: 1.8rem;">
           CHỌN ĐỘI THI ĐẤU
         </h2>
-        <p style="color: #94a3b8; font-size: 0.85rem;">Chọn đội bạn đại diện để nhận quyền bấm chuông</p>
+        <p style="color: var(--c-surface); font-size: 0.95rem;">Chọn đội bạn đại diện để nhận quyền bấm chuông</p>
       </div>
 
       <div id="teamSelectList" style="display: flex; flex-direction: column; gap: 10px;">
@@ -345,7 +329,6 @@
     let currentGameState = null;
     let selectedWager = 0;
 
-    // Connect & Join Team
     function joinTeam(teamId) {
       myTeamId = teamId;
       localStorage.setItem('arena_team_id', teamId);
@@ -367,18 +350,13 @@
       document.getElementById('teamSelectModal').style.display = 'flex';
     });
 
-    // Sound from server
     socket.on('play_sound', (name) => {
-      if (window.quizSound) {
-        window.quizSound.playSound(name);
-      }
+      if (window.quizSound) window.quizSound.playSound(name);
     });
 
-    // Main Game State Listener
     socket.on('game_state', (state) => {
       currentGameState = state;
 
-      // Show team selection modal if not yet joined
       if (!myTeamId) {
         renderTeamSelectModal(state.teams);
         return;
@@ -421,11 +399,11 @@
         item.style.borderLeft = `5px solid ${team.color}`;
         item.innerHTML = `
           <div>
-            <div style="font-weight: 800; font-size: 1.05rem; color: ${team.color};">${team.name}</div>
-            <div style="font-size: 0.75rem; color: #94a3b8;">${team.mascot || 'Thần thú'}</div>
+            <div style="font-size: 1.2rem; color: ${team.color};">${team.name}</div>
+            <div style="font-family: var(--font-mono); font-size: 0.8rem; color: #cbd5e1;">${team.mascot || 'Thần thú'}</div>
           </div>
           <span class="badge ${team.connected ? 'badge-ruby' : 'badge-live'}">
-            ${team.connected ? 'Đang có người dùng' : 'Sẵn sàng'}
+            ${team.connected ? 'Đang dùng' : 'Sẵn sàng'}
           </span>
         `;
         item.onclick = () => joinTeam(team.id);
@@ -433,7 +411,6 @@
       });
     }
 
-    // Render Canvas based on Game Stage
     function renderPlayerView(state) {
       const canvas = document.getElementById('playerCanvas');
       const statusCard = document.getElementById('playerStatusCard');
@@ -443,20 +420,23 @@
 
       // 1. LOBBY
       if (state.status === 'LOBBY') {
-        statusCard.innerHTML = `<span style="color: #4ade80;">● ĐÃ SẴN SÀNG THI ĐẤU</span>`;
+        statusCard.innerHTML = `<span style="color: var(--c-tertiary);">● ĐÃ SẴN SÀNG THI ĐẤU</span>`;
         canvas.innerHTML = `
           <div style="text-align: center; padding: 20px;">
-            <div class="bell-pulse" style="font-size: 5rem; margin-bottom: 12px;">🔔</div>
-            <h3 class="gold-text" style="font-size: 1.3rem; font-weight: 800;">CHÀO MỪNG ${team.name.toUpperCase()}!</h3>
-            <p style="color: #cbd5e1; font-size: 0.95rem; margin-top: 8px;">
-              Vui lòng quan sát màn hình máy chiếu.<br>Nút bấm chuông sẽ kích hoạt khi MC bắt đầu câu hỏi.
+            <svg class="ui-icon bell-pulse" style="width: 72px; height: 72px; stroke: var(--c-surface); margin-bottom: 12px;" viewBox="0 0 24 24">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <h3 class="electric-heading" style="font-size: 1.5rem;">CHÀO MỪNG ${team.name.toUpperCase()}!</h3>
+            <p style="color: var(--c-surface); font-size: 1rem; margin-top: 8px;">
+              Quan sát màn hình máy chiếu.<br>Nút bấm chuông sẽ kích hoạt khi MC bắt đầu câu hỏi.
             </p>
           </div>
         `;
         return;
       }
 
-      // 2. ROUND 1 — CHUÔNG VÀNG TRI THỨC
+      // 2. ROUND 1
       if (state.status === 'ROUND1') {
         const isBuzzerOpen = state.r1.stage === 'BUZZER_OPEN';
         const isMyTurn = state.r1.currentTurn === myTeamId;
@@ -464,22 +444,21 @@
         const myQueuePos = state.r1.buzzerQueue.findIndex(b => b.teamId === myTeamId) + 1;
 
         if (isMyTurn && state.r1.stage === 'ANSWERING') {
-          // My team has the turn! Render A B C D options
           statusCard.innerHTML = `
-            <div style="color: #4ade80; font-weight: 900; font-size: 1.1rem; animation: bellPulse 1s infinite;">
-              🎉 CHÚC MỪNG! ĐỘI BẠN ĐÃ GIÀNH QUYỀN TRẢ LỜI! (5s)
+            <div style="color: var(--c-tertiary); font-size: 1.25rem;" class="undulate-text">
+              CHÚC MỪNG! ĐỘI BẠN ĐÃ GIÀNH QUYỀN TRẢ LỜI! (5s)
             </div>
           `;
           canvas.innerHTML = `
             <div style="width: 100%; text-align: center;">
-              <p style="color: #fef08a; font-weight: 700; margin-bottom: 12px; font-size: 1.1rem;">
+              <p style="color: var(--c-surface); font-size: 1.15rem; margin-bottom: 12px;">
                 CHỌN ĐÁP ÁN TRÊN ĐIỆN THOẠI HOẶC ĐỌC CHO MC:
               </p>
               <div class="player-options-grid">
                 ${['A', 'B', 'C', 'D'].map((letter, idx) => `
                   <button class="player-opt-btn ${state.r1.selectedAnswer === idx ? 'selected' : ''}" onclick="selectAnswer(${idx})">
-                    <span style="font-size: 2rem; color: #fbbf24;">${letter}</span>
-                    <span style="font-size: 0.8rem; color: #cbd5e1;">Phương án ${letter}</span>
+                    <span style="font-size: 2.2rem; color: var(--c-surface); font-family: var(--font-mono);">${letter}</span>
+                    <span style="font-size: 0.9rem; color: #cbd5e1;">Phương án ${letter}</span>
                   </button>
                 `).join('')}
               </div>
@@ -488,19 +467,18 @@
           return;
         }
 
-        // Buzzer state
         if (isBuzzerOpen) {
           if (alreadyBuzzed) {
-            statusCard.innerHTML = `<span style="color: #38bdf8;">ĐÃ BẤM CHUÔNG THÀNH CÔNG! (HẠNG #${myQueuePos})</span>`;
+            statusCard.innerHTML = `<span style="color: var(--c-tertiary);">ĐÃ BẤM CHUÔNG THÀNH CÔNG! (HẠNG #${myQueuePos})</span>`;
           } else {
-            statusCard.innerHTML = `<span style="color: #fef08a; animation: bellPulse 1s infinite;">🔥 CHUÔNG ĐÃ MỞ! BẤM NGAY ĐỂ GIÀNH QUYỀN!</span>`;
+            statusCard.innerHTML = `<span style="color: var(--c-surface);" class="undulate-text">CHUÔNG ĐÃ MỞ! BẤM NGAY ĐỂ GIÀNH QUYỀN!</span>`;
           }
         } else if (state.r1.stage === 'QUESTION_OPEN') {
-          statusCard.innerHTML = `<span>📖 ĐANG ĐỌC CÂU HỎI ${state.r1.questionIndex + 1}...</span>`;
+          statusCard.innerHTML = `<span>ĐANG ĐỌC CÂU HỎI ${state.r1.questionIndex + 1}...</span>`;
         } else if (state.r1.stage === 'REVEALED') {
-          statusCard.innerHTML = `<span>💡 ĐÃ CÔNG BỐ ĐÁP ÁN</span>`;
+          statusCard.innerHTML = `<span>ĐÃ CÔNG BỐ ĐÁP ÁN</span>`;
         } else if (team.locked) {
-          statusCard.innerHTML = `<span style="color: #f87171;">⚠️ ĐÃ MẤT LƯỢT TRẢ LỜI CÂU HỎI NÀY</span>`;
+          statusCard.innerHTML = `<span style="color: var(--c-secondary);">ĐÃ MẤT LƯỢT TRẢ LỜI CÂU HỎI NÀY</span>`;
         } else {
           statusCard.innerHTML = `<span>ĐANG CHỜ LƯỢT CỦA MC...</span>`;
         }
@@ -510,11 +488,14 @@
                   id="mainBuzzerBtn"
                   ${(!isBuzzerOpen || alreadyBuzzed || team.locked) ? 'disabled' : ''}
                   onclick="triggerBuzzer('NORMAL')">
-            <span class="buzzer-icon">🔔</span>
+            <svg class="ui-icon buzzer-icon" viewBox="0 0 24 24">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
             <span class="buzzer-label">BẤM CHUÔNG</span>
           </button>
           ${alreadyBuzzed ? `
-            <div style="font-size: 1rem; color: #5eead4; font-weight: 700;">
+            <div style="font-family: var(--font-mono); font-size: 1.05rem; color: var(--c-tertiary); font-weight: 700;">
               Thứ tự máy chủ ghi nhận: Hạng #${myQueuePos}
             </div>
           ` : ''}
@@ -530,18 +511,18 @@
 
         if (isMyPieceTurn) {
           statusCard.innerHTML = `
-            <div style="color: #4ade80; font-weight: 900; font-size: 1.1rem; animation: bellPulse 1s infinite;">
-              🧩 BẠN GIÀNH QUYỀN TRẢ LỜI MẢNH GHÉP ${state.r2.pieceIndex + 1}!
+            <div style="color: var(--c-tertiary); font-size: 1.2rem;">
+              BẠN GIÀNH QUYỀN TRẢ LỜI MẢNH GHÉP ${state.r2.pieceIndex + 1}!
             </div>
           `;
           canvas.innerHTML = `
             <div style="width: 100%; text-align: center;">
-              <p style="color: #5eead4; font-weight: 700; margin-bottom: 12px;">CHỌN ĐÁP ÁN CHO MẢNH GHÉP:</p>
+              <p style="color: var(--c-tertiary); font-size: 1.1rem; margin-bottom: 12px;">CHỌN ĐÁP ÁN CHO MẢNH GHÉP:</p>
               <div class="player-options-grid">
                 ${['A', 'B', 'C', 'D'].map((letter, idx) => `
                   <button class="player-opt-btn" onclick="selectAnswer(${idx})">
-                    <span style="font-size: 2rem; color: #5eead4;">${letter}</span>
-                    <span style="font-size: 0.8rem; color: #cbd5e1;">Phương án ${letter}</span>
+                    <span style="font-size: 2.2rem; color: var(--c-tertiary); font-family: var(--font-mono);">${letter}</span>
+                    <span style="font-size: 0.9rem; color: #cbd5e1;">Phương án ${letter}</span>
                   </button>
                 `).join('')}
               </div>
@@ -552,17 +533,21 @@
 
         if (isMyKeywordTurn) {
           statusCard.innerHTML = `
-            <div style="color: #fbbf24; font-weight: 900; font-size: 1.1rem; animation: bellPulse 1s infinite;">
-              🔑 ĐỘI BẠN ĐANG ĐOÁN TỪ KHÓA CHỦ ĐỀ! (+100đ)
+            <div style="color: var(--c-surface); font-size: 1.25rem;">
+              ĐỘI BẠN ĐANG ĐOÁN TỪ KHÓA CHỦ ĐỀ! (+100đ)
             </div>
           `;
           canvas.innerHTML = `
             <div style="text-align: center; padding: 20px;">
-              <span style="font-size: 4rem;">🔑</span>
-              <h3 class="gold-text" style="font-size: 1.4rem; font-weight: 900; margin-top: 10px;">
+              <svg class="ui-icon" style="width: 64px; height: 64px; stroke: var(--c-surface);" viewBox="0 0 24 24">
+                <circle cx="7.5" cy="15.5" r="5.5"></circle>
+                <path d="m21 2-9.6 9.6"></path>
+                <path d="m15.5 7.5 3 3L22 7l-3-3"></path>
+              </svg>
+              <h3 class="electric-heading" style="font-size: 1.6rem; margin-top: 10px;">
                 HÃY TRẢ LỜI TRỰC TIẾP VỚI MC!
               </h3>
-              <p style="color: #cbd5e1; margin-top: 8px;">Nếu chính xác, đội bạn sẽ nhận ngay 100 điểm!</p>
+              <p style="color: var(--c-surface); margin-top: 8px;">Nếu chính xác, đội bạn nhận ngay 100 điểm!</p>
             </div>
           `;
           return;
@@ -572,41 +557,49 @@
 
         canvas.innerHTML = `
           <div class="r2-buzzer-grid">
-            <!-- Button 1: Piece Buzzer -->
             <button class="dual-buzzer-btn btn-piece-buzzer" 
                     ${(!isPieceBuzzerOpen || team.locked) ? 'disabled' : ''}
                     onclick="triggerBuzzer('PIECE')">
-              <span style="font-size: 2.2rem;">🧩</span>
+              <svg class="ui-icon" style="width: 28px; height: 28px; stroke: #fff;" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="9" y1="3" x2="9" y2="21"></line>
+                <line x1="15" y1="3" x2="15" y2="21"></line>
+                <line x1="3" y1="9" x2="21" y2="9"></line>
+                <line x1="3" y1="15" x2="21" y2="15"></line>
+              </svg>
               <div>
                 <div>CHUÔNG MẢNH GHÉP</div>
-                <div style="font-size: 0.75rem; font-weight: normal; opacity: 0.85;">Giành quyền mở mảnh ghép (+20đ)</div>
+                <div style="font-size: 0.8rem; font-family: var(--font-mono); opacity: 0.9;">Giành quyền mở mảnh (+20đ)</div>
               </div>
             </button>
 
-            <!-- Button 2: Keyword Buzzer -->
             <button class="dual-buzzer-btn btn-keyword-buzzer"
                     ${(team.keywordLocked || state.r2.keywordSolved) ? 'disabled' : ''}
                     onclick="triggerBuzzer('KEYWORD')">
-              <span style="font-size: 2.2rem;">🔑</span>
+              <svg class="ui-icon" style="width: 28px; height: 28px; stroke: var(--c-neutral);" viewBox="0 0 24 24">
+                <circle cx="7.5" cy="15.5" r="5.5"></circle>
+                <path d="m21 2-9.6 9.6"></path>
+                <path d="m15.5 7.5 3 3L22 7l-3-3"></path>
+              </svg>
               <div>
                 <div>CHUÔNG TỪ KHÓA</div>
-                <div style="font-size: 0.75rem; font-weight: normal; opacity: 0.85;">Giải mã toàn bộ bức tranh (+100đ)</div>
+                <div style="font-size: 0.8rem; font-family: var(--font-mono); opacity: 0.9;">Giải mã toàn bộ tranh (+100đ)</div>
               </div>
             </button>
           </div>
           ${team.keywordLocked ? `
-            <div style="color: #f87171; font-size: 0.85rem; text-align: center;">
-              ⚠️ Đội bạn đã mất quyền bấm chuông từ khóa trong Vòng 2.
+            <div style="color: var(--c-secondary); font-size: 0.9rem; text-align: center; font-family: var(--font-mono);">
+              Đội bạn đã mất quyền bấm chuông từ khóa trong Vòng 2.
             </div>
           ` : ''}
         `;
         return;
       }
 
-      // 4. ROUND 3 — CƯỢC ĐIỂM & VỀ ĐÍCH
+      // 4. ROUND 3 — CƯỢC ĐIỂM
       if (state.status === 'ROUND3_BET') {
         if (state.r3.stage === 'BETTING') {
-          statusCard.innerHTML = `<span style="color: #fbbf24; font-weight: 800;">⏳ ĐẶT CƯỢC: CÒN ${state.r3.betTimeLeft || 10} GIÂY!</span>`;
+          statusCard.innerHTML = `<span style="color: var(--c-surface);">ĐẶT CƯỢC: CÒN ${state.r3.betTimeLeft || 10} GIÂY!</span>`;
 
           const maxPoints = team.score;
           const isConfirmed = state.r3.bets[myTeamId] !== undefined;
@@ -614,47 +607,44 @@
           canvas.innerHTML = `
             <div class="wager-box">
               <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-size: 0.9rem; color: #cbd5e1;">Mức cược đang chọn:</span>
-                <span style="font-family: var(--font-display); font-size: 1.8rem; font-weight: 900; color: #fbbf24;" id="wagerDisplay">
+                <span style="font-size: 1rem; color: #cbd5e1;">Mức cược đang chọn:</span>
+                <span style="font-family: var(--font-mono); font-size: 2rem; font-weight: 700; color: var(--c-surface);" id="wagerDisplay">
                   ${selectedWager} đ
                 </span>
               </div>
 
-              <!-- Interactive Slider -->
               <input type="range" class="wager-slider" id="wagerSliderInput" min="0" max="${maxPoints}" value="${selectedWager}" 
                      oninput="updateWagerValue(this.value)">
 
-              <!-- Quick Chips -->
               <div class="chips-row">
                 <button class="chip-btn" onclick="setWagerQuick(0)">0đ</button>
                 <button class="chip-btn" onclick="addWagerQuick(10)">+10đ</button>
                 <button class="chip-btn" onclick="addWagerQuick(20)">+20đ</button>
                 <button class="chip-btn" onclick="addWagerQuick(50)">+50đ</button>
-                <button class="chip-btn" style="color: #f43f5e; font-weight: 900;" onclick="setWagerQuick(${maxPoints})">TẤT TAY</button>
+                <button class="chip-btn" style="color: var(--c-secondary); font-weight: 900;" onclick="setWagerQuick(${maxPoints})">TẤT TAY</button>
               </div>
 
-              <button class="btn btn-gold" style="width: 100%; padding: 14px; font-size: 1.1rem; margin-top: 8px;"
+              <button class="btn btn-gold" style="width: 100%; padding: 14px; font-size: 1.2rem; margin-top: 8px;"
                       onclick="submitWager()">
-                ${isConfirmed ? '✓ ĐÃ XÁC NHẬN (CẬP NHẬT)' : '🔒 XÁC NHẬN CƯỢC'}
+                ${isConfirmed ? 'ĐÃ XÁC NHẬN (CẬP NHẬT)' : 'XÁC NHẬN CƯỢC'}
               </button>
             </div>
           `;
           return;
         }
 
-        // Final Question Buzzer in Round 3
         if (state.r3.stage === 'QUESTION' || state.r3.stage === 'ANSWERING') {
           const isMyTurn = state.r3.currentTurn === myTeamId;
           if (isMyTurn) {
-            statusCard.innerHTML = `<span style="color: #4ade80; font-weight: 900;">🔥 LƯỢT CỦA BẠN TRẢ LỜI CÂU HỎI VỀ ĐÍCH!</span>`;
+            statusCard.innerHTML = `<span style="color: var(--c-tertiary);">LƯỢT CỦA BẠN TRẢ LỜI CÂU HỎI VỀ ĐÍCH!</span>`;
             canvas.innerHTML = `
               <div style="width: 100%; text-align: center;">
-                <p style="color: #fef08a; font-weight: 700; margin-bottom: 12px;">CHỌN ĐÁP ÁN QUYẾT ĐỊNH:</p>
+                <p style="color: var(--c-surface); font-size: 1.15rem; margin-bottom: 12px;">CHỌN ĐÁP ÁN QUYẾT ĐỊNH:</p>
                 <div class="player-options-grid">
                   ${['A', 'B', 'C', 'D'].map((letter, idx) => `
                     <button class="player-opt-btn ${state.r3.selectedAnswer === idx ? 'selected' : ''}" onclick="selectAnswer(${idx})">
-                      <span style="font-size: 2rem; color: #fbbf24;">${letter}</span>
-                      <span style="font-size: 0.8rem; color: #cbd5e1;">Phương án ${letter}</span>
+                      <span style="font-size: 2.2rem; color: var(--c-surface); font-family: var(--font-mono);">${letter}</span>
+                      <span style="font-size: 0.9rem; color: #cbd5e1;">Phương án ${letter}</span>
                     </button>
                   `).join('')}
                 </div>
@@ -663,12 +653,14 @@
             return;
           }
 
-          statusCard.innerHTML = `<span>🔥 BẤM CHUÔNG ĐỂ GIÀNH QUYỀN TRẢ LỜI CÂU HỎI CUỐI!</span>`;
+          statusCard.innerHTML = `<span>BẤM CHUÔNG ĐỂ GIÀNH QUYỀN TRẢ LỜI CÂU HỎI CUỐI!</span>`;
           canvas.innerHTML = `
             <button class="big-buzzer-btn bell-pulse" 
                     ${team.locked ? 'disabled' : ''}
                     onclick="triggerBuzzer('NORMAL')">
-              <span class="buzzer-icon">⚡</span>
+              <svg class="ui-icon buzzer-icon" viewBox="0 0 24 24">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
               <span class="buzzer-label">BẤM CHUÔNG</span>
             </button>
           `;
@@ -676,7 +668,7 @@
         }
 
         statusCard.innerHTML = `<span>ĐANG CHỜ HIỆU LỆNH CỦA MC...</span>`;
-        canvas.innerHTML = `<div style="text-align: center; color: #94a3b8;">Hãy chú ý màn hình máy chiếu!</div>`;
+        canvas.innerHTML = `<div style="text-align: center; color: #cbd5e1;">Chú ý màn hình máy chiếu!</div>`;
         return;
       }
 
@@ -684,40 +676,35 @@
       if (state.status.startsWith('FINALE')) {
         const lb = state.finale.leaderboard;
         const myRank = lb.find(t => t.id === myTeamId);
-        statusCard.innerHTML = `<span style="color: #fbbf24; font-weight: 800;">🏆 KẾT QUẢ CHUNG CUỘC</span>`;
+        statusCard.innerHTML = `<span style="color: var(--c-surface);">KẾT QUẢ CHUNG CUỘC</span>`;
         canvas.innerHTML = `
           <div style="text-align: center; padding: 20px;">
             ${myRank && myRank.rank === 1 ? `
-              <span style="font-size: 5rem;">👑</span>
-              <h2 class="ruby-text" style="font-size: 1.8rem; font-weight: 900; margin-top: 10px;">
+              <h2 class="electric-heading" style="font-size: 2rem; margin-top: 10px;">
                 XIN CHÚC MỪNG QUÁN QUÂN!
               </h2>
             ` : `
-              <span style="font-size: 4rem;">🎖️</span>
-              <h2 class="gold-text" style="font-size: 1.5rem; font-weight: 900; margin-top: 10px;">
+              <h2 class="gold-text" style="font-size: 1.8rem; margin-top: 10px;">
                 ĐỘI ĐẠT HẠNG ${myRank ? myRank.rank : '-'}
               </h2>
             `}
-            <div style="font-family: var(--font-display); font-size: 2.4rem; font-weight: 900; color: #fef08a; margin: 12px 0;">
+            <div style="font-family: var(--font-mono); font-size: 3rem; font-weight: 700; color: var(--c-surface); margin: 12px 0;">
               ${team.score} ĐIỂM
             </div>
-            <p style="color: #cbd5e1; font-size: 0.95rem;">Cảm ơn đội bạn đã tham gia cuộc thi xuất sắc!</p>
+            <p style="color: #cbd5e1; font-size: 1rem;">Cảm ơn đội bạn đã tham gia cuộc thi xuất sắc!</p>
           </div>
         `;
         return;
       }
 
-      // Recaps
       statusCard.innerHTML = `<span>TỔNG KẾT VÒNG THI</span>`;
       canvas.innerHTML = `
-        <div style="text-align: center; color: #94a3b8;">
-          <span style="font-size: 3rem;">📊</span>
-          <p style="margin-top: 10px;">MC đang tổng kết điểm số trên màn hình chính.</p>
+        <div style="text-align: center; color: #cbd5e1;">
+          <p style="font-size: 1.1rem;">MC đang tổng kết điểm số trên màn hình chính.</p>
         </div>
       `;
     }
 
-    // Trigger Buzzer
     function triggerBuzzer(type) {
       if (!myTeamId) return;
       if (window.quizSound) window.quizSound.playBuzzer();
@@ -727,7 +714,6 @@
       });
     }
 
-    // Select Answer
     function selectAnswer(index) {
       if (!myTeamId) return;
       if (window.quizSound) window.quizSound.playTick();
@@ -737,7 +723,6 @@
       });
     }
 
-    // Wager Helpers
     function updateWagerValue(val) {
       selectedWager = Math.floor(Number(val));
       const disp = document.getElementById('wagerDisplay');
@@ -770,7 +755,6 @@
       alert(`Đã gửi mức cược: ${selectedWager} điểm!`);
     }
 
-    // Init
     if (myTeamId) {
       joinTeam(myTeamId);
     }

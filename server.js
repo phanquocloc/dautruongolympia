@@ -58,7 +58,7 @@ function saveQuestions(data) {
   }
 }
 
-// Initial default teams
+// Initial default teams with 60s Psychedelic Palette (DESIGN.MD)
 function createDefaultTeams() {
   return [
     {
@@ -66,8 +66,8 @@ function createDefaultTeams() {
       name: 'Đội 1 – Hỏa Phượng',
       shortName: 'Hỏa Phượng',
       mascot: 'Phượng Hoàng Lửa',
-      color: '#ef4444',
-      bgGlow: 'rgba(239, 68, 68, 0.25)',
+      color: '#FF5F00', // Electric Orange
+      bgGlow: 'rgba(255, 95, 0, 0.25)',
       avatar: 'fire_phoenix',
       score: 0,
       r1Score: 0,
@@ -85,8 +85,8 @@ function createDefaultTeams() {
       name: 'Đội 2 – Thanh Long',
       shortName: 'Thanh Long',
       mascot: 'Rồng Xanh Ngọc',
-      color: '#06b6d4',
-      bgGlow: 'rgba(6, 182, 212, 0.25)',
+      color: '#C2F700', // Lime Green
+      bgGlow: 'rgba(194, 247, 0, 0.25)',
       avatar: 'azure_dragon',
       score: 0,
       r1Score: 0,
@@ -104,8 +104,8 @@ function createDefaultTeams() {
       name: 'Đội 3 – Bạch Hổ',
       shortName: 'Bạch Hổ',
       mascot: 'Hổ Trắng Oai Phong',
-      color: '#f59e0b',
-      bgGlow: 'rgba(245, 158, 11, 0.25)',
+      color: '#FFD700', // Sunshine Yellow
+      bgGlow: 'rgba(255, 215, 0, 0.25)',
       avatar: 'white_tiger',
       score: 0,
       r1Score: 0,
@@ -123,8 +123,8 @@ function createDefaultTeams() {
       name: 'Đội 4 – Huyền Vũ',
       shortName: 'Huyền Vũ',
       mascot: 'Rùa Rắn Linh Thiêng',
-      color: '#8b5cf6',
-      bgGlow: 'rgba(139, 92, 246, 0.25)',
+      color: '#A020F0', // Purple Haze
+      bgGlow: 'rgba(160, 32, 240, 0.25)',
       avatar: 'black_tortoise',
       score: 0,
       r1Score: 0,
@@ -142,8 +142,8 @@ function createDefaultTeams() {
       name: 'Đội 5 – Kim Lân',
       shortName: 'Kim Lân',
       mascot: 'Kỳ Lân Hoàng Kim',
-      color: '#eab308',
-      bgGlow: 'rgba(234, 179, 8, 0.25)',
+      color: '#FF1D8E', // Hot Pink
+      bgGlow: 'rgba(255, 29, 142, 0.25)',
       avatar: 'golden_qilin',
       score: 0,
       r1Score: 0,
@@ -414,7 +414,6 @@ app.get('/mc', (req, res) => res.sendFile(path.join(__dirname, 'public', 'mc.htm
 app.get('/projector', (req, res) => res.sendFile(path.join(__dirname, 'public', 'projector.html')));
 app.get('/player', (req, res) => res.sendFile(path.join(__dirname, 'public', 'player.html')));
 app.get('/sandbox', (req, res) => res.sendFile(path.join(__dirname, 'public', 'sandbox.html')));
-app.get('/psychedelic', (req, res) => res.sendFile(path.join(__dirname, 'public', 'psychedelic.html')));
 
 // Socket.io Events
 io.on('connection', (socket) => {
