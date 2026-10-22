@@ -475,32 +475,41 @@
       key: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="7.5" cy="15.5" r="5.5"></circle><path d="m21 2-9.6 9.6"></path><path d="m15.5 7.5 3 3L22 7l-3-3"></path></svg>'
     };
 
-    // Authenticate as MC
-    socket.emit('mc:auth', { pass: 'ARENAMC2026' }, (res) => {
-      if (res && res.ok) {
-        console.log('MC authenticated successfully');
-      } else {
-        alert('Sai mật khẩu MC!');
-      }
-    });
-
-    // Listeners
-    socket.on('gameState', (state) => {
+    // Handle incoming state from server
+    function handleIncomingState(state) {
+      if (!state) return;
       currentGameState = state;
       updateMcUI(state);
-    });
 
-    socket.on('buzzerQueue', (queue) => {
-      updateBuzzerQueue(queue);
-    });
+      // Extract buzzer queue
+      let q = [];
+      if (state.r1 && state.r1.buzzerQueue && state.r1.buzzerQueue.length) q = state.r1.buzzerQueue;
+      else if (state.r2 && state.r2.buzzerQueue && state.r2.buzzerQueue.length) q = state.r2.buzzerQueue;
+      else if (state.r3 && state.r3.buzzerQueue && state.r3.buzzerQueue.length) q = state.r3.buzzerQueue;
+      updateBuzzerQueue(q);
 
-    socket.on('logs', (logs) => {
-      updateLogs(logs);
-    });
+      // Extract event log
+      if (state.eventLog) {
+        updateLogs(state.eventLog);
+      }
+    }
 
-    // Send actions to server
+    // Support both snake_case and camelCase events
+    socket.on('game_state', handleIncomingState);
+    socket.on('gameState', handleIncomingState);
+    socket.on('buzzerQueue', updateBuzzerQueue);
+    socket.on('logs', updateLogs);
+
+    // Initial state fetch so UI renders IMMEDIATELY on page load
+    fetch('/api/state')
+      .then(res => res.json())
+      .then(state => handleIncomingState(state))
+      .catch(e => console.log('Init state fetch error:', e));
+
+    // Send actions to server (supports both mc_action and mcAction)
     function sendMcAction(action, payload = {}) {
-      socket.emit('mcAction', { action, ...payload });
+      socket.emit('mc_action', { action, payload });
+      socket.emit('mcAction', { action, payload, ...payload });
     }
 
     function switchTab(tab) {

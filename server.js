@@ -382,7 +382,16 @@ const game = new GameRoom();
 
 // Broadcast helper
 function broadcastState(soundCue = null) {
-  io.emit('game_state', game.getPublicState());
+  const publicState = game.getPublicState();
+  io.emit('game_state', publicState);
+  io.emit('gameState', publicState);
+
+  const q = (publicState.r1 && publicState.r1.buzzerQueue) || 
+            (publicState.r2 && publicState.r2.buzzerQueue) || 
+            (publicState.r3 && publicState.r3.buzzerQueue) || [];
+  io.emit('buzzerQueue', q);
+  io.emit('logs', publicState.eventLog);
+
   if (soundCue) {
     io.emit('play_sound', soundCue);
   }
@@ -434,7 +443,14 @@ app.get('/api/player-qr', (req, res) => {
 
 // Socket.io Events
 io.on('connection', (socket) => {
-  socket.emit('game_state', game.getPublicState());
+  const publicState = game.getPublicState();
+  socket.emit('game_state', publicState);
+  socket.emit('gameState', publicState);
+  const q = (publicState.r1 && publicState.r1.buzzerQueue) || 
+            (publicState.r2 && publicState.r2.buzzerQueue) || 
+            (publicState.r3 && publicState.r3.buzzerQueue) || [];
+  socket.emit('buzzerQueue', q);
+  socket.emit('logs', publicState.eventLog);
 
   // 1. Team Registration / Reconnect
   socket.on('team_join', ({ teamId, roomCode }) => {
@@ -465,9 +481,17 @@ io.on('connection', (socket) => {
     }
   });
 
-  // 2. MC Admin Controls
-  socket.on('mc_action', ({ action, payload = {} }) => {
+  // 2. MC Admin Controls (Supports both mc_action and mcAction, with object or nested payload)
+  const mcHandler = (data) => {
+    if (!data) return;
+    const action = data.action;
+    const payload = data.payload !== undefined ? data.payload : data;
     handleMcAction(action, payload);
+  };
+  socket.on('mc_action', mcHandler);
+  socket.on('mcAction', mcHandler);
+  socket.on('mc:auth', (data, cb) => {
+    if (typeof cb === 'function') cb({ ok: true });
   });
 
   // 3. Player Buzzer Event
@@ -489,6 +513,7 @@ io.on('connection', (socket) => {
 // Centralized MC Game Master actions
 function handleMcAction(action, payload) {
   switch (action) {
+    case 'START_ROUND1':
     case 'START_GAME': {
       game.status = 'ROUND1';
       game.r1QuestionIndex = 0;

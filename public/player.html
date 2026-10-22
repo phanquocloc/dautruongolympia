@@ -278,7 +278,10 @@
         <div class="team-avatar avatar-phoenix" id="playerAvatar"></div>
         <div>
           <div class="player-team-title" id="playerTeamName">Chọn Đội Của Bạn</div>
-          <span class="badge badge-gold" id="playerRoomBadge">PHÒNG: ARENA88</span>
+          <div style="display: flex; gap: 6px; align-items: center; margin-top: 2px;">
+            <span class="badge badge-gold" id="playerRoomBadge">PHÒNG: ARENA88</span>
+            <button onclick="switchTeamPrompt()" class="btn btn-ghost" style="padding: 2px 8px; font-size: 0.75rem; border-radius: 4px; border: 1px solid var(--c-primary); color: var(--c-surface);">Đổi Đội</button>
+          </div>
         </div>
       </div>
       <div style="text-align: right;">
@@ -373,9 +376,24 @@
 
       socket.emit('team_join', {
         teamId: myTeamId,
-        roomCode: 'ARENA88'
+        roomCode: currentGameState?.roomCode || 'ARENA88'
       });
     }
+
+    function switchTeamPrompt() {
+      if (currentGameState && currentGameState.teams) {
+        renderTeamSelectModal(currentGameState.teams);
+      } else {
+        document.getElementById('teamSelectModal').style.display = 'flex';
+      }
+    }
+
+    socket.on('connect', () => {
+      console.log('Player socket connected');
+      if (myTeamId) {
+        joinTeam(myTeamId);
+      }
+    });
 
     socket.on('join_success', ({ team, roomCode }) => {
       document.getElementById('playerRoomBadge').innerText = `PHÒNG: ${roomCode}`;
@@ -391,7 +409,8 @@
       if (window.quizSound) window.quizSound.playSound(name);
     });
 
-    socket.on('game_state', (state) => {
+    function handleIncomingPlayerState(state) {
+      if (!state) return;
       currentGameState = state;
 
       if (!myTeamId) {
@@ -405,7 +424,16 @@
       }
 
       renderPlayerView(state);
-    });
+    }
+
+    socket.on('game_state', handleIncomingPlayerState);
+    socket.on('gameState', handleIncomingPlayerState);
+
+    // Initial state fetch so UI renders immediately without waiting for first socket packet
+    fetch('/api/state')
+      .then(r => r.json())
+      .then(st => handleIncomingPlayerState(st))
+      .catch(() => {});
 
     function updateTeamHeader(team) {
       document.getElementById('playerTeamName').innerText = team.name;

@@ -555,11 +555,21 @@
       }
     }
 
-    socket.on('game_state', (state) => {
+    function handleIncomingProjectorState(state) {
+      if (!state) return;
       currentGameState = state;
       renderStage(state);
       renderPodiumBar(state);
-    });
+    }
+
+    socket.on('game_state', handleIncomingProjectorState);
+    socket.on('gameState', handleIncomingProjectorState);
+
+    // Initial state fetch so projector renders immediately without delay
+    fetch('/api/state')
+      .then(r => r.json())
+      .then(st => handleIncomingProjectorState(st))
+      .catch(() => {});
 
     socket.on('turn_timer_tick', ({ timeLeft }) => {
       const timerEl = document.getElementById('qTimerDisplay');
