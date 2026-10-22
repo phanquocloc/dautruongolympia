@@ -70,12 +70,13 @@
     .stage-arena {
       position: relative;
       border-radius: var(--radius-base);
-      overflow: hidden;
+      overflow-y: auto;
+      overflow-x: hidden;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
-      padding: 24px;
+      padding: 20px 24px;
       background: var(--c-dark-card);
       border: 2px solid var(--c-primary);
     }
@@ -291,21 +292,42 @@
     /* --- ROUND 2 PUZZLE STAGE --- */
     .r2-container {
       width: 100%;
-      height: 100%;
-      display: grid;
-      grid-template-columns: 1fr 380px;
-      gap: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
       align-items: center;
+    }
+    .r2-topbar {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 18px;
+      border-radius: var(--radius-base);
+      background: var(--c-dark-surface);
+      border: 1.5px solid var(--c-surface);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .r2-split-layout {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 20px;
+      align-items: start;
     }
     .puzzle-board-wrapper {
       position: relative;
       width: 100%;
-      aspect-ratio: 16 / 9;
-      max-height: 520px;
+      aspect-ratio: 16 / 10;
       border-radius: var(--radius-base);
       overflow: hidden;
       border: 3px solid var(--c-surface);
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+    }
+    .puzzle-board-large {
+      max-width: 680px;
+      margin: 10px auto;
     }
     .puzzle-bg-image {
       width: 100%;
@@ -332,31 +354,27 @@
       justify-content: center;
       transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
+    .puzzle-tile.active-piece {
+      border: 3.5px solid var(--c-surface);
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.85);
+      animation: bellPulse 1.2s infinite;
+    }
     .puzzle-tile.unlocked {
       opacity: 0;
       pointer-events: none;
       transform: scale(0.85) rotateY(90deg);
     }
     .puzzle-tile-num {
-      font-size: 3rem;
+      font-size: 2.5rem;
       color: var(--c-surface);
       text-shadow: 2px 2px 0px var(--c-neutral);
     }
     .puzzle-tile-label {
       font-family: var(--font-mono);
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--c-tertiary);
       text-transform: uppercase;
       letter-spacing: 1px;
-    }
-
-    /* Round 2 Side Panel */
-    .r2-side-panel {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      height: 100%;
-      justify-content: center;
     }
 
     /* --- ROUND 3 WAGER VIEW --- */
@@ -486,7 +504,7 @@
     </svg>
     <div>
       <h3 id="buzzerTeamName" style="font-size: 1.4rem; color: var(--c-surface);">ĐỘI BẤM CHUÔNG!</h3>
-      <p id="buzzerDetails" style="font-size: 0.85rem; color: #cbd5e1; font-family: var(--font-mono);">Đang giữ quyền trả lời (5 giây)</p>
+      <p id="buzzerDetails" style="font-size: 0.85rem; color: #cbd5e1; font-family: var(--font-mono);">Đang giữ quyền trả lời (45 giây)</p>
     </div>
   </div>
 
@@ -639,7 +657,7 @@
         buzzerAlert.style.display = 'flex';
         document.getElementById('buzzerTeamName').innerText = `${activeTurnTeam.name.toUpperCase()} GIÀNH QUYỀN!`;
         document.getElementById('buzzerTeamName').style.color = activeTurnTeam.color;
-        document.getElementById('buzzerDetails').innerText = state.r2.keywordTurn ? 'Đoán từ khóa chủ đề (+100 điểm)' : 'Thời gian trả lời: 5 giây';
+        document.getElementById('buzzerDetails').innerText = state.r2.keywordTurn ? 'Đoán từ khóa chủ đề (+100 điểm)' : 'Thời gian trả lời: 45 giây';
       } else {
         buzzerAlert.style.display = 'none';
       }
@@ -693,7 +711,7 @@
             <div class="q-header-row">
               <span class="q-topic-tag">${q.topic || 'Triết học Mác – Lênin'}</span>
               <div class="q-timer-badge" id="qTimerDisplay">
-                ${state.r1.timeLeft || 5}s
+                ${state.r1.timeLeft !== undefined && state.r1.timeLeft !== null ? state.r1.timeLeft : 45}s
               </div>
             </div>
 
@@ -747,65 +765,120 @@
 
         const p = state.r2.currentPiece;
         const pieces = state.r2.piecesUnlocked;
+        const isPieceActive = p && state.r2.stage !== 'IDLE';
 
         arena.innerHTML = `
           <div class="r2-container">
-            <div class="puzzle-board-wrapper">
-              <img src="/assets/images/round2_mystery.jpg" alt="Bức Tranh Bí Ẩn" class="puzzle-bg-image">
-              <div class="puzzle-grid">
-                ${[0, 1, 2, 3, 4, 5].map(idx => `
-                  <div class="puzzle-tile ${pieces[idx] ? 'unlocked' : ''}">
-                    <span class="puzzle-tile-num">${idx + 1}</span>
-                    <span class="puzzle-tile-label">Mảnh Ghép ${idx + 1}</span>
+            <!-- Topbar with Stage Info, Timer and Keyword Status -->
+            <div class="r2-topbar">
+              <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <span class="badge badge-gold" style="font-size: 1rem; padding: 6px 14px;">VÒNG 2: BỨC TRANH BÍ ẨN</span>
+                ${isPieceActive ? `
+                  <span class="badge badge-jade" style="font-size: 1rem; padding: 6px 14px;">
+                    MẢNH GHÉP SỐ ${state.r2.pieceIndex + 1}: ${p.title} (+20đ / 10đ)
+                  </span>
+                ` : ''}
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 14px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="color: var(--c-surface); font-weight: bold; font-size: 0.95rem;">TỪ KHÓA CHỦ ĐỀ (+100Đ):</span>
+                  <span class="badge ${state.r2.keywordSolved ? 'badge-jade' : 'badge-gold'}" style="font-size: 1rem; letter-spacing: 1px;">
+                    ${state.r2.keywordSolved ? state.r2.keyword : '[ BÍ ẨN ]'}
+                  </span>
+                </div>
+                ${isPieceActive ? `
+                  <div class="q-timer-badge" id="qTimerDisplay">
+                    ${state.r2.timeLeft !== undefined && state.r2.timeLeft !== null ? state.r2.timeLeft : 45}s
                   </div>
-                `).join('')}
+                ` : ''}
               </div>
             </div>
 
-            <div class="r2-side-panel">
-              <div class="card-psy" style="background: var(--c-dark-surface); border: 2px solid var(--c-surface);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                  <span class="badge badge-gold">TỪ KHÓA CHỦ ĐỀ</span>
-                  <span style="font-family: var(--font-mono); font-weight: 700; color: var(--c-surface);">+100 ĐIỂM</span>
+            ${isPieceActive ? `
+              <!-- Active Piece Layout: Puzzle Board on Left, Full Question Box on Right -->
+              <div class="r2-split-layout">
+                <!-- Left: Puzzle Board Preview -->
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                  <div class="puzzle-board-wrapper">
+                    <img src="/assets/images/round2_mystery.jpg" alt="Bức Tranh Bí Ẩn" class="puzzle-bg-image">
+                    <div class="puzzle-grid">
+                      ${[0, 1, 2, 3, 4, 5].map(idx => `
+                        <div class="puzzle-tile ${pieces[idx] ? 'unlocked' : ''} ${state.r2.pieceIndex === idx ? 'active-piece' : ''}">
+                          <span class="puzzle-tile-num">${idx + 1}</span>
+                          <span class="puzzle-tile-label">${state.r2.pieceIndex === idx ? 'Đang Mở' : 'Mảnh ' + (idx + 1)}</span>
+                        </div>
+                      `).join('')}
+                    </div>
+                  </div>
+                  <div style="padding: 10px 14px; background: var(--c-dark-surface); border: 1.5px solid var(--c-primary); border-radius: var(--radius-base); text-align: center; font-size: 0.9rem; color: #cbd5e1;">
+                    💡 Bấm <strong style="color: var(--c-surface);">CHUÔNG TỪ KHÓA</strong> trên điện thoại bất cứ lúc nào để giải mã (+100đ)!
+                  </div>
                 </div>
-                <p style="font-size: 0.95rem; color: #cbd5e1; margin-bottom: 10px;">
-                  Bấm <strong>CHUÔNG TỪ KHÓA</strong> trên điện thoại bất kỳ lúc nào để giải mã!
-                </p>
-                ${state.r2.keywordSolved ? `
-                  <div style="padding: 12px; background: rgba(194, 247, 0, 0.2); border: 1.5px solid var(--c-tertiary); border-radius: var(--radius-base); text-align: center;">
-                    <div style="font-size: 1.5rem; color: var(--c-tertiary); font-weight: 700;">${state.r2.keyword}</div>
-                    <div style="font-size: 0.9rem; color: #f1f5f9; margin-top: 4px;">${state.r2.keywordExplanation}</div>
-                  </div>
-                ` : `
-                  <div style="font-family: var(--font-mono); letter-spacing: 4px; font-size: 1.3rem; color: var(--c-surface); text-align: center;">
-                    [ TỪ KHÓA BÍ ẨN ]
-                  </div>
-                `}
-              </div>
 
-              ${p && state.r2.stage !== 'IDLE' ? `
-                <div class="card-psy" style="background: var(--c-dark-surface); border: 2px solid var(--c-primary);">
-                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <span class="badge badge-jade">${p.title}</span>
-                    <span style="font-family: var(--font-mono); font-weight: 700; color: var(--c-tertiary);">+20 / 10 ĐIỂM</span>
-                  </div>
-                  <h4 style="font-size: 1.25rem; line-height: 1.35; margin-bottom: 12px; color: #ffffff;">
+                <!-- Right: High-prominence Question Box (Never Covered!) -->
+                <div class="q-box" style="max-width: 100%;">
+                  <div class="q-card" style="font-size: 1.6rem; padding: 22px 28px; line-height: 1.4; border-color: var(--c-tertiary); text-align: left;">
+                    <div style="font-size: 0.95rem; color: var(--c-tertiary); font-weight: bold; margin-bottom: 6px; text-transform: uppercase;">
+                      CÂU HỎI MẢNH GHÉP SỐ ${state.r2.pieceIndex + 1}
+                    </div>
                     ${p.question}
-                  </h4>
-                  <div style="display: flex; flex-direction: column; gap: 8px;">
-                    ${p.options.map((opt, i) => `
-                      <div style="padding: 8px 12px; background: rgba(255,255,255,0.06); border-radius: 6px; font-size: 1rem; border: 1px solid rgba(255,255,255,0.1); ${state.r2.stage === 'PIECE_REVEALED' && i === p.correctIndex ? 'border-color: var(--c-tertiary); background: rgba(194,247,0,0.25); font-weight: bold;' : ''}">
-                        ${opt}
+                  </div>
+
+                  <div class="options-grid" style="margin-top: 14px;">
+                    ${p.options.map((optText, idx) => {
+                      let optClass = 'opt-card';
+                      if (state.r2.selectedAnswer === idx) optClass += ' selected';
+                      if (state.r2.stage === 'PIECE_REVEALED') {
+                        if (idx === p.correctIndex) optClass += ' correct-answer';
+                        else if (state.r2.selectedAnswer === idx) optClass += ' wrong-answer';
+                      }
+                      return `
+                        <div class="${optClass}">
+                          <span class="opt-letter">${['A','B','C','D'][idx]}</span>
+                          <span>${optText.replace(/^[A-D]\.\s*/, '')}</span>
+                        </div>
+                      `;
+                    }).join('')}
+                  </div>
+
+                  ${state.r2.stage === 'PIECE_REVEALED' ? `
+                    <div class="explanation-overlay" style="position: static; margin-top: 14px;">
+                      <h3 style="color: var(--c-surface); font-size: 1.4rem; margin-bottom: 8px;">
+                        ĐÁP ÁN CHÍNH XÁC: ${['A','B','C','D'][p.correctIndex]}. ${p.options[p.correctIndex].replace(/^[A-D]\.\s*/, '')}
+                      </h3>
+                      <p style="font-size: 1.15rem; line-height: 1.5; color: #f1f5f9;">
+                        ${p.explanation || 'Mảnh ghép đã được mở khóa thành công!'}
+                      </p>
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+            ` : `
+              <!-- Idle Layout: Full Size Puzzle Board Centered -->
+              <div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 16px;">
+                <div class="puzzle-board-wrapper puzzle-board-large">
+                  <img src="/assets/images/round2_mystery.jpg" alt="Bức Tranh Bí Ẩn" class="puzzle-bg-image">
+                  <div class="puzzle-grid">
+                    ${[0, 1, 2, 3, 4, 5].map(idx => `
+                      <div class="puzzle-tile ${pieces[idx] ? 'unlocked' : ''}">
+                        <span class="puzzle-tile-num">${idx + 1}</span>
+                        <span class="puzzle-tile-label">${pieces[idx] ? 'Đã Mở' : 'Mảnh ' + (idx + 1)}</span>
                       </div>
                     `).join('')}
                   </div>
                 </div>
-              ` : `
-                <div class="card-psy" style="background: var(--c-dark-surface); text-align: center; color: #cbd5e1;">
-                  <p style="font-size: 1.05rem;">Đang chờ MC mở câu hỏi mảnh ghép tiếp theo...</p>
+
+                <div style="padding: 16px 28px; background: var(--c-dark-surface); border: 2px solid var(--c-surface); border-radius: var(--radius-base); text-align: center; max-width: 680px; width: 100%;">
+                  <h3 style="color: var(--c-surface); font-size: 1.3rem; margin-bottom: 6px;">
+                    ĐANG CHỜ MC MỞ MẢNH GHÉP TIẾP THEO
+                  </h3>
+                  <p style="color: #cbd5e1; font-size: 1rem;">
+                    Các đội chơi hãy sẵn sàng tay trên nút bấm chuông điện thoại để giành quyền mở mảnh (+20đ / 10đ)!
+                  </p>
                 </div>
-              `}
-            </div>
+              </div>
+            `}
           </div>
         `;
         return;
@@ -882,7 +955,7 @@
               <div class="q-header-row">
                 <span class="q-topic-tag">CÂU HỎI QUYẾT ĐỊNH VẬN MỆNH</span>
                 <div class="q-timer-badge" id="qTimerDisplay">
-                  ${state.r3.timeLeft || 5}s
+                  ${state.r3.timeLeft !== undefined && state.r3.timeLeft !== null ? state.r3.timeLeft : 45}s
                 </div>
               </div>
 

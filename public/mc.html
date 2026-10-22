@@ -764,8 +764,11 @@
             ` : ''}
 
             <div class="action-btn-row">
+              <button class="btn btn-gold" onclick="sendMcAction('R2_SELECT_AND_BUZZ', { pieceIndex: ${state.r2.pieceIndex >= 0 ? state.r2.pieceIndex : 0} })" style="display: inline-flex; align-items: center; gap: 6px; font-weight: bold; background: var(--c-primary); color: #fff;">
+                ${SVGS.bell} <span>⚡ Mở Mảnh & Bật Chuông Ngay (1 Chạm)</span>
+              </button>
               <button class="btn btn-jade" onclick="sendMcAction('R2_START_PIECE_BUZZER')" style="display: inline-flex; align-items: center; gap: 6px;">
-                ${SVGS.bell} <span>Bật Chuông Mảnh Ghép</span>
+                ${SVGS.bell} <span>Chỉ Bật Chuông</span>
               </button>
               <button class="btn btn-ghost" onclick="sendMcAction('R2_FORCE_UNLOCK_PIECE')" style="display: inline-flex; align-items: center; gap: 6px;">
                 ${SVGS.unlock} <span>Mở Mảnh Ghép Này</span>

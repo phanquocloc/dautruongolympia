@@ -242,6 +242,7 @@ class GameRoom {
     this.r1ActiveAttempt = 0;
     this.r1CurrentTurn = null;
     this.r1SelectedAnswer = null;
+    this.r1TurnTimeLeft = 45;
     if (this.r1TurnTimer) clearInterval(this.r1TurnTimer);
 
     this.r2CurrentPieceIndex = -1;
@@ -354,10 +355,10 @@ class GameRoom {
     return result;
   }
 
-  // Timer helpers for 5-second answer window
+  // Timer helpers for 45-second answer window
   startTurnCountdown(onTick, onEnd) {
     if (this.r1TurnTimer) clearInterval(this.r1TurnTimer);
-    this.r1TurnTimeLeft = 5;
+    this.r1TurnTimeLeft = 45;
     this.r1TurnTimer = setInterval(() => {
       if (this.paused) return;
       this.r1TurnTimeLeft -= 1;
@@ -671,6 +672,22 @@ function handleMcAction(action, payload) {
     }
 
     // --- ROUND 2 ACTIONS ---
+    case 'R2_SELECT_AND_BUZZ': {
+      const { pieceIndex } = payload;
+      if (pieceIndex >= 0 && pieceIndex < 6) {
+        game.r2CurrentPieceIndex = pieceIndex;
+        game.r2Stage = 'PIECE_BUZZER';
+        game.r2BuzzerQueue = [];
+        game.r2ActiveAttempt = 0;
+        game.r2CurrentTurn = null;
+        game.teams.forEach(t => (t.locked = false));
+        game.stopTurnCountdown();
+        game.logEvent('GAME', `Vòng 2: Mở Mảnh ghép ${pieceIndex + 1} & Bật chuông ngay!`);
+        broadcastState('bell');
+      }
+      break;
+    }
+
     case 'R2_SELECT_PIECE': {
       const { pieceIndex } = payload;
       if (pieceIndex >= 0 && pieceIndex < 6) {
@@ -988,7 +1005,7 @@ function grantR1Turn(teamId) {
   game.r1SelectedAnswer = null;
   game.r1Stage = 'ANSWERING';
   const team = game.getTeam(teamId);
-  game.logEvent('TURN', `Lượt trả lời cấp cho ${team ? team.name : teamId} (5 giây)`);
+  game.logEvent('TURN', `Lượt trả lời cấp cho ${team ? team.name : teamId} (45 giây)`);
   broadcastState('bell');
 
   game.startTurnCountdown(
@@ -997,7 +1014,7 @@ function grantR1Turn(teamId) {
     },
     () => {
       // Timeout
-      game.logEvent('TIMEOUT', `${team ? team.name : teamId} hết thời gian 5s trả lời!`);
+      game.logEvent('TIMEOUT', `${team ? team.name : teamId} hết thời gian 45s trả lời!`);
       handleR1WrongOrTimeout();
     }
   );
@@ -1036,13 +1053,13 @@ function grantR2Turn(teamId) {
   game.r2CurrentTurn = teamId;
   game.r2Stage = 'PIECE_ANSWERING';
   const team = game.getTeam(teamId);
-  game.logEvent('TURN', `Lượt trả lời Mảnh ghép ${game.r2CurrentPieceIndex + 1} cấp cho ${team ? team.name : teamId}`);
+  game.logEvent('TURN', `Lượt trả lời Mảnh ghép ${game.r2CurrentPieceIndex + 1} cấp cho ${team ? team.name : teamId} (45 giây)`);
   broadcastState('bell');
 
   game.startTurnCountdown(
     (left) => io.emit('turn_timer_tick', { timeLeft: left }),
     () => {
-      game.logEvent('TIMEOUT', `${team ? team.name : teamId} hết giờ trả lời mảnh ghép!`);
+      game.logEvent('TIMEOUT', `${team ? team.name : teamId} hết thời gian 45s trả lời mảnh ghép!`);
       handleR2PieceWrongOrTimeout();
     }
   );
@@ -1074,13 +1091,13 @@ function grantR3Turn(teamId) {
   game.r3SelectedAnswer = null;
   game.r3Stage = 'ANSWERING';
   const team = game.getTeam(teamId);
-  game.logEvent('TURN', `Quyền trả lời câu hỏi quyết định thuộc về ${team ? team.name : teamId}`);
+  game.logEvent('TURN', `Quyền trả lời câu hỏi quyết định thuộc về ${team ? team.name : teamId} (45 giây)`);
   broadcastState('bell');
 
   game.startTurnCountdown(
     (left) => io.emit('turn_timer_tick', { timeLeft: left }),
     () => {
-      game.logEvent('TIMEOUT', `${team ? team.name : teamId} hết thời gian trả lời câu hỏi Vòng 3!`);
+      game.logEvent('TIMEOUT', `${team ? team.name : teamId} hết thời gian 45s trả lời câu hỏi Vòng 3!`);
       handleR3WrongOrTimeout();
     }
   );

@@ -592,7 +592,7 @@
         if (isMyTurn && state.r1.stage === 'ANSWERING') {
           statusCard.innerHTML = `
             <div style="color: var(--c-tertiary); font-size: 1.25rem; font-weight: bold;">
-              CHÚC MỪNG! ĐỘI BẠN ĐÃ GIÀNH QUYỀN TRẢ LỜI! (${state.r1.timeLeft || 5}s)
+              CHÚC MỪNG! ĐỘI BẠN ĐÃ GIÀNH QUYỀN TRẢ LỜI! (${state.r1.timeLeft !== undefined && state.r1.timeLeft !== null ? state.r1.timeLeft : 45}s)
             </div>
           `;
           canvas.innerHTML = `
@@ -617,7 +617,7 @@
         if (state.r1.stage === 'ANSWERING' && !isMyTurn) {
           statusCard.innerHTML = `
             <span style="color: var(--c-surface); font-weight: bold;">
-              Đội ${answeringTeam ? answeringTeam.name : 'đối thủ'} đang trả lời (${state.r1.timeLeft || 5}s)...
+              Đội ${answeringTeam ? answeringTeam.name : 'đối thủ'} đang trả lời (${state.r1.timeLeft !== undefined && state.r1.timeLeft !== null ? state.r1.timeLeft : 45}s)...
             </span>
           `;
           canvas.innerHTML = `
@@ -719,24 +719,40 @@
 
       // 3. ROUND 2 — Bức Tranh Bí Ẩn (Dual Buzzers)
       if (state.status === 'ROUND2') {
+        const p = state.r2.currentPiece;
         const isPieceBuzzerOpen = state.r2.stage === 'PIECE_BUZZER';
         const isMyPieceTurn = state.r2.currentTurn === myTeamId && state.r2.stage === 'PIECE_ANSWERING';
         const isMyKeywordTurn = state.r2.keywordTurn === myTeamId;
+        const otherPieceTurn = state.r2.currentTurn && state.r2.currentTurn !== myTeamId;
+        const otherTeamObj = otherPieceTurn ? state.teams.find(t => t.id === state.r2.currentTurn) : null;
 
         if (isMyPieceTurn) {
           statusCard.innerHTML = `
             <div style="color: var(--c-tertiary); font-size: 1.2rem; font-weight: bold;">
-              BẠN GIÀNH QUYỀN TRẢ LỜI MẢNH GHÉP ${state.r2.pieceIndex + 1}!
+              BẠN GIÀNH QUYỀN TRẢ LỜI MẢNH GHÉP ${state.r2.pieceIndex + 1}! (${state.r2.timeLeft !== undefined && state.r2.timeLeft !== null ? state.r2.timeLeft : 45}s)
             </div>
           `;
           canvas.innerHTML = `
             <div style="width: 100%; text-align: center;">
-              <p style="color: var(--c-tertiary); font-size: 1.1rem; margin-bottom: 12px; font-weight: bold;">CHỌN ĐÁP ÁN CHO MẢNH GHÉP:</p>
+              ${p ? `
+                <div style="background: rgba(18,7,34,0.9); padding: 12px 16px; border-radius: var(--radius-base); border: 2px solid var(--c-tertiary); margin-bottom: 12px; text-align: left;">
+                  <div style="font-size: 0.85rem; color: var(--c-tertiary); font-weight: bold; margin-bottom: 3px;">
+                    MẢNH GHÉP ${state.r2.pieceIndex + 1}: ${p.title}
+                  </div>
+                  <div style="font-size: 1.15rem; color: #fff; font-weight: bold; line-height: 1.4;">
+                    ${p.question}
+                  </div>
+                </div>
+              ` : ''}
+
+              <p style="color: var(--c-surface); font-size: 1.05rem; margin-bottom: 10px; font-weight: bold;">CHỌN ĐÁP ÁN CHO MẢNH GHÉP:</p>
               <div class="player-options-grid">
                 ${['A', 'B', 'C', 'D'].map((letter, idx) => `
                   <button class="player-opt-btn" onclick="selectAnswer(${idx})">
-                    <span style="font-size: 2.2rem; color: var(--c-tertiary); font-weight: bold;">${letter}</span>
-                    <span style="font-size: 0.9rem; color: #cbd5e1;">Phương án ${letter}</span>
+                    <span style="font-size: 2rem; color: var(--c-tertiary); font-weight: bold;">${letter}</span>
+                    <span style="font-size: 0.9rem; color: #cbd5e1; text-align: center;">
+                      ${p?.options ? p.options[idx].replace(/^[A-D]\.\s*/, '') : 'Phương án ' + letter}
+                    </span>
                   </button>
                 `).join('')}
               </div>
@@ -745,31 +761,28 @@
           return;
         }
 
-        if (isMyKeywordTurn) {
+        if (otherPieceTurn) {
           statusCard.innerHTML = `
-            <div style="color: var(--c-surface); font-size: 1.25rem; font-weight: bold;">
-              ĐỘI BẠN ĐANG ĐOÁN TỪ KHÓA CHỦ ĐỀ! (+100đ)
-            </div>
+            <span style="color: var(--c-surface); font-weight: bold;">
+              Đội ${otherTeamObj ? otherTeamObj.name : 'đối thủ'} đang trả lời Mảnh ghép (${state.r2.timeLeft !== undefined && state.r2.timeLeft !== null ? state.r2.timeLeft : 45}s)...
+            </span>
           `;
-          canvas.innerHTML = `
-            <div style="text-align: center; padding: 20px;">
-              <svg class="ui-icon" style="width: 64px; height: 64px; stroke: var(--c-surface);" viewBox="0 0 24 24">
-                <circle cx="7.5" cy="15.5" r="5.5"></circle>
-                <path d="m21 2-9.6 9.6"></path>
-                <path d="m15.5 7.5 3 3L22 7l-3-3"></path>
-              </svg>
-              <h3 style="font-size: 1.6rem; margin-top: 10px; color: var(--c-surface); font-weight: bold;">
-                HÃY TRẢ LỜI TRỰC TIẾP VỚI MC!
-              </h3>
-              <p style="color: #cbd5e1; margin-top: 8px;">Nếu chính xác, đội bạn nhận ngay 100 điểm!</p>
-            </div>
-          `;
-          return;
+        } else {
+          statusCard.innerHTML = `<span>VÒNG 2: GIẢI MÃ BỨC TRANH BÍ ẨN</span>`;
         }
 
-        statusCard.innerHTML = `<span>VÒNG 2: GIẢI MÃ BỨC TRANH BÍ ẨN</span>`;
-
         canvas.innerHTML = `
+          ${p && state.r2.stage !== 'IDLE' ? `
+            <div style="background: rgba(18,7,34,0.85); padding: 12px 16px; border-radius: var(--radius-base); border: 1.5px solid var(--c-primary); margin-bottom: 12px; text-align: left; width: 100%;">
+              <div style="font-size: 0.85rem; color: var(--c-tertiary); font-weight: bold; margin-bottom: 2px;">
+                MẢNH GHÉP ${state.r2.pieceIndex + 1}: ${p.title} (+20đ / 10đ)
+              </div>
+              <div style="font-size: 1.05rem; color: #ffffff; font-weight: bold; line-height: 1.4;">
+                ${p.question}
+              </div>
+            </div>
+          ` : ''}
+
           <div class="r2-buzzer-grid">
             <button class="dual-buzzer-btn btn-piece-buzzer ${isPieceBuzzerOpen && !team.locked ? 'btn-buzzer-ready' : 'btn-buzzer-waiting'}" 
                     onclick="handleBuzzerClick('PIECE')">
@@ -847,16 +860,29 @@
 
         if (state.r3.stage === 'QUESTION' || state.r3.stage === 'ANSWERING') {
           const isMyTurn = state.r3.currentTurn === myTeamId;
+          const otherR3Turn = state.r3.currentTurn && state.r3.currentTurn !== myTeamId;
+          const ansTeam = otherR3Turn ? state.teams.find(t => t.id === state.r3.currentTurn) : null;
+
           if (isMyTurn) {
-            statusCard.innerHTML = `<span style="color: var(--c-tertiary); font-weight: bold;">LƯỢT CỦA BẠN TRẢ LỜI CÂU HỎI VỀ ĐÍCH!</span>`;
+            statusCard.innerHTML = `<span style="color: var(--c-tertiary); font-weight: bold;">LƯỢT CỦA BẠN TRẢ LỜI CÂU HỎI VỀ ĐÍCH! (${state.r3.timeLeft !== undefined && state.r3.timeLeft !== null ? state.r3.timeLeft : 45}s)</span>`;
             canvas.innerHTML = `
               <div style="width: 100%; text-align: center;">
+                ${state.r3.question ? `
+                  <div style="background: rgba(18,7,34,0.9); padding: 12px 16px; border-radius: var(--radius-base); border: 2px solid var(--c-secondary); margin-bottom: 12px; text-align: left;">
+                    <div style="font-size: 0.85rem; color: var(--c-secondary); font-weight: bold; margin-bottom: 3px;">
+                      CÂU HỎI QUYẾT ĐỊNH VẬN MỆNH
+                    </div>
+                    <div style="font-size: 1.15rem; color: #fff; font-weight: bold; line-height: 1.4;">
+                      ${state.r3.question.question}
+                    </div>
+                  </div>
+                ` : ''}
                 <p style="color: var(--c-surface); font-size: 1.15rem; margin-bottom: 12px; font-weight: bold;">CHỌN ĐÁP ÁN QUYẾT ĐỊNH:</p>
                 <div class="player-options-grid">
                   ${['A', 'B', 'C', 'D'].map((letter, idx) => `
                     <button class="player-opt-btn ${state.r3.selectedAnswer === idx ? 'selected' : ''}" onclick="selectAnswer(${idx})">
-                      <span style="font-size: 2.2rem; color: var(--c-surface); font-weight: bold;">${letter}</span>
-                      <span style="font-size: 0.9rem; color: #cbd5e1;">Phương án ${letter}</span>
+                      <span style="font-size: 2rem; color: var(--c-surface); font-weight: bold;">${letter}</span>
+                      <span style="font-size: 0.9rem; color: #cbd5e1; text-align: center;">${state.r3.question?.options ? state.r3.question.options[idx].replace(/^[A-D]\.\s*/, '') : 'Phương án ' + letter}</span>
                     </button>
                   `).join('')}
                 </div>
@@ -865,8 +891,19 @@
             return;
           }
 
-          statusCard.innerHTML = `<span style="color: var(--c-surface); font-weight: bold;">BẤM CHUÔNG ĐỂ GIÀNH QUYỀN TRẢ LỜI CÂU HỎI CUỐI!</span>`;
+          if (otherR3Turn) {
+            statusCard.innerHTML = `<span style="color: var(--c-surface); font-weight: bold;">Đội ${ansTeam ? ansTeam.name : 'đối thủ'} đang trả lời (${state.r3.timeLeft !== undefined && state.r3.timeLeft !== null ? state.r3.timeLeft : 45}s)...</span>`;
+          } else {
+            statusCard.innerHTML = `<span style="color: var(--c-surface); font-weight: bold;">BẤM CHUÔNG ĐỂ GIÀNH QUYỀN TRẢ LỜI CÂU HỎI CUỐI!</span>`;
+          }
+
           canvas.innerHTML = `
+            ${state.r3.question ? `
+              <div style="background: rgba(18,7,34,0.85); padding: 12px 16px; border-radius: var(--radius-base); border: 1.5px solid var(--c-secondary); margin-bottom: 12px; text-align: left; width: 100%;">
+                <div style="font-size: 0.85rem; color: var(--c-secondary); font-weight: bold; margin-bottom: 2px;">CÂU HỎI QUYẾT ĐỊNH</div>
+                <div style="font-size: 1.05rem; color: #ffffff; font-weight: bold; line-height: 1.4;">${state.r3.question.question}</div>
+              </div>
+            ` : ''}
             <button class="big-buzzer-btn btn-buzzer-ready" onclick="handleBuzzerClick('NORMAL')">
               ${renderGoldenBellSvg(75)}
               <span class="buzzer-label">BẤM CHUÔNG</span>
