@@ -1,9 +1,9 @@
 /* ==========================================================================
-   ANIME RELIGION QUIZ ARENA — PSICODÉLICO ANOS 60 THEME
+   RUNG CHUÔNG VÀNG — PSICODÉLICO ANOS 60 THEME
    Strict implementation of DESIGN.MD (1965-1971 San Francisco Psychedelic Poster Art)
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Lobster&family=Lobster+Two:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700;800&family=Lobster&family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&display=swap');
 
 :root {
   /* 60s Psychedelic Color Tokens from DESIGN.MD */
@@ -26,9 +26,10 @@
   --team-4: #A020F0;          /* Purple Haze (Huyền Vũ) */
   --team-5: #FF1D8E;          /* Hot Pink (Kim Lân) */
 
-  /* Typography Scale */
-  --font-display: 'Lobster', cursive;
-  --font-body: 'Lobster', cursive;
+  /* Typography Scale with 100% Vietnamese Diacritic Fallback */
+  --font-display: 'Lobster', 'Montserrat', 'Be Vietnam Pro', cursive, sans-serif;
+  --font-body: 'Lobster', 'Montserrat', 'Be Vietnam Pro', sans-serif;
+  --font-ui: 'Montserrat', 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
   --fs-hero: clamp(2.5rem, 5vw, 4rem);
@@ -446,4 +447,32 @@ body {
 ::-webkit-scrollbar-thumb {
   background: var(--c-primary);
   border-radius: 4px;
+}
+
+/* 100% Transparent Vector Golden Bell (No dark background box) */
+.golden-bell-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin: 12px auto;
+  position: relative;
+}
+.golden-bell-svg {
+  background: transparent !important;
+  border: none !important;
+  overflow: visible;
+  filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.75)) drop-shadow(0 0 45px rgba(255, 95, 0, 0.4));
+  animation: bellVibratePulse 2s ease-in-out infinite;
+}
+@keyframes bellVibratePulse {
+  0% { transform: rotate(0deg) scale(1); }
+  10% { transform: rotate(-8deg) scale(1.05); }
+  20% { transform: rotate(8deg) scale(1.05); }
+  30% { transform: rotate(-5deg) scale(1.03); }
+  40% { transform: rotate(5deg) scale(1.03); }
+  50% { transform: rotate(0deg) scale(1); }
+  100% { transform: rotate(0deg) scale(1); }
 }

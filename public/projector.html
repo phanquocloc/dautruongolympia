@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MÀN HÌNH TRÌNH CHIẾU — ANIME RELIGION QUIZ ARENA</title>
+  <title>MÀN HÌNH TRÌNH CHIẾU — RUNG CHUÔNG VÀNG</title>
   <link rel="stylesheet" href="/assets/css/arena_theme.css">
   <style>
     body {
@@ -442,7 +442,7 @@
           <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
         </svg>
         <div>
-          <h1 class="stage-logo-text electric-heading">ANIME RELIGION QUIZ ARENA</h1>
+          <h1 class="stage-logo-text electric-heading">RUNG CHUÔNG VÀNG</h1>
           <p style="font-size: 0.8rem; color: var(--c-surface); font-family: var(--font-mono);">
             PSICODÉLICO ANOS 60 • RUNG CHUÔNG VÀNG 5 ĐỘI
           </p>
@@ -498,6 +498,25 @@
   <script>
     const socket = io();
     let currentGameState = null;
+    let dynamicQrUrl = null;
+    let dynamicPlayerUrl = window.location.origin + '/player';
+
+    function fetchDynamicQr() {
+      fetch(`/api/player-qr?origin=${encodeURIComponent(window.location.origin)}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.qrUrl) {
+            dynamicQrUrl = data.qrUrl;
+            dynamicPlayerUrl = data.playerUrl;
+            const img = document.getElementById('lobbyQrImage');
+            if (img) img.src = dynamicQrUrl;
+            const code = document.getElementById('lobbyPlayerUrlText');
+            if (code) code.innerText = dynamicPlayerUrl;
+          }
+        })
+        .catch(e => console.log('Dynamic QR fetch error:', e));
+    }
+    fetchDynamicQr();
 
     function toggleAudio() {
       const isMuted = window.quizSound.toggleMute();
@@ -618,13 +637,14 @@
       // 1. LOBBY
       if (state.status === 'LOBBY') {
         badgeTitle.innerText = 'PHÒNG CHỜ KHAI MẠC';
+        const displayPlayerUrl = dynamicPlayerUrl || (window.location.origin + '/player');
         arena.innerHTML = `
           <div class="lobby-view">
-            <h1 class="lobby-title electric-heading">ANIME RELIGION QUIZ ARENA</h1>
+            <h1 class="lobby-title electric-heading">RUNG CHUÔNG VÀNG</h1>
             <p class="lobby-sub">“Giải mã tri thức – Khám phá niềm tin – Chinh phục chuông vàng!”</p>
             
             <div class="lobby-qr-box">
-              <img src="${state.qrUrl}" class="lobby-qr-img" alt="QR Code">
+              <img src="${dynamicQrUrl || state.qrUrl}" id="lobbyQrImage" class="lobby-qr-img" alt="QR Code">
               <div style="text-align: left;">
                 <h3 style="color: var(--c-surface); font-size: 1.4rem; margin-bottom: 6px;">
                   QUÉT MÃ ĐỂ VÀO PHÒNG
@@ -632,8 +652,8 @@
                 <p style="color: #cbd5e1; font-size: 1rem; margin-bottom: 8px;">
                   Mã phòng: <strong style="color: var(--c-tertiary); font-size: 1.3rem; font-family: var(--font-mono);">${state.roomCode}</strong>
                 </p>
-                <code style="background: var(--c-dark); padding: 6px 12px; border-radius: 4px; color: var(--c-tertiary); font-family: var(--font-mono);">
-                  http://${state.localIP}:3000/player
+                <code id="lobbyPlayerUrlText" style="background: var(--c-dark); padding: 8px 14px; border-radius: 4px; color: var(--c-tertiary); font-family: var(--font-mono); font-size: 1.05rem; word-break: break-all; border: 1px solid var(--c-primary); display: inline-block;">
+                  ${displayPlayerUrl}
                 </code>
               </div>
             </div>
@@ -955,7 +975,7 @@
             ${isChampion ? `
               <img src="/assets/images/golden_trophy.jpg" alt="Cúp Chuông Vàng" class="champion-trophy-img">
               <h2 class="electric-heading" style="font-size: 2.2rem; letter-spacing: 2px;">
-                NHÀ VÔ ĐỊCH ANIME RELIGION QUIZ ARENA
+                NHÀ VÔ ĐỊCH RUNG CHUÔNG VÀNG
               </h2>
             ` : `
               <div style="font-size: 1.6rem; color: #94a3b8; letter-spacing: 2px;">

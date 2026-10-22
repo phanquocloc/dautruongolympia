@@ -32,8 +32,10 @@ function getLocalIP() {
 }
 
 const localIP = getLocalIP();
+const publicBaseUrl = process.env.RENDER_EXTERNAL_URL || process.env.PUBLIC_URL || `http://${localIP}:${PORT}`;
+const defaultPlayerUrl = `${publicBaseUrl.replace(/\/$/, '')}/player`;
 let playerQrDataUrl = '';
-QRCode.toDataURL(`http://${localIP}:${PORT}/player`, { margin: 1, width: 260 }, (err, url) => {
+QRCode.toDataURL(defaultPlayerUrl, { margin: 1, width: 280, color: { dark: '#120722', light: '#FFD700' } }, (err, url) => {
   if (!err) playerQrDataUrl = url;
 });
 
@@ -271,6 +273,8 @@ class GameRoom {
       paused: this.paused,
       teams: this.teams,
       localIP,
+      publicBaseUrl,
+      playerUrl: defaultPlayerUrl,
       qrUrl: playerQrDataUrl,
       eventLog: this.eventLog.slice(0, 30),
       // Round 1
@@ -414,6 +418,19 @@ app.get('/mc', (req, res) => res.sendFile(path.join(__dirname, 'public', 'mc.htm
 app.get('/projector', (req, res) => res.sendFile(path.join(__dirname, 'public', 'projector.html')));
 app.get('/player', (req, res) => res.sendFile(path.join(__dirname, 'public', 'player.html')));
 app.get('/sandbox', (req, res) => res.sendFile(path.join(__dirname, 'public', 'sandbox.html')));
+
+// Dynamic QR generator matching actual browser client origin
+app.get('/api/player-qr', (req, res) => {
+  const proto = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
+  const host = req.headers['x-forwarded-host'] || req.headers.host;
+  const origin = req.query.origin || process.env.RENDER_EXTERNAL_URL || `${proto}://${host}`;
+  const cleanOrigin = origin.replace(/\/$/, '');
+  const targetPlayerUrl = `${cleanOrigin}/player`;
+  QRCode.toDataURL(targetPlayerUrl, { margin: 1, width: 280, color: { dark: '#120722', light: '#FFD700' } }, (err, url) => {
+    if (err) return res.status(500).json({ error: 'QR Generation failed' });
+    res.json({ playerUrl: targetPlayerUrl, qrUrl: url });
+  });
+});
 
 // Socket.io Events
 io.on('connection', (socket) => {
@@ -809,7 +826,7 @@ function handleMcAction(action, payload) {
           game.logEvent('FINALE', 'Công bố Hạng 2');
           broadcastState('bell');
         } else if (game.finaleStep === 6) {
-          game.logEvent('FINALE', 'VINH DANH NHÀ VÔ ĐỊCH ANIME RELIGION QUIZ ARENA!');
+          game.logEvent('FINALE', 'VINH DANH NHÀ VÔ ĐỊCH RUNG CHUÔNG VÀNG!');
           broadcastState('victory');
         } else if (game.finaleStep >= 7) {
           game.status = 'FINALE_LEADERBOARD';
@@ -1102,9 +1119,9 @@ app.get('/ping', (req, res) => res.status(200).send('pong'));
 // Start Primary Server
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`=======================================================`);
-  console.log(`  ANIME RELIGION QUIZ ARENA SERVER RUNNING!`);
+  console.log(`  RUNG CHUÔNG VÀNG SERVER RUNNING!`);
   console.log(`  Local Address:     http://localhost:${PORT}`);
-  console.log(`  Network (Phones):  http://${localIP}:${PORT}/player`);
+  console.log(`  Network (Phones):  ${defaultPlayerUrl}`);
   console.log(`  MC Control:        http://localhost:${PORT}/mc`);
   console.log(`  Projector:         http://localhost:${PORT}/projector`);
   console.log(`  5-Device Sandbox:  http://localhost:${PORT}/sandbox`);

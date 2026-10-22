@@ -1,4 +1,4 @@
-# 🔔 ANIME RELIGION QUIZ ARENA — RUNG CHUÔNG VÀNG 5 ĐỘI
+# 🔔 RUNG CHUÔNG VÀNG — ĐẤU TRƯỜNG 5 ĐỘI THI ĐẤU
 
 > **Khẩu hiệu:** *“Giải mã tri thức – Khám phá niềm tin – Chinh phục chuông vàng!”*  
 > **Chủ đề học thuật:**

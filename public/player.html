@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ĐIỆN THOẠI ĐỘI CHƠI — ANIME RELIGION QUIZ ARENA</title>
+  <title>ĐIỆN THOẠI ĐỘI CHƠI — RUNG CHUÔNG VÀNG</title>
   <link rel="stylesheet" href="/assets/css/arena_theme.css">
   <style>
     body {
@@ -299,7 +299,7 @@
 
     <!-- Bottom info -->
     <footer style="text-align: center; color: #94a3b8; font-size: 0.85rem; font-family: var(--font-mono);">
-      ANIME RELIGION QUIZ ARENA • PSICODÉLICO ANOS 60
+      RUNG CHUÔNG VÀNG • PSICODÉLICO ANOS 60
     </footer>
   </div>
 
@@ -328,6 +328,43 @@
     let myTeamId = urlParams.get('team') || localStorage.getItem('arena_team_id') || null;
     let currentGameState = null;
     let selectedWager = 0;
+
+    // 100% Transparent Vector Golden Bell Component (Zero black boxes, zero font glitches)
+    function renderGoldenBellSvg(size = 110) {
+      return `
+        <div class="golden-bell-wrap" style="width: ${size}px; height: ${size}px;">
+          <svg class="golden-bell-svg" width="${size}" height="${size}" viewBox="0 0 100 100" fill="none">
+            <defs>
+              <linearGradient id="bellGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FFF5A0" />
+                <stop offset="30%" stop-color="#FFD700" />
+                <stop offset="70%" stop-color="#FF5F00" />
+                <stop offset="100%" stop-color="#FF1D8E" />
+              </linearGradient>
+              <linearGradient id="bellRimGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#FF5F00" />
+                <stop offset="50%" stop-color="#FFD700" />
+                <stop offset="100%" stop-color="#FF5F00" />
+              </linearGradient>
+              <linearGradient id="bellHighlight" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="rgba(255,255,255,0.85)" />
+                <stop offset="100%" stop-color="rgba(255,255,255,0)" />
+              </linearGradient>
+            </defs>
+            <!-- Hanger Loop -->
+            <path d="M42 15 C42 7, 58 7, 58 15 L58 23 L42 23 Z" fill="#FFD700" stroke="#FF5F00" stroke-width="3" stroke-linejoin="round" />
+            <!-- Bell Dome Body -->
+            <path d="M50 21 C34 21, 26 43, 23 65 C23 71, 19 76, 12 78 C12 83, 88 83, 88 78 C81 76, 77 71, 77 65 C74 43, 66 21, 50 21 Z" fill="url(#bellGoldGrad)" stroke="#FF5F00" stroke-width="3.5" stroke-linejoin="round" />
+            <!-- Base Rim Ellipse -->
+            <ellipse cx="50" cy="78" rx="38" ry="7" fill="url(#bellRimGrad)" stroke="#FF5F00" stroke-width="3" />
+            <!-- Clapper Ball -->
+            <circle cx="50" cy="82" r="8.5" fill="#FF1D8E" stroke="#FFD700" stroke-width="3" />
+            <!-- Specular Reflection Highlight -->
+            <path d="M32 33 C36 25, 42 23, 46 22 C42 29, 37 44, 35 61 C32 56, 29 43, 32 33 Z" fill="url(#bellHighlight)" />
+          </svg>
+        </div>
+      `;
+    }
 
     function joinTeam(teamId) {
       myTeamId = teamId;
@@ -420,16 +457,15 @@
 
       // 1. LOBBY
       if (state.status === 'LOBBY') {
-        statusCard.innerHTML = `<span style="color: var(--c-tertiary);">● ĐÃ SẴN SÀNG THI ĐẤU</span>`;
+        statusCard.innerHTML = `<span style="color: var(--c-tertiary); font-family: var(--font-ui); font-weight: 700; letter-spacing: 0.5px;">● ĐÃ SẴN SÀNG THI ĐẤU</span>`;
         canvas.innerHTML = `
           <div style="text-align: center; padding: 20px;">
-            <svg class="ui-icon bell-pulse" style="width: 72px; height: 72px; stroke: var(--c-surface); margin-bottom: 12px;" viewBox="0 0 24 24">
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-            </svg>
-            <h3 class="electric-heading" style="font-size: 1.5rem;">CHÀO MỪNG ${team.name.toUpperCase()}!</h3>
-            <p style="color: var(--c-surface); font-size: 1rem; margin-top: 8px;">
-              Quan sát màn hình máy chiếu.<br>Nút bấm chuông sẽ kích hoạt khi MC bắt đầu câu hỏi.
+            ${renderGoldenBellSvg(120)}
+            <h3 class="electric-heading" style="font-size: 1.6rem; color: var(--c-surface); text-shadow: 2px 2px 0 var(--c-secondary); margin-top: 14px;">
+              CHÀO MỪNG ${team.name.toUpperCase()}!
+            </h3>
+            <p style="color: #fff; font-size: 1rem; margin-top: 10px; font-family: var(--font-ui); line-height: 1.5;">
+              Vui lòng quan sát màn hình máy chiếu.<br>Nút bấm chuông sẽ kích hoạt khi MC mở hiệu lệnh câu hỏi.
             </p>
           </div>
         `;
@@ -488,10 +524,7 @@
                   id="mainBuzzerBtn"
                   ${(!isBuzzerOpen || alreadyBuzzed || team.locked) ? 'disabled' : ''}
                   onclick="triggerBuzzer('NORMAL')">
-            <svg class="ui-icon buzzer-icon" viewBox="0 0 24 24">
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-            </svg>
+            ${renderGoldenBellSvg(75)}
             <span class="buzzer-label">BẤM CHUÔNG</span>
           </button>
           ${alreadyBuzzed ? `
@@ -658,9 +691,7 @@
             <button class="big-buzzer-btn bell-pulse" 
                     ${team.locked ? 'disabled' : ''}
                     onclick="triggerBuzzer('NORMAL')">
-              <svg class="ui-icon buzzer-icon" viewBox="0 0 24 24">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-              </svg>
+              ${renderGoldenBellSvg(75)}
               <span class="buzzer-label">BẤM CHUÔNG</span>
             </button>
           `;

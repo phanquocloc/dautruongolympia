@@ -3,7 +3,7 @@ const { io } = require('socket.io-client');
 const SERVER_URL = 'http://localhost:3000';
 
 async function runFullMatchSimulation() {
-  console.log('--- BẮT ĐẦU MÔ PHỎNG TOÀN DIỆN TRẬN ĐẤU ANIME RELIGION QUIZ ARENA ---');
+  console.log('--- BẮT ĐẦU MÔ PHỎNG TOÀN DIỆN TRẬN ĐẤU RUNG CHUÔNG VÀNG ---');
 
   // Connect MC socket
   const mcSocket = io(SERVER_URL);
