@@ -12,11 +12,12 @@ RUN npm install --omit=dev
 # Copy application files
 COPY . .
 
-# Expose port (Render/Railway sets PORT dynamically)
+# Expose ports: 3001 is first so Render routes to detected port 3001
+EXPOSE 3001
 EXPOSE 3000
+EXPOSE 10000
 
 ENV NODE_ENV=production
-ENV PORT=3000
 
 # Start command
 CMD ["node", "server.js"]

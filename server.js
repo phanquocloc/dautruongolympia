@@ -1095,7 +1095,12 @@ function handlePlayerSubmitWager(teamId, wager) {
   broadcastState('wager_lock');
 }
 
-// Start Server
+// Health check endpoints for Render / Cloud load balancers
+app.get('/healthz', (req, res) => res.status(200).send('OK'));
+app.get('/health', (req, res) => res.status(200).send('OK'));
+app.get('/ping', (req, res) => res.status(200).send('pong'));
+
+// Start Primary Server
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`=======================================================`);
   console.log(`  ANIME RELIGION QUIZ ARENA SERVER RUNNING!`);
@@ -1105,4 +1110,19 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log(`  Projector:         http://localhost:${PORT}/projector`);
   console.log(`  5-Device Sandbox:  http://localhost:${PORT}/sandbox`);
   console.log(`=======================================================`);
+});
+
+// Bind secondary fallback ports (3000, 3001, 10000) so Render probes always succeed
+const fallbackPorts = [3000, 3001, 10000].filter(p => Number(p) !== Number(PORT));
+fallbackPorts.forEach(port => {
+  try {
+    const fallbackServer = http.createServer(app);
+    io.attach(fallbackServer);
+    fallbackServer.listen(port, '0.0.0.0', () => {
+      console.log(`  [Cloud Port Guard] Also listening on port ${port} for load-balancer routing.`);
+    });
+    fallbackServer.on('error', () => {
+      // Ignored safely if port is already taken or unavailable
+    });
+  } catch (e) {}
 });
