@@ -862,7 +862,9 @@
           const isMyTurn = state.r3.currentTurn === myTeamId;
           const otherR3Turn = state.r3.currentTurn && state.r3.currentTurn !== myTeamId;
           const ansTeam = otherR3Turn ? state.teams.find(t => t.id === state.r3.currentTurn) : null;
+          const isMyTeamLocked = team?.locked || (state.r3.wrongTeams && state.r3.wrongTeams.includes(myTeamId));
 
+          // Case 1: Lượt của đội tôi trả lời
           if (isMyTurn) {
             statusCard.innerHTML = `<span style="color: var(--c-tertiary); font-weight: bold;">LƯỢT CỦA BẠN TRẢ LỜI CÂU HỎI VỀ ĐÍCH! (${state.r3.timeLeft !== undefined && state.r3.timeLeft !== null ? state.r3.timeLeft : 45}s)</span>`;
             canvas.innerHTML = `
@@ -891,12 +893,50 @@
             return;
           }
 
-          if (otherR3Turn) {
-            statusCard.innerHTML = `<span style="color: var(--c-surface); font-weight: bold;">Đội ${ansTeam ? ansTeam.name : 'đối thủ'} đang trả lời (${state.r3.timeLeft !== undefined && state.r3.timeLeft !== null ? state.r3.timeLeft : 45}s)...</span>`;
-          } else {
-            statusCard.innerHTML = `<span style="color: var(--c-surface); font-weight: bold;">BẤM CHUÔNG ĐỂ GIÀNH QUYỀN TRẢ LỜI CÂU HỎI CUỐI!</span>`;
+          // Case 2: Đội tôi ĐÃ TRẢ LỜI SAI (BỊ KHÓA LƯỢT VĨNH VIỄN Ở CÂU NÀY)
+          if (isMyTeamLocked) {
+            statusCard.innerHTML = `<span style="color: #ef4444; font-weight: bold;">ĐỘI BẠN ĐÃ MẤT LƯỢT Ở CÂU HỎI NÀY!</span>`;
+            canvas.innerHTML = `
+              ${state.r3.question ? `
+                <div style="background: rgba(18,7,34,0.85); padding: 12px 16px; border-radius: var(--radius-base); border: 1.5px solid #ef4444; margin-bottom: 12px; text-align: left; width: 100%;">
+                  <div style="font-size: 0.85rem; color: #ef4444; font-weight: bold; margin-bottom: 2px;">CÂU HỎI QUYẾT ĐỊNH</div>
+                  <div style="font-size: 1.05rem; color: #cbd5e1; line-height: 1.4;">${state.r3.question.question}</div>
+                </div>
+              ` : ''}
+              <button class="big-buzzer-btn btn-buzzer-locked" onclick="showToast('⚠️ Đội bạn đã trả lời sai và bị mất quyền bấm chuông câu này!')">
+                ${renderGoldenBellSvg(75)}
+                <span class="buzzer-label" style="color: #94a3b8;">MẤT LƯỢT</span>
+              </button>
+              <div style="font-size: 0.95rem; color: #f87171; text-align: center; margin-top: 8px; font-weight: bold;">
+                ⚠️ Bạn đã trả lời sai và bị trừ điểm cược. Quyền bấm chuông thuộc về các đội còn lại!
+              </div>
+            `;
+            return;
           }
 
+          // Case 3: Đội khác đang trả lời
+          if (otherR3Turn) {
+            statusCard.innerHTML = `<span style="color: var(--c-surface); font-weight: bold;">Đội ${ansTeam ? ansTeam.name : 'đối thủ'} đang trả lời (${state.r3.timeLeft !== undefined && state.r3.timeLeft !== null ? state.r3.timeLeft : 45}s)...</span>`;
+            canvas.innerHTML = `
+              ${state.r3.question ? `
+                <div style="background: rgba(18,7,34,0.85); padding: 12px 16px; border-radius: var(--radius-base); border: 1.5px solid var(--c-secondary); margin-bottom: 12px; text-align: left; width: 100%;">
+                  <div style="font-size: 0.85rem; color: var(--c-secondary); font-weight: bold; margin-bottom: 2px;">CÂU HỎI QUYẾT ĐỊNH</div>
+                  <div style="font-size: 1.05rem; color: #ffffff; font-weight: bold; line-height: 1.4;">${state.r3.question.question}</div>
+                </div>
+              ` : ''}
+              <button class="big-buzzer-btn btn-buzzer-waiting" onclick="handleBuzzerClick('NORMAL')">
+                ${renderGoldenBellSvg(75)}
+                <span class="buzzer-label">ĐỢI LƯỢT</span>
+              </button>
+              <div style="font-size: 1rem; color: var(--c-surface); text-align: center; margin-top: 8px;">
+                Chuông sẽ mở lại cho đội bạn nếu đối thủ trả lời sai hoặc hết giờ.
+              </div>
+            `;
+            return;
+          }
+
+          // Case 4: Chuông đang mở cho các đội còn lại
+          statusCard.innerHTML = `<span style="color: var(--c-surface); font-weight: bold;">BẤM CHUÔNG ĐỂ GIÀNH QUYỀN TRẢ LỜI CÂU HỎI CUỐI!</span>`;
           canvas.innerHTML = `
             ${state.r3.question ? `
               <div style="background: rgba(18,7,34,0.85); padding: 12px 16px; border-radius: var(--radius-base); border: 1.5px solid var(--c-secondary); margin-bottom: 12px; text-align: left; width: 100%;">
@@ -1044,8 +1084,8 @@
 
       // Round 3
       if (state.status === 'ROUND3_BET') {
-        if (team?.locked) {
-          showToast('⚠️ Đội bạn đã mất lượt ở câu hỏi này!');
+        if (team?.locked || (state.r3.wrongTeams && state.r3.wrongTeams.includes(myTeamId))) {
+          showToast('⚠️ Đội bạn đã trả lời sai và bị mất quyền trả lời câu hỏi này!');
           return;
         }
         if (state.r3.stage === 'ANSWERING') {

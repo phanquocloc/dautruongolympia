@@ -200,6 +200,7 @@ class GameRoom {
     this.r3BuzzerQueue = [];
     this.r3CurrentTurn = null;
     this.r3SelectedAnswer = null;
+    this.r3WrongTeams = [];
 
     // Finale
     this.finaleStep = 0; // 0: none, 1: suspense, 2: rank 5, 3: rank 4, 4: rank 3, 5: rank 2, 6: champion, 7: full leaderboard
@@ -263,6 +264,7 @@ class GameRoom {
     this.r3BuzzerQueue = [];
     this.r3CurrentTurn = null;
     this.r3SelectedAnswer = null;
+    this.r3WrongTeams = [];
     this.finaleStep = 0;
 
     this.logEvent('SYSTEM', 'Trận đấu đã được khởi tạo lại về trạng thái ban đầu');
@@ -318,7 +320,8 @@ class GameRoom {
         buzzerQueue: this.r3BuzzerQueue,
         currentTurn: this.r3CurrentTurn,
         selectedAnswer: this.r3SelectedAnswer,
-        timeLeft: this.r1TurnTimeLeft
+        timeLeft: this.r1TurnTimeLeft,
+        wrongTeams: this.r3WrongTeams || []
       },
       // Finale
       finale: {
@@ -799,6 +802,7 @@ function handleMcAction(action, payload) {
       game.r3Stage = 'BETTING';
       game.r3BetTimeLeft = 10;
       game.r3Bets = {};
+      game.r3WrongTeams = [];
       game.teams.forEach(t => {
         t.locked = false;
         t.r3Wager = 0;
@@ -832,9 +836,30 @@ function handleMcAction(action, payload) {
       game.r3BuzzerQueue = [];
       game.r3CurrentTurn = null;
       game.r3SelectedAnswer = null;
-      game.teams.forEach(t => (t.locked = false));
+      if (!game.r3WrongTeams || game.r3WrongTeams.length === 0) {
+        game.r3WrongTeams = [];
+        game.teams.forEach(t => (t.locked = false));
+      } else {
+        game.teams.forEach(t => {
+          t.locked = game.r3WrongTeams.includes(t.id);
+        });
+      }
       game.stopTurnCountdown();
       game.logEvent('GAME', 'Mở Câu hỏi thử thách Vòng 3! Bấm chuông giành quyền trả lời!');
+      broadcastState('bell');
+      break;
+    }
+
+    case 'R3_REOPEN_BUZZER': {
+      game.r3Stage = 'QUESTION';
+      game.r3BuzzerQueue = [];
+      game.r3CurrentTurn = null;
+      game.r3SelectedAnswer = null;
+      game.teams.forEach(t => {
+        t.locked = (game.r3WrongTeams || []).includes(t.id);
+      });
+      game.stopTurnCountdown();
+      game.logEvent('GAME', 'Mở lại chuông Vòng 3! Chỉ các đội chưa trả lời sai mới được bấm chuông!');
       broadcastState('bell');
       break;
     }
@@ -995,7 +1020,7 @@ function handlePlayerBuzz(teamId, buzzerType) {
 
   // Round 3 Buzzer
   if (game.status === 'ROUND3_BET' && (game.r3Stage === 'QUESTION' || game.r3Stage === 'ANSWERING')) {
-    if (team.locked) return;
+    if (team.locked || (game.r3WrongTeams && game.r3WrongTeams.includes(teamId))) return;
     if (game.r3BuzzerQueue.some(b => b.teamId === teamId)) return;
     game.r3BuzzerQueue.push({ teamId, timestamp: serverTime, teamName: team.name, color: team.color });
     game.logEvent('BUZZER', `${team.name} bấm chuông quyết định Vòng 3! (Hàng đợi #${game.r3BuzzerQueue.length})`);
@@ -1121,18 +1146,35 @@ function handleR3WrongOrTimeout() {
       team.score = Math.max(0, team.score - wager);
       team.r3Result = -wager;
       team.locked = true;
-      game.logEvent('R3_RESULT', `${team.name} trả lời không chính xác, bị trừ -${wager} điểm cược!`);
+      if (!game.r3WrongTeams) game.r3WrongTeams = [];
+      if (!game.r3WrongTeams.includes(team.id)) {
+        game.r3WrongTeams.push(team.id);
+      }
+      game.logEvent('R3_RESULT', `${team.name} trả lời không chính xác, bị trừ -${wager} điểm cược và mất quyền trả lời câu hỏi này!`);
     }
   }
 
-  // Next in queue?
-  const currentIndex = game.r3BuzzerQueue.findIndex(b => b.teamId === game.r3CurrentTurn);
-  const next = game.r3BuzzerQueue[currentIndex + 1];
+  // Next in queue? Tìm đội tiếp theo trong hàng đợi mà chưa bị khóa/chưa trả lời sai
+  let next = null;
+  while (game.r3BuzzerQueue.length > 0) {
+    const candidate = game.r3BuzzerQueue.shift();
+    if (candidate && candidate.teamId !== game.r3CurrentTurn && !game.r3WrongTeams.includes(candidate.teamId)) {
+      next = candidate;
+      break;
+    }
+  }
+
   if (next) {
     grantR3Turn(next.teamId);
   } else {
+    // Không còn ai trong hàng đợi -> Mở lại chuông cho các đội còn lại chưa trả lời sai!
     game.r3CurrentTurn = null;
+    game.r3SelectedAnswer = null;
     game.r3Stage = 'QUESTION';
+    game.teams.forEach(t => {
+      t.locked = (game.r3WrongTeams || []).includes(t.id);
+    });
+    game.logEvent('GAME', 'Mở lại chuông Vòng 3 cho các đội còn lại tiếp tục giành quyền trả lời!');
     broadcastState('wrong');
   }
 }

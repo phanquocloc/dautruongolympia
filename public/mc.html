@@ -838,6 +838,30 @@
               </div>
             ` : ''}
 
+            <!-- Question Preview Card for MC -->
+            ${state.r3.question ? `
+              <div style="background: rgba(18, 7, 34, 0.7); border: 2px solid var(--psy-pink); border-radius: var(--radius-sm); padding: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                  <span style="font-family: var(--font-display); font-size: 1.15rem; color: var(--psy-yellow);">
+                    NỘI DUNG CÂU HỎI VỀ ĐÍCH:
+                  </span>
+                  <span class="badge ${state.r3.wrongTeams && state.r3.wrongTeams.length > 0 ? 'badge-ruby' : 'badge-jade'}">
+                    ${state.r3.wrongTeams && state.r3.wrongTeams.length > 0 ? `Đã mất lượt: ${state.r3.wrongTeams.map(id => state.teams.find(t=>t.id===id)?.name || id).join(', ')}` : 'Chưa có đội nào mất lượt'}
+                  </span>
+                </div>
+                <div style="font-size: 1.15rem; color: #fff; line-height: 1.4; margin-bottom: 12px; font-weight: bold;">
+                  ${state.r3.question.question}
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                  ${state.r3.question.options.map((opt, i) => `
+                    <div style="padding: 8px 12px; border-radius: 4px; font-size: 0.95rem; background: ${i === state.r3.question.correctIndex ? 'rgba(194, 247, 0, 0.25)' : 'rgba(255,255,255,0.06)'}; border: 1.5px solid ${i === state.r3.question.correctIndex ? 'var(--psy-lime)' : 'transparent'}; color: ${i === state.r3.question.correctIndex ? 'var(--psy-lime)' : '#cbd5e1'}; font-weight: ${i === state.r3.question.correctIndex ? 'bold' : 'normal'};">
+                      ${opt} ${i === state.r3.question.correctIndex ? '✓ (ĐÁP ÁN ĐÚNG)' : ''}
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            ` : ''}
+
             <!-- Step Actions -->
             <div class="action-btn-row">
               <button class="btn btn-gold" onclick="sendMcAction('GO_TO_ROUND3')" style="display: inline-flex; align-items: center; gap: 6px;">
@@ -851,6 +875,9 @@
               </button>
               <button class="btn btn-jade" onclick="sendMcAction('R3_OPEN_QUESTION')" style="display: inline-flex; align-items: center; gap: 6px;">
                 ${SVGS.book} <span>4. Mở Câu Hỏi & Chuông</span>
+              </button>
+              <button class="btn btn-gold" onclick="sendMcAction('R3_REOPEN_BUZZER')" style="display: inline-flex; align-items: center; gap: 6px;" title="Mở lại chuông nhưng giữ nguyên trạng thái khóa của đội đã trả lời sai">
+                <span>🔔 Mở Lại Chuông (Chỉ Cho Đội Chưa Sai)</span>
               </button>
               <button class="btn btn-ruby" onclick="sendMcAction('R3_FINISH')" style="display: inline-flex; align-items: center; gap: 6px;">
                 ${SVGS.trophy} <span>5. Tiến Vào Lễ Vinh Danh</span>

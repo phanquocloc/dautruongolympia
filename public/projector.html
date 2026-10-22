@@ -626,8 +626,8 @@
             <div class="team-avatar ${avatarClass}"></div>
             <div>
               <div style="font-size: 1.15rem; color: ${team.color};">${team.name}</div>
-              <div style="font-family: var(--font-mono); font-size: 0.75rem; color: ${team.connected ? 'var(--c-tertiary)' : '#64748b'};">
-                ${team.connected ? '● Trực tuyến' : '○ Ngoại tuyến'}
+              <div style="font-family: var(--font-mono); font-size: 0.75rem; color: ${team.locked ? '#ef4444' : (team.connected ? 'var(--c-tertiary)' : '#64748b')}; font-weight: ${team.locked ? 'bold' : 'normal'};">
+                ${team.locked ? '✕ MẤT LƯỢT' : (team.connected ? '● Trực tuyến' : '○ Ngoại tuyến')}
               </div>
             </div>
           </div>
@@ -737,9 +737,9 @@
             </div>
 
             ${isRevealed ? `
-              <div class="explanation-overlay">
-                <h2 style="color: var(--c-surface); font-size: 1.8rem; margin-bottom: 12px;">ĐÁP ÁN CHÍNH XÁC & GIẢI THÍCH</h2>
-                <p style="font-size: 1.35rem; line-height: 1.6; color: #f1f5f9; margin-bottom: 16px;">
+              <div class="explanation-overlay" style="position: static; margin-top: 14px; width: 100%; padding: 20px 28px;">
+                <h3 style="color: var(--c-surface); font-size: 1.5rem; margin-bottom: 8px;">ĐÁP ÁN CHÍNH XÁC & GIẢI THÍCH</h3>
+                <p style="font-size: 1.2rem; line-height: 1.5; color: #f1f5f9; margin-bottom: 8px;">
                   ${q.explanation}
                 </p>
                 <div style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--c-tertiary);">
@@ -950,16 +950,28 @@
         if (state.r3.stage === 'QUESTION' || state.r3.stage === 'ANSWERING' || state.r3.stage === 'REVEALED') {
           const q = state.r3.question;
           const isRevealed = state.r3.stage === 'REVEALED';
+          const wrongCount = (state.r3.wrongTeams || []).length;
           arena.innerHTML = `
-            <div class="q-box">
+            <div class="q-box" style="width: 100%; max-width: 1100px; padding-bottom: 24px;">
               <div class="q-header-row">
-                <span class="q-topic-tag">CÂU HỎI QUYẾT ĐỊNH VẬN MỆNH</span>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                  <span class="q-topic-tag">CÂU HỎI QUYẾT ĐỊNH VẬN MỆNH</span>
+                  ${wrongCount > 0 ? `
+                    <span class="badge badge-ruby" style="font-size: 0.9rem; padding: 4px 10px;">
+                      ⚡ ${wrongCount} đội đã mất quyền trả lời
+                    </span>
+                  ` : ''}
+                </div>
                 <div class="q-timer-badge" id="qTimerDisplay">
                   ${state.r3.timeLeft !== undefined && state.r3.timeLeft !== null ? state.r3.timeLeft : 45}s
                 </div>
               </div>
 
-              <div class="q-card" style="border-color: var(--c-secondary);">
+              <!-- Question Card with Optimized Line Height & Padding -->
+              <div class="q-card" style="border-color: var(--c-secondary); font-size: 1.55rem; padding: 20px 28px; line-height: 1.4; text-align: left;">
+                <div style="font-size: 0.9rem; color: var(--c-secondary); font-weight: bold; margin-bottom: 6px; text-transform: uppercase;">
+                  CÂU HỎI THỬ THÁCH VỀ ĐÍCH
+                </div>
                 ${q.question}
               </div>
 
@@ -972,7 +984,7 @@
                     else if (state.r3.selectedAnswer === idx) optClass += ' wrong-answer';
                   }
                   return `
-                    <div class="${optClass}">
+                    <div class="${optClass}" style="font-size: 1.15rem; padding: 14px 18px; line-height: 1.35;">
                       <span class="opt-letter">${['A','B','C','D'][idx]}</span>
                       <span>${optText.replace(/^[A-D]\.\s*/, '')}</span>
                     </div>
@@ -981,9 +993,9 @@
               </div>
 
               ${isRevealed ? `
-                <div class="explanation-overlay">
-                  <h2 style="color: var(--c-surface); font-size: 1.8rem; margin-bottom: 12px;">ĐÁP ÁN CHÍNH THỨC & Ý NGHĨA HỌC THUẬT</h2>
-                  <p style="font-size: 1.35rem; line-height: 1.6; color: #f1f5f9; margin-bottom: 16px;">
+                <div class="explanation-overlay" style="position: static; margin-top: 14px; width: 100%; padding: 20px 28px;">
+                  <h3 style="color: var(--c-surface); font-size: 1.45rem; margin-bottom: 8px;">ĐÁP ÁN CHÍNH THỨC & Ý NGHĨA HỌC THUẬT</h3>
+                  <p style="font-size: 1.15rem; line-height: 1.5; color: #f1f5f9; margin-bottom: 8px;">
                     ${q.explanation}
                   </p>
                   <div style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--c-tertiary);">

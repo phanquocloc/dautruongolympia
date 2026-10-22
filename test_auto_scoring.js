@@ -164,8 +164,67 @@ async function testAutoScoring() {
     throw new Error('FAIL TEST 4: Cộng điểm cược Vòng 3 thất bại');
   }
 
+  // -------------------------------------------------------------
+  // TEST 5: VÒNG 3 - ĐỘI ĐÃ SAI KHÔNG ĐƯỢC BẤM CHUÔNG LẠI, CHỈ CÁC ĐỘI CÒN LẠI ĐƯỢC BẤM
+  // -------------------------------------------------------------
+  console.log('\n--- 5. TEST VÒNG 3: ĐỘI ĐÃ TRẢ LỜI SAI BỊ CẤM BẤM LẠI, CHỈ ĐỘI CÒN LẠI ĐƯỢC BẤM ---');
+  await mcAction('GO_TO_ROUND3');
+  teamSockets['team-1'].emit('player_submit_wager', { teamId: 'team-1', wager: 10 });
+  teamSockets['team-2'].emit('player_submit_wager', { teamId: 'team-2', wager: 10 });
+  teamSockets['team-3'].emit('player_submit_wager', { teamId: 'team-3', wager: 10 });
+  await new Promise(r => setTimeout(r, 200));
+  await mcAction('R3_FORCE_LOCK_BETS');
+  await new Promise(r => setTimeout(r, 300));
+  await mcAction('R3_OPEN_QUESTION');
+
+  // Chỉ một mình Đội 1 bấm chuông trước
+  teamSockets['team-1'].emit('player_buzz', { teamId: 'team-1', buzzerType: 'NORMAL' });
+  await new Promise(r => setTimeout(r, 300));
+  st = await getState();
+  console.log(`Đội 1 giành quyền trả lời. Current Turn: ${st.r3.currentTurn}`);
+
+  // Đội 1 trả lời SAI
+  console.log('-> Đội 1 chọn đáp án [A] (SAI)...');
+  teamSockets['team-1'].emit('player_select_answer', { teamId: 'team-1', answerIndex: 0 });
+  await new Promise(r => setTimeout(r, 400));
+
+  st = await getState();
+  console.log(`Sau khi Đội 1 trả lời sai: Stage = ${st.r3.stage} | Đội 1 locked = ${st.teams.find(t=>t.id==='team-1').locked} | wrongTeams = ${JSON.stringify(st.r3.wrongTeams)}`);
+
+  // Đội 1 CỐ TÌNH BẤM CHUÔNG LẠI
+  console.log('-> Đội 1 (đã sai) cố tình bấm chuông lại...');
+  teamSockets['team-1'].emit('player_buzz', { teamId: 'team-1', buzzerType: 'NORMAL' });
+  await new Promise(r => setTimeout(r, 300));
+
+  st = await getState();
+  console.log(`Kết quả: Current Turn = ${st.r3.currentTurn} (Kỳ vọng: null vì Đội 1 bị cấm bấm!)`);
+  if (st.r3.currentTurn === 'team-1') {
+    throw new Error('FAIL TEST 5: Đội đã trả lời sai vẫn bấm chuông được!');
+  }
+
+  // MC bấm "Mở lại chuông cho các đội còn lại" (hoặc chuông tự động mở)
+  await mcAction('R3_REOPEN_BUZZER');
+  st = await getState();
+  console.log(`Sau khi mở lại chuông: Đội 1 locked = ${st.teams.find(t=>t.id==='team-1').locked} (vẫn phải true)`);
+  if (!st.teams.find(t=>t.id==='team-1').locked) {
+    throw new Error('FAIL TEST 5: Đội 1 bị mở khóa trái phép khi mở lại chuông!');
+  }
+
+  // Đội 3 (đội chưa trả lời) bấm chuông
+  console.log('-> Đội 3 (chưa trả lời sai) bấm chuông...');
+  teamSockets['team-3'].emit('player_buzz', { teamId: 'team-3', buzzerType: 'NORMAL' });
+  await new Promise(r => setTimeout(r, 300));
+
+  st = await getState();
+  console.log(`Kết quả: Current Turn = ${st.r3.currentTurn} (Kỳ vọng: team-3)`);
+  if (st.r3.currentTurn !== 'team-3') {
+    throw new Error('FAIL TEST 5: Đội 3 chưa sai không bấm chuông được!');
+  }
+
+  console.log('✓ PASS TEST 5: Đội trả lời sai bị cấm bấm lại hoàn toàn, chỉ các đội còn lại mới được bấm!');
+
   console.log('\n=============================================================');
-  console.log('🎉 TẤT CẢ 4 TEST TỰ ĐỘNG CHẤM & CỘNG TRỪ ĐIỂM ĐỀU THÀNH CÔNG 100%!');
+  console.log('🎉 TẤT CẢ 5 TEST KIỂM THỬ ĐỀU THÀNH CÔNG TUYỆT ĐỐI 100%!');
   console.log('=============================================================');
 
   process.exit(0);
